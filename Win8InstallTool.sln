@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win8InstallTool", "Win8InstallTool\Win8InstallTool.csproj", "{34462172-AF4D-4300-B5C7-A84455E02FC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{0E6E98B7-C907-420E-86AB-193CECC0DAF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{34462172-AF4D-4300-B5C7-A84455E02FC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34462172-AF4D-4300-B5C7-A84455E02FC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34462172-AF4D-4300-B5C7-A84455E02FC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E6E98B7-C907-420E-86AB-193CECC0DAF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E6E98B7-C907-420E-86AB-193CECC0DAF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E6E98B7-C907-420E-86AB-193CECC0DAF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E6E98B7-C907-420E-86AB-193CECC0DAF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
