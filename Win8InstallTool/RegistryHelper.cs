@@ -85,6 +85,19 @@ namespace Win8InstallTool
 
 		public static void Import(string file) => InvokeRegeditor($"/s {file}");
 
+		// CLSDI 格式 {8-4-4-4-12}
+		public static string GetCLSIDValue(string clsid)
+		{
+			using (var key = OpenKey(@"HKEY_CLASSES_ROOT\CLSID\" + clsid))
+			{
+				if (clsid == null)
+				{
+					throw new DirectoryNotFoundException("CLSID记录不存在");
+				}
+				return (string)key.GetValue(string.Empty);
+			}
+		}
+
 		/// <summary>
 		/// 尽管程序要求以管理员身份运行，但有些注册表键仍然没有修改权限，故需要添加一下权限。
 		/// 可以使用using语法来自动还原权限：<code>using (RegistryHelper.ElevatePermission(key)) { ... }</code>

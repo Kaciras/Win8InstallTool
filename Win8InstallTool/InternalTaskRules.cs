@@ -26,6 +26,11 @@ namespace Win8InstallTool
 			});
 			TaskRules.Add(new TaskItemRule
 			{
+				Path = @"\Microsoft\Windows\Application Experience\ProgramDataUpdater",
+				Description = "没同意客户体验改善计划的可以删了",
+			});
+			TaskRules.Add(new TaskItemRule
+			{
 				Path = @"\Microsoft\Windows\Application Experience\StartupAppTask",
 				Description = "启动项应该自己注意,而不是靠它来扫描",
 				Delete = false,
