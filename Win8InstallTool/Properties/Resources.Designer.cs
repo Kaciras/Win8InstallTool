@@ -61,31 +61,19 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
-        ///   查找类似 # 屏蔽百度广告
-        ///127.0.0.1 a.baidu.com
-        ///127.0.0.1 baidutv.baidu.com
-        ///127.0.0.1 bar.baidu.com
-        ///127.0.0.1 c.baidu.com
-        ///127.0.0.1 cjhq.baidu.com
-        ///127.0.0.1 cpro.staticbaidu.com
-        ///127.0.0.1 drmcmm.baidu.com
-        ///127.0.0.1 e.baidu.com
-        ///127.0.0.1 pos.baidu.com
-        ///127.0.0.1 eclick.baidu.com
-        ///127.0.0.1 eiv.baidu.com
-        ///127.0.0.1 hc.baidu.com
-        ///127.0.0.1 hm.baidu.com
-        ///127.0.0.1 ma.baidu.com
-        ///127.0.0.1 nsclick.baidu.com
-        ///127.0.0.1 spcode.baidu.com
-        ///127.0.0.1 tk.baidu.com
-        ///127.0.0.1 union.baidu.com
-        ///127.0.0.1 ucstat.baidu.com
-        ///127.0.0 [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///   查找类似 Windows Registry Editor Version 5.00
+        ///
+        ///[HKEY_CLASSES_ROOT\*\shell\OpenWithNotepad]
+        ///@=&quot;用记事本打开&quot;
+        ///
+        ///[HKEY_CLASSES_ROOT\*\shell\OpenWithNotepad\command]
+        ///@=&quot;notepad.exe %1&quot;
+        ///
+        /// 的本地化字符串。
         /// </summary>
-        internal static string Hosts {
+        internal static string OpenWithNotepad {
             get {
-                return ResourceManager.GetString("Hosts", resourceCulture);
+                return ResourceManager.GetString("OpenWithNotepad", resourceCulture);
             }
         }
     }

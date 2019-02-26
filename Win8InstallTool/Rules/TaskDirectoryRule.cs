@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Win8InstallTool.Rules
 {
-	public interface Rule
+	public sealed class TaskDirectoryRule : TaskShcdulerRule
 	{
-		bool Optimizable();
-
-		void Optimize();
 	}
 }

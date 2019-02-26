@@ -36,12 +36,15 @@ namespace Win8InstallTool
 		internal static void DeleteDirectory(string path)
 		{
 			var folder = Root.GetFolder(path);
+
 			folder.GetTasks((int)_TASK_ENUM_FLAGS.TASK_ENUM_HIDDEN)
 				.Cast<IRegisteredTask>()
 				.ForEach(t => folder.DeleteTask(t.Name, 0));
+
 			folder.GetFolders(0)
 				.Cast<ITaskFolder>()
 				.ForEach(f => DeleteDirectory(f.Path));
+
 			Root.DeleteFolder(path, 0);
 		}
 

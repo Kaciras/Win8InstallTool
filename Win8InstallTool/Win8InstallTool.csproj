@@ -68,6 +68,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InternalRuleList.cs" />
+    <Compile Include="InternalTaskRules.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -77,27 +79,28 @@
     </Compile>
     <Compile Include="RegistryHelper.cs" />
     <Compile Include="Rules\ContextMenuRule.cs" />
-    <Compile Include="Rules\HostsRule.cs" />
+    <Compile Include="Rules\OpenWithNotepadRule.cs" />
     <Compile Include="Rules\Rule.cs" />
     <Compile Include="Rules\RuleSet.cs" />
     <Compile Include="Rules\ServiceRule.cs" />
     <Compile Include="Rules\ServiceState.cs" />
+    <Compile Include="Rules\TaskDirectoryRule.cs" />
+    <Compile Include="Rules\TaskItemRule.cs" />
     <Compile Include="Rules\TaskRule.cs" />
+    <Compile Include="Rules\TaskShcdulerRule.cs" />
     <Compile Include="TaskShcdulerManager.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Properties\app.manifest" />
+    <None Include="Resources\OpenWithNotepad.reg" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Hosts.txt" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -117,5 +120,6 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,17 +6,19 @@ using System.Threading.Tasks;
 
 namespace Win8InstallTool.Rules
 {
-	public class TaskRule : Rule
+	public abstract class TaskShcdulerRule : Rule
 	{
-		public string Directory { get; set; }
-		public string Namae { get; set; }
+		public string Path { get; set; }
+		public string Description { get; set; }
 
-		public void Optimize()
+		public bool Delete { get; set; } = true;
+
+		public bool Optimizable()
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool Optimizable()
+		public void Optimize()
 		{
 			throw new NotImplementedException();
 		}
