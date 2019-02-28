@@ -104,7 +104,7 @@ namespace Win8InstallTool
 		/// </summary>
 		/// <param name="key">键</param>
 		/// <returns>一个可销毁对象，在销毁时还原键的权限</returns>
-		public static TemporaryElevateSession ElevatePermission(RegistryKey key)
+		public static IDisposable ElevatePermission(RegistryKey key)
 		{
 			var old = key.GetAccessControl();
 
@@ -116,7 +116,7 @@ namespace Win8InstallTool
 			return new TemporaryElevateSession(key, old);
 		}
 
-		public readonly struct TemporaryElevateSession : IDisposable
+		internal readonly struct TemporaryElevateSession : IDisposable
 		{
 			private readonly RegistryKey key;
 			private readonly RegistrySecurity accessControl;
@@ -132,6 +132,13 @@ namespace Win8InstallTool
 				// TODO: key被删了咋办
 				key.SetAccessControl(accessControl);
 			}
+		}
+
+		// 扩展方法
+
+		public static bool ContainsSubKey(this RegistryKey key, string name)
+		{
+			using (var subKey = key.OpenSubKey(name)) return subKey != null;
 		}
 	}
 }

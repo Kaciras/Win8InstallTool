@@ -18,14 +18,7 @@ namespace Win8InstallTool.Rules
 
 		public void Execute()
 		{
-			try
-			{
-				Registry.ClassesRoot.DeleteSubKeyTree(Class);
-			}
-			catch(ArgumentException)
-			{
-				Console.WriteLine($"{Class}不存在，可能已经删除");
-			}
+			Registry.ClassesRoot.DeleteSubKeyTree(Class, false);
 		}
 	}
 }

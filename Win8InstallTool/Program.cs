@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -41,6 +42,25 @@ namespace Win8InstallTool
 			//new ContextMenuRule(@"batfile\shell\print").Execute();
 			//new ContextMenuRule(@"txtfile\shell\print").Execute();
 			//new ContextMenuRule(@"SystemFileAssociations\image\shell\print").Execute();
+
+			// 设为桌面背景
+			var wallpapers = RegSearch(@"HKEY_CLASSES_ROOT\SystemFileAssociations", @"Shell\setdesktopwallpaper");
+			foreach (var item in wallpapers)
+			{
+				new ContextMenuRule(@"SystemFileAssociations\" + item).Execute();
+			}
+		}
+
+		// 只搜一层
+		public static List<string> RegSearch(string root, string key)
+		{
+			using (var rootKey  = RegistryHelper.OpenKey(root))
+			{
+				return rootKey.GetSubKeyNames()
+					.Select(name => Path.Combine(name, key))
+					.Where(path => rootKey.ContainsSubKey(path))
+					.ToList();
+			}
 		}
 	}
 }
