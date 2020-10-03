@@ -69,29 +69,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InternalRuleList.cs" />
-    <Compile Include="InternalTaskRules.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Src\InternalRuleList.cs" />
+    <Compile Include="Src\InternalTaskRules.cs" />
+    <Compile Include="Src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RegistryHelper.cs" />
-    <Compile Include="Rules\ContextMenuRule.cs" />
-    <Compile Include="Rules\ExplorerFolderRule.cs" />
-    <Compile Include="Rules\OpenWithNotepadRule.cs" />
-    <Compile Include="Rules\Rule.cs" />
-    <Compile Include="Rules\RuleSet.cs" />
-    <Compile Include="Rules\ServiceRule.cs" />
-    <Compile Include="Rules\ServiceState.cs" />
-    <Compile Include="Rules\TaskDirectoryRule.cs" />
-    <Compile Include="Rules\TaskItemRule.cs" />
-    <Compile Include="Rules\TaskRule.cs" />
-    <Compile Include="Rules\TaskShcdulerRule.cs" />
-    <Compile Include="TaskShcdulerManager.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Src\RegistryHelper.cs" />
+    <Compile Include="Src\Rules\ContextMenuRule.cs" />
+    <Compile Include="Src\Rules\ExplorerFolderRule.cs" />
+    <Compile Include="Src\Rules\OpenWithNotepadRule.cs" />
+    <Compile Include="Src\Rules\Rule.cs" />
+    <Compile Include="Src\Rules\RuleSet.cs" />
+    <Compile Include="Src\Rules\ServiceRule.cs" />
+    <Compile Include="Src\Rules\ServiceState.cs" />
+    <Compile Include="Src\Rules\TaskDirectoryRule.cs" />
+    <Compile Include="Src\Rules\TaskItemRule.cs" />
+    <Compile Include="Src\Rules\TaskRule.cs" />
+    <Compile Include="Src\Rules\TaskShcdulerRule.cs" />
+    <Compile Include="Src\TaskShcdulerManager.cs" />
+    <Compile Include="Src\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -122,6 +122,8 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Src\Interactive\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

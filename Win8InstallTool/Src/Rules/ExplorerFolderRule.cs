@@ -27,13 +27,19 @@ namespace Win8InstallTool.Rules
 
 		public bool Optimizable()
 		{
-			//return names.Select(n => KEY + n).Any(k => RegEditor.ContainsKey(k));
-			return false;
+			using (var nameSpage = Registry.LocalMachine.OpenSubKey(KEY))
+			{
+				return names.Any(k => nameSpage.ContainsSubKey(k));
+			}
 		}
 
+		// 找不到子项，但是在Regeditor里却存在
 		public void Optimize()
 		{
-			names.ForEach(name => Registry.LocalMachine.DeleteSubKeyTree(Path.Combine(KEY, name), false));
+			using (var nameSpage = Registry.LocalMachine.OpenSubKey(KEY, true))
+			{
+				names.ForEach(name => nameSpage.DeleteSubKey(name));
+			}
 		}
 	}
 }

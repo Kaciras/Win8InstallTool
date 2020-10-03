@@ -50,8 +50,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RegistryHelperTest.cs" />
-    <Compile Include="UtilsTest.cs" />
+    <Compile Include="Src\RegistryHelperTest.cs" />
+    <Compile Include="Src\UtilsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
