@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,11 @@ namespace Win8InstallTool
 	{
 		public static void Main(string[] args)
 		{
-			new ExplorerFolderRule().Optimize();
+			var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+			Console.WriteLine($"Kaciras 的 Windows8 优化工具 v{version}");
+			Console.ReadKey();
+
+			//new ExplorerFolderRule().Optimize();
 		}
 	}
 }
