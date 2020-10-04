@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32;
@@ -23,19 +24,21 @@ namespace Win8InstallTool.Rules
 		};
 
 		public string Name = "清除我的电脑界面上的6个文件夹";
+
 		public string Discription = "这些可以从个人文件夹里打开,放在我的电脑里只会占位置";
 
-		public bool Optimizable()
+		public bool Check()
 		{
-			using var nameSpage = Registry.LocalMachine.OpenSubKey(KEY);
+			using var nameSpage = Registry.LocalMachine.OpenSubKey(KEY, RegistryRights.FullControl);
 			return names.Any(k => nameSpage.ContainsSubKey(k));
 		}
 
-		// 找不到子项，但是在Regeditor里却存在
+		// 注册表 32 跟 64 位存储是分开的，系统自带的注册表编辑器能同时操作两者，但C#的API不能。
+		// 如果架构对比上，则会出现找不到 key 的情况。
 		public void Optimize()
 		{
 			using var nameSpage = Registry.LocalMachine.OpenSubKey(KEY, true);
-			names.ForEach(name => nameSpage.DeleteSubKey(name));
+			names.ForEach(name => nameSpage.DeleteSubKeyTree(name));
 		}
 	}
 }
