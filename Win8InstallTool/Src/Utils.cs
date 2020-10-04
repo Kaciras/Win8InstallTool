@@ -15,21 +15,6 @@ namespace Win8InstallTool
 			foreach (var item in ienum) action(item);
 		}
 
-		internal static string GetDescription(Enum obj)
-		{
-			var mem = obj.GetType().GetField(obj.ToString());
-			var attr=Attribute.GetCustomAttribute(mem, typeof(DescriptionAttribute));
-			return (attr as DescriptionAttribute)?.Description;
-		}
-
-		internal static void FocusAnother()
-		{
-			var current = Process.GetCurrentProcess();
-			var other = Process.GetProcessesByName(current.ProcessName)
-				.Where(p => p.Id != current.Id).First();
-			SwitchToThisWindow(other.MainWindowHandle, true);
-		}
-
 		[DllImport("user32.dll")]
 		static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
 
@@ -40,7 +25,7 @@ namespace Win8InstallTool
 		/// <returns>字符串资源</returns>
 		public static string ExtractStringFromDLL(string @string)
 		{
-			if(@string[0] == '@')
+			if (@string[0] == '@')
 			{
 				@string = @string.Substring(1);
 			}
@@ -50,7 +35,7 @@ namespace Win8InstallTool
 		}
 
 		/// <summary>
-		/// 从Windows动态链接库文件里读取字符串资源。
+		/// 从 Windows 动态链接库文件里读取字符串资源。
 		/// </summary>
 		/// <param name="file">DLL文件</param>
 		/// <param name="number">资源索引</param>
@@ -59,20 +44,20 @@ namespace Win8InstallTool
 		{
 			var lib = LoadLibrary(file);
 
-			var returnCode = Marshal.GetLastWin32Error();
-			if (returnCode != 0)
+			var code = Marshal.GetLastWin32Error();
+			if (code != 0)
 			{
-				throw new SystemException("错误代码:" + returnCode);
+				throw new SystemException("错误代码:" + code);
 			}
 
-			var result = new StringBuilder(2048);
-			LoadString(lib, number, result, result.Capacity);
+			var buffer = new StringBuilder(2048);
+			LoadString(lib, number, buffer, buffer.Capacity);
 			FreeLibrary(lib);
-			return result.ToString();
+			return buffer.ToString();
 		}
 
 		[DllImport("kernel32.dll", SetLastError = true)]
-		static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)]string lpFileName);
+		static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
 
 		[DllImport("user32.dll")]
 		static extern int LoadString(IntPtr hInstance, int ID, StringBuilder lpBuffer, int nBufferMax);

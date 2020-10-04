@@ -32,25 +32,23 @@ namespace Win8InstallTool.Rules
 		/// </summary>
 		public ServiceState TargetState { get; set; } = ServiceState.Disabled;
 
-		public bool Optimizable()
+		public bool Check()
 		{
-			using (var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key))
+			using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key);
+			if (config == null)
 			{
-				if (config == null)
-				{
-					return false; // 不存在的服务没法优化
-				}
-
-				// 加载显示名称
-				Name = (string)config.GetValue("DisplayName") ?? Key; 
-
-				var current = (ServiceState)config.GetValue("Start");
-				if (current == ServiceState.Automatic && (int)config.GetValue("DelayedAutostart") == 1)
-				{
-					return current == ServiceState.LazyStart;
-				}
-				return current == TargetState;
+				return false; // 不存在的服务没法优化
 			}
+
+			// 加载显示名称
+			Name = (string)config.GetValue("DisplayName") ?? Key;
+
+			var current = (ServiceState)config.GetValue("Start");
+			if (current == ServiceState.Automatic && (int)config.GetValue("DelayedAutostart") == 1)
+			{
+				return current == ServiceState.LazyStart;
+			}
+			return current == TargetState;
 		}
 
 		public void Optimize()
@@ -60,20 +58,18 @@ namespace Win8InstallTool.Rules
 				Registry.LocalMachine.DeleteSubKeyTree(SERVICE_DIR + Key);
 			}
 
-			using (var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key))
-			{
-				var startValue = (int)TargetState;
+			using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key);
+			var startValue = (int)TargetState;
 
-				if (TargetState == ServiceState.LazyStart)
-				{
-					config.SetValue("DelayedAutostart", 1, RegistryValueKind.DWord);
-					startValue = 2;
-				}
-				else
-				{
-					config.DeleteValue("DelayedAutostart");
-					config.SetValue("Start", startValue, RegistryValueKind.DWord);
-				}
+			if (TargetState == ServiceState.LazyStart)
+			{
+				config.SetValue("DelayedAutostart", 1, RegistryValueKind.DWord);
+				startValue = 2;
+			}
+			else
+			{
+				config.DeleteValue("DelayedAutostart");
+				config.SetValue("Start", startValue, RegistryValueKind.DWord);
 			}
 		}
 	}

@@ -13,6 +13,9 @@ namespace Win8InstallTool
 {
 	public static class RegistryHelper
 	{
+		/// <summary>
+		/// 从 .NET 标准库里抄的快捷方法，为什么微软不直接提供？
+		/// </summary>
 		public static RegistryKey OpenKey(string path, bool wirte = false)
 		{
 			if (path == null)
@@ -27,7 +30,7 @@ namespace Win8InstallTool
 				basekeyName = path.Substring(0, i);
 			}
 
-			RegistryKey basekey = null;
+			RegistryKey basekey;
 
 			switch (basekeyName.ToUpper())
 			{
@@ -53,7 +56,7 @@ namespace Win8InstallTool
 					basekey = RegistryKey.OpenBaseKey(RegistryHive.DynData, RegistryView.Default);
 					break;
 				default:
-					throw new ArgumentException("InvalidKeyName");
+					throw new ArgumentException("InvalidKeyName: " + basekeyName);
 			}
 
 			if (i == -1 || i == path.Length)
@@ -67,6 +70,10 @@ namespace Win8InstallTool
 			}
 		}
 
+		/// <summary>
+		/// 调用 Regedit.exe 程序，用来做一些 Win32 库没有提供的功能，比如导入导出。
+		/// </summary>
+		/// <param name="args">运行参数</param>
 		private static void InvokeRegeditor(string args)
 		{
 			var windir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
@@ -88,19 +95,20 @@ namespace Win8InstallTool
 		// CLSDI 格式 {8-4-4-4-12}
 		public static string GetCLSIDValue(string clsid)
 		{
-			using (var key = OpenKey(@"HKEY_CLASSES_ROOT\CLSID\" + clsid))
+			using var key = OpenKey(@"HKEY_CLASSES_ROOT\CLSID\" + clsid);
+			if (clsid == null)
 			{
-				if (clsid == null)
-				{
-					throw new DirectoryNotFoundException("CLSID记录不存在");
-				}
-				return (string)key.GetValue(string.Empty);
+				throw new DirectoryNotFoundException("CLSID记录不存在");
 			}
+			return (string)key.GetValue(string.Empty);
 		}
 
 		/// <summary>
 		/// 尽管程序要求以管理员身份运行，但有些注册表键仍然没有修改权限，故需要添加一下权限。
-		/// 可以使用using语法来自动还原权限：<code>using (RegistryHelper.ElevatePermission(key)) { ... }</code>
+		/// 可以使用using语法来自动还原权限：
+		/// <code>
+		///		using (RegistryHelper.ElevatePermission(key)) { ... }
+		/// </code>
 		/// </summary>
 		/// <param name="key">键</param>
 		/// <returns>一个可销毁对象，在销毁时还原键的权限</returns>
@@ -134,11 +142,12 @@ namespace Win8InstallTool
 			}
 		}
 
-		// 扩展方法
+		// ============================ 扩展方法 ============================
 
 		public static bool ContainsSubKey(this RegistryKey key, string name)
 		{
-			using (var subKey = key.OpenSubKey(name)) return subKey != null;
+			using var subKey = key.OpenSubKey(name, RegistryRights.FullControl);
+			return subKey != null;
 		}
 	}
 }

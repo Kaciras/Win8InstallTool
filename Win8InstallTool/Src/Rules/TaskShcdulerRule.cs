@@ -13,7 +13,7 @@ namespace Win8InstallTool.Rules
 
 		public bool Delete { get; set; } = true;
 
-		public bool Optimizable()
+		public bool Check()
 		{
 			throw new NotImplementedException();
 		}

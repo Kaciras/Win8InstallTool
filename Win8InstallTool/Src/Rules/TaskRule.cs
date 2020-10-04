@@ -16,7 +16,7 @@ namespace Win8InstallTool.Rules
 			throw new NotImplementedException();
 		}
 
-		public bool Optimizable()
+		public bool Check()
 		{
 			throw new NotImplementedException();
 		}

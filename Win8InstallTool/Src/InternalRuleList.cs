@@ -193,13 +193,11 @@ namespace Win8InstallTool
 		// 只搜一层
 		public static List<string> RegSearch(string root, string key)
 		{
-			using (var rootKey = RegistryHelper.OpenKey(root))
-			{
-				return rootKey.GetSubKeyNames()
-					.Select(name => Path.Combine(name, key))
-					.Where(path => rootKey.ContainsSubKey(path))
-					.ToList();
-			}
+			using var rootKey = RegistryHelper.OpenKey(root);
+			return rootKey.GetSubKeyNames()
+				.Select(name => Path.Combine(name, key))
+				.Where(path => rootKey.ContainsSubKey(path))
+				.ToList();
 		}
 	}
 }

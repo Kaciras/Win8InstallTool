@@ -10,7 +10,7 @@ namespace Win8InstallTool.Rules
 {
 	public sealed class OpenWithNotepadRule : Rule
 	{
-		public bool Optimizable()
+		public bool Check()
 		{
 			return Registry.ClassesRoot.OpenSubKey(@"*\shell\OpenWithNotepad") == null;
 		}

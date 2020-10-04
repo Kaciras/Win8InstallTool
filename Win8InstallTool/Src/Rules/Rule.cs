@@ -8,7 +8,7 @@ namespace Win8InstallTool.Rules
 {
 	public interface Rule
 	{
-		bool Optimizable();
+		bool Check();
 
 		void Optimize();
 	}
