@@ -16,42 +16,54 @@ namespace Win8InstallTool
 		public static void Main(string[] args)
 		{
 			var version = Assembly.GetExecutingAssembly().GetName().Version;
-			Console.WriteLine($"Kaciras 的 Windows8 优化工具 v{version.ToString(3)}");
+			Console.WriteLine($"Kaciras 的 Win8 优化工具 v{version.ToString(3)}");
 
-			try
-			{
-				CheckSupportedOS();
-			}
-			catch (PlatformNotSupportedException e)
-			{
-				Console.WriteLine(e.Message);
-				Environment.Exit(1);
-			}
+			var osType = CheckOSSupport();
 
+			
 			var rule = new ExplorerFolderRule();
 			if (rule.Check())
 			{
 				rule.Optimize();
 			}
-			Console.WriteLine("优化完毕，按任意键结束程序");
+
+			Console.WriteLine("优化完毕！按任意键结束程序");
 			Console.ReadKey();
 		}
 
-		private static void CheckSupportedOS()
+		/// <summary>
+		/// 检查本程序是否支持所在的系统，如果不支持则会终止程序并返回退出码1，支持则返回系统类型。
+		/// </summary>
+		/// <returns>支持的系统类型</returns>
+		static SupportedOS CheckOSSupport()
 		{
 			var os = Environment.OSVersion;
 			var version = os.Version;
 
-			var isWin81 = os.Platform == PlatformID.Win32NT && version.Major * 10 == 6 && version.Minor == 1;
-			if (!isWin81)
-			{
-				throw new PlatformNotSupportedException("本程序仅支持 Windows8.1");
-			}
-
 			if (!Environment.Is64BitOperatingSystem)
 			{
-				throw new PlatformNotSupportedException("本程序仅支持64位系统，请运行32位的版本");
+				Console.Error.WriteLine("本程序仅支持64位系统，请运行32位的版本");
+				Environment.Exit(1);
 			}
+
+			if (os.Platform != PlatformID.Win32NT)
+			{
+				Console.Error.WriteLine("本程序不支持该系统");
+				Environment.Exit(1);
+			}
+
+			if (version.Major == 10)
+			{
+				return SupportedOS.Windows10;
+			}
+			if (version.Major == 6 && version.Minor == 3)
+			{
+				return SupportedOS.Windows8_1;
+			}
+
+			Console.Error.WriteLine("本程序不支持该系统");
+			Environment.Exit(1);
+			throw new InvalidProgramException("前面一句已经结束了程序");
 		}
 	}
 }
