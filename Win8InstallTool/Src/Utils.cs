@@ -15,9 +15,6 @@ namespace Win8InstallTool
 			foreach (var item in ienum) action(item);
 		}
 
-		[DllImport("user32.dll")]
-		static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
-
 		/// <summary>
 		/// 解析类似 "@shell32.dll,-1#immutable1" 这样的字符串，并读取其引用的DLL中的字符串资源。
 		/// </summary>
@@ -38,7 +35,7 @@ namespace Win8InstallTool
 		/// 从 Windows 动态链接库文件里读取字符串资源。
 		/// </summary>
 		/// <param name="file">DLL文件</param>
-		/// <param name="number">资源索引</param>
+		/// <param name="number">资源索引，不能是负数</param>
 		/// <returns>字符串资源</returns>
 		public static string ExtractStringFromDLL(string file, int number)
 		{
@@ -47,7 +44,7 @@ namespace Win8InstallTool
 			var code = Marshal.GetLastWin32Error();
 			if (code != 0)
 			{
-				throw new SystemException("错误代码:" + code);
+				throw new SystemException($"无法加载{file}，错误代码:{code}");
 			}
 
 			var buffer = new StringBuilder(2048);
@@ -57,12 +54,12 @@ namespace Win8InstallTool
 		}
 
 		[DllImport("kernel32.dll", SetLastError = true)]
-		static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
+		static extern IntPtr LoadLibrary(string lpFileName);
 
 		[DllImport("user32.dll")]
 		static extern int LoadString(IntPtr hInstance, int ID, StringBuilder lpBuffer, int nBufferMax);
 
-		[DllImport("kernel32.dll", SetLastError = true)]
+		[DllImport("kernel32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool FreeLibrary(IntPtr hModule);
 	}

@@ -76,8 +76,7 @@ namespace Win8InstallTool
 		/// <param name="args">运行参数</param>
 		private static void InvokeRegeditor(string args)
 		{
-			var windir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
-			var startInfo = new ProcessStartInfo(Path.Combine(windir, "regedit.exe"), args);
+			var startInfo = new ProcessStartInfo("regedt32", args);
 			var process = new Process { StartInfo = startInfo };
 			process.Start();
 			process.WaitForExit();
@@ -146,7 +145,7 @@ namespace Win8InstallTool
 
 		public static bool ContainsSubKey(this RegistryKey key, string name)
 		{
-			using var subKey = key.OpenSubKey(name, RegistryRights.FullControl);
+			using var subKey = key.OpenSubKey(name);
 			return subKey != null;
 		}
 	}

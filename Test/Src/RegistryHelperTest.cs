@@ -23,8 +23,23 @@ namespace Test
 		public void ContainsKey()
 		{
 			Assert.IsTrue(Registry.LocalMachine.ContainsSubKey(@"SOFTWARE\Microsoft"));
-
 			Assert.IsFalse(Registry.LocalMachine.ContainsSubKey(@"SOFTWARE\Xicrosoft"));
+		}
+
+		[TestMethod]
+		public void Import()
+		{
+			RegistryHelper.Import(@"Resources\ImportTest.reg");
+
+			try
+			{
+				var value = Registry.GetValue(@"HKEY_CURRENT_USER\Environment\Test_Win8Tool", "StringValue", null);
+				Assert.AreEqual("foobar", value);
+			}
+			finally
+			{
+				Registry.CurrentUser.DeleteSubKeyTree(@"Environment\Test_Win8Tool");
+			}
 		}
 	}
 }
