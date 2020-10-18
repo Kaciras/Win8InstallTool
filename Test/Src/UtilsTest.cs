@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Win8InstallTool;
 
-namespace Test
+namespace Win8InstallTool.Test
 {
 	[TestClass]
 	public class UtilsTest
