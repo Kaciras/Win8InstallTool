@@ -7,32 +7,37 @@ using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
-	public class ServiceRule : Rule
+	public class ServiceRule : Optimizable
 	{
 		private const string SERVICE_DIR = @"SYSTEM\CurrentControlSet\Services\";
 
-		// 逻辑上讲，首先使用Optimizable筛选出需要优化的项，然后才显示名字，故该属性在Optimizable里初始化。
+		/// <summary>
+		/// 服务在注册表里的目录名。
+		/// </summary>
+		public string Key { get; }
+
+		/// <summary>
+		/// 对此服务的简单介绍，以及需要优化的原因。
+		/// </summary>
+		public string Description { get; }
+
 		/// <summary>
 		/// 服务的显示名，改名称可读性较强。
 		/// </summary>
 		public string Name { get; private set; }
 
 		/// <summary>
-		/// 服务在注册表里的目录名。
-		/// </summary>
-		public string Key { get; set; }
-
-		/// <summary>
-		/// 对此服务的简单介绍，以及需要优化的原因。
-		/// </summary>
-		public string Description { get; set; }
-
-		/// <summary>
 		/// 此服务应当被优化为什么状态，默认禁用。
 		/// </summary>
 		public ServiceState TargetState { get; set; } = ServiceState.Disabled;
 
-		public bool Check()
+        public ServiceRule(string key, string description)
+        {
+            Key = key;
+            Description = description;
+        }
+
+        public bool Check()
 		{
 			using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key);
 			if (config == null)
@@ -40,15 +45,21 @@ namespace Win8InstallTool.Rules
 				return false; // 不存在的服务没法优化
 			}
 
-			// 加载显示名称
-			Name = (string)config.GetValue("DisplayName") ?? Key;
+			Name = (string)config.GetValue("DisplayName", Key);
+			if (Name.StartsWith("@"))
+            {
+				Name = Utils.ExtractStringFromDLL(Name);
+            }
 
-			var current = (ServiceState)config.GetValue("Start");
-			if (current == ServiceState.Automatic && (int)config.GetValue("DelayedAutostart") == 1)
+			var state = (ServiceState)config.GetValue("Start");
+			var delayed = (int)config.GetValue("DelayedAutostart", -1) == 1;
+
+			if (state == ServiceState.Automatic && delayed)
 			{
-				return current == ServiceState.LazyStart;
+				state = ServiceState.LazyStart;
 			}
-			return current == TargetState;
+
+			return state == TargetState;
 		}
 
 		public void Optimize()
@@ -69,8 +80,9 @@ namespace Win8InstallTool.Rules
 			else
 			{
 				config.DeleteValue("DelayedAutostart");
-				config.SetValue("Start", startValue, RegistryValueKind.DWord);
 			}
+
+			config.SetValue("Start", startValue, RegistryValueKind.DWord);
 		}
 	}
 }
