@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Win8InstallTool</RootNamespace>
     <AssemblyName>Win8InstallTool</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -92,7 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Src\InternalRuleList.cs" />
-    <Compile Include="Src\InternalTaskRules.cs" />
+    <Compile Include="Src\Rules\SchannelRule.cs" />
+    <Compile Include="Src\SupportedOS.cs" />
     <Compile Include="Src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -109,7 +110,6 @@
     <Compile Include="Src\Rules\ServiceState.cs" />
     <Compile Include="Src\Rules\TaskDirectoryRule.cs" />
     <Compile Include="Src\Rules\TaskItemRule.cs" />
-    <Compile Include="Src\Rules\TaskRule.cs" />
     <Compile Include="Src\Rules\TaskShcdulerRule.cs" />
     <Compile Include="Src\TaskShcdulerManager.cs" />
     <Compile Include="Src\Utils.cs" />
@@ -117,7 +117,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Properties\app.manifest" />
-    <None Include="Resources\OpenWithNotepad.reg" />
+    <None Include="Resources\OpenWithNotepad.reg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

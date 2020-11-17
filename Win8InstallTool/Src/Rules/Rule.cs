@@ -8,6 +8,8 @@ namespace Win8InstallTool.Rules
 {
 	public interface Rule
 	{
+		string Description { get; }
+
 		bool Check();
 
 		void Optimize();

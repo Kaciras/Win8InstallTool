@@ -9,7 +9,7 @@ namespace Win8InstallTool
 {
 	public static class TaskShcdulerManager
 	{
-		static TaskSchedulerClass taskScheduler;
+		static readonly TaskSchedulerClass taskScheduler;
 
 		static TaskShcdulerManager()
 		{

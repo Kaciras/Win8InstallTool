@@ -23,11 +23,9 @@ namespace Win8InstallTool.Rules
 			"{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}",
 		};
 
-		public string Name = "清除我的电脑界面上的6个文件夹";
+		public string Description => "清除我的电脑界面上的6个文件夹,这些可以从个人文件夹里打开,放在我的电脑里只会占位置";
 
-		public string Discription = "这些可以从个人文件夹里打开,放在我的电脑里只会占位置";
-
-		public bool Check()
+        public bool Check()
 		{
 			using var nameSpage = Registry.LocalMachine.OpenSubKey(KEY, RegistryRights.FullControl);
 			return names.Any(k => nameSpage.ContainsSubKey(k));

@@ -10,16 +10,16 @@ namespace Win8InstallTool.Rules
 {
 	public sealed class OpenWithNotepadRule : Rule
 	{
-		public bool Check()
+		public string Description => "把用记事本打开添加到右键菜单";
+
+        public bool Check()
 		{
 			return Registry.ClassesRoot.OpenSubKey(@"*\shell\OpenWithNotepad") == null;
 		}
 
 		public void Optimize()
 		{
-			//Resources.OpenWithNotepad
-			//var Path.GetTempFileName();
-			//RegistryHelper.Import()
+			RegistryHelper.Import("OpenWithNotepad.reg");
 		}
 	}
 }

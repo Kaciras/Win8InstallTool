@@ -7,18 +7,25 @@ using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
-	public class ContextMenuRule
-	{
-		public string Class { get; set; }
+    public class ContextMenuRule : Rule
+    {
+        private readonly string @class;
 
-		public ContextMenuRule(string @class)
-		{
-			Class = @class;
-		}
+        public string Description => throw new NotImplementedException();
 
-		public void Execute()
-		{
-			Registry.ClassesRoot.DeleteSubKeyTree(Class, false);
-		}
-	}
+        public ContextMenuRule(string @class)
+        {
+            this.@class = @class;
+        }
+
+        public bool Check()
+        {
+            return RegistryHelper.ContainsSubKey(Registry.ClassesRoot, @class);
+        }
+
+        public void Optimize()
+        {
+            Registry.ClassesRoot.DeleteSubKeyTree(@class, false);
+        }
+    }
 }

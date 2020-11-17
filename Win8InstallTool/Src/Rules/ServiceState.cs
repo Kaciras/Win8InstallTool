@@ -23,6 +23,8 @@ namespace Win8InstallTool.Rules
 		/// </summary>
 		Disabled = 4,
 
+		// 【注意】以下的几个不是注册表项的值
+
 		/// <summary>
 		/// 启动类型：延迟启动
 		/// </summary>
