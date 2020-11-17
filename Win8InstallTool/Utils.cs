@@ -1,18 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text;
 
 namespace Win8InstallTool
 {
     internal static class Utils
     {
+        /// <summary>
+        /// 这么常用的函数标准库竟然不自带。
+        /// </summary>
         public static void ForEach<T>(this IEnumerable<T> ienum, Action<T> action)
         {
             foreach (var item in ienum) action(item);
+        }
+
+        /// <summary>
+        /// 创建临时文件，搭配 using 语句使用，在销毁时删除。
+        /// </summary>
+        public static TempFileSession CreateTempFile()
+        {
+            var file = Path.GetTempFileName();
+            return new TempFileSession(file);
         }
 
         /// <summary>
@@ -63,5 +74,17 @@ namespace Win8InstallTool
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool FreeLibrary(IntPtr hModule);
+
+        public sealed class TempFileSession : IDisposable
+        {
+            public readonly string Path;
+
+            internal TempFileSession(string path)
+            {
+                Path = path;
+            }
+
+            public void Dispose() => File.Delete(Path);
+        }
     }
 }

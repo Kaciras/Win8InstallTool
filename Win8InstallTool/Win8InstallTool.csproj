@@ -81,9 +81,11 @@
     <Compile Include="MainWindow.designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Optimizable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryHelper.cs" />
+    <Compile Include="RuleSet.cs" />
     <Compile Include="Rules\ContextMenuRule.cs" />
     <Compile Include="Rules\ExplorerFolderRule.cs" />
     <Compile Include="Rules\OpenWithNotepadRule.cs" />
@@ -91,9 +93,9 @@
     <Compile Include="Rules\SchannelRule.cs" />
     <Compile Include="Rules\ServiceRule.cs" />
     <Compile Include="Rules\ServiceState.cs" />
+    <Compile Include="Rules\StartupMenuRule.cs" />
     <Compile Include="Rules\TaskDirectoryRule.cs" />
     <Compile Include="Rules\TaskItemRule.cs" />
-    <Compile Include="Rules\TaskShcdulerRule.cs" />
     <Compile Include="TaskShcdulerManager.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="MainWindow.resx">
@@ -107,6 +109,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
@@ -118,9 +121,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\OpenWithNotepad.reg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Resources\OpenWithNotepad.reg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -148,6 +149,7 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
