@@ -12,16 +12,8 @@ namespace Win8InstallTool.Rules
 
 		public string Description { get; set; }
 
-		public bool ShouldDelete { get; set; } = true;
+        public abstract bool Check();
 
-		public bool Check()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void Optimize()
-		{
-			throw new NotImplementedException();
-		}
-	}
+        public abstract void Optimize();
+    }
 }

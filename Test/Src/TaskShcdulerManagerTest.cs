@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Win8InstallTool.Test
 {
-	[TestClass]
+    [TestClass]
 	public sealed class TaskShcdulerManagerTest
 	{
 		[TestMethod]
@@ -15,6 +10,21 @@ namespace Win8InstallTool.Test
 		{
 			var windows = TaskShcdulerManager.Root.GetFolder(@"Microsoft\Windows");
 			Assert.IsTrue(windows.GetFolders(0).Count > 50);
+		}
+
+        [TestMethod]
+        public void GetEnabled()
+        {
+			var task = TaskShcdulerManager.Root.GetTask(@"Microsoft\Windows\Chkdsk\ProactiveScan");
+			Assert.IsTrue(task.Enabled);
+		}
+
+		[TestMethod]
+		public void DeleteFolder()
+		{
+			var folder = TaskShcdulerManager.Root.CreateFolder("Test");
+			folder.CreateFolder("SubFolder");
+			TaskShcdulerManager.DeleteFolder(@"Test\SubFolder");
 		}
 	}
 }

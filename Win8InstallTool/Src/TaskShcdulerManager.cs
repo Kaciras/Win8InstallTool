@@ -7,6 +7,9 @@ using TaskScheduler;
 
 namespace Win8InstallTool
 {
+	/// <summary>
+	/// 对 TaskScheduler 的封装，提供了一些快捷方法。
+	/// </summary>
 	public static class TaskShcdulerManager
 	{
 		static readonly TaskSchedulerClass taskScheduler;
@@ -20,20 +23,20 @@ namespace Win8InstallTool
 
 		public static ITaskFolder Root { get; }
 
-		public static bool ExistFolder(string path)
+		public static bool FolderExists(string path)
 		{
 			try
 			{
 				Root.GetFolder(path);
+				return true;
 			}
 			catch (FileNotFoundException)
 			{
 				return false;
 			}
-			return true;
 		}
 
-		internal static void DeleteDirectory(string path)
+		public static void DeleteFolder(string path)
 		{
 			var folder = Root.GetFolder(path);
 
@@ -43,31 +46,36 @@ namespace Win8InstallTool
 
 			folder.GetFolders(0)
 				.Cast<ITaskFolder>()
-				.ForEach(f => DeleteDirectory(f.Path));
+				.ForEach(f => DeleteFolder(f.Path));
 
 			Root.DeleteFolder(path, 0);
 		}
 
-		internal static void DeleteTask(string dir, string name)
+		public static void DeleteTask(string path)
 		{
-			var folder = taskScheduler.GetFolder(dir);
-			folder.DeleteTask(name, 0);
+			var folder = Path.GetDirectoryName(path);
+			var name = Path.GetFileName(path);
+			taskScheduler.GetFolder(folder).DeleteTask(name, 0);
 		}
 
-		internal static void ChangeEnable(string dir, string name, bool enable)
+		public static void SetEnable(string path, bool enable)
 		{
-			var task = taskScheduler.GetFolder(dir)?.GetTask(name);
+			var task = Root.GetTask(path);
 			if (task != null)
 			{
 				task.Enabled = enable;
 			}
+            else
+            {
+				throw new FileNotFoundException("找不到任务项");
+            }
 		}
 
-		internal static bool? GetEnable(string dir, string name)
+		public static bool? GetEnable(string path)
 		{
 			try
 			{
-				return taskScheduler.GetFolder(dir).GetTask(name)?.Enabled;
+				return Root.GetTask(path).Enabled;
 			}
 			catch(IOException ex)
 			when (ex is DirectoryNotFoundException || ex is FileNotFoundException)

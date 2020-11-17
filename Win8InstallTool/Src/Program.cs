@@ -23,10 +23,10 @@ namespace Win8InstallTool
 
 			CheckOSSupport();
 
-			//HandleRuleGroup(InternalRuleList.ContextMenuRules());
-			//HandleRuleGroup(InternalRuleList.SystemServiceRules());
-			//HandleRuleGroup(InternalRuleList.RegistryTaskRules());
-			HandleRuleGroup(InternalRuleList.OtherRules());
+            //HandleRuleGroup(InternalRuleList.ContextMenuRules());
+            //HandleRuleGroup(InternalRuleList.SystemServiceRules());
+            HandleRuleGroup(InternalRuleList.RegistryTaskRules());
+            HandleRuleGroup(InternalRuleList.OtherRules());
 
 			Console.WriteLine("优化完毕！可能需要重启下系统哦。");
 			Console.ReadKey();
@@ -36,7 +36,7 @@ namespace Win8InstallTool
 		/// 检查本程序是否支持所在的系统，如果不支持则会终止程序并返回退出码1，支持则返回系统类型。
 		/// </summary>
 		/// <returns>支持的系统类型</returns>
-		static SupportedOS CheckOSSupport()
+		static void CheckOSSupport()
 		{
 			var os = Environment.OSVersion;
 			var version = os.Version;
@@ -49,21 +49,16 @@ namespace Win8InstallTool
 
 			if (os.Platform != PlatformID.Win32NT)
 			{
-				Console.Error.WriteLine("本程序不支持该系统");
+				Console.Error.WriteLine("本程序仅支持Windows8");
 				Environment.Exit(1);
 			}
 
-			if (version.Major == 10)
+			if (version.Major != 6 && version.Minor != 3)
 			{
-				return SupportedOS.Windows10;
+				Console.Error.WriteLine("本程序仅支持Windows8");
+				Environment.Exit(1);
 			}
-			if (version.Major == 6 && version.Minor == 3)
-			{
-				return SupportedOS.Windows8_1;
-			}
-
-			Console.Error.WriteLine("本程序不支持该系统");
-			Environment.Exit(1);
+			
 			throw new InvalidProgramException("前面一句已经结束了程序");
 		}
 

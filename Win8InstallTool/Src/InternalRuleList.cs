@@ -123,6 +123,7 @@ namespace Win8InstallTool
 		public static List<Rule> OtherRules() => new List<Rule>
 			{
 				new SchannelRule(),
+				new OpenWithNotepadRule(),
 			};
 
 		public static List<Rule> ContextMenuRules()
