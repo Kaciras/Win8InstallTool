@@ -15,19 +15,20 @@ namespace Win8InstallTool
 	{
 		public static void Main(string[] args)
 		{
-			var version = Assembly.GetExecutingAssembly().GetName().Version;
-			Console.WriteLine($"Kaciras 的 Win8 优化工具 v{version.ToString(3)}");
+			var appVersion = Assembly.GetExecutingAssembly().GetName().Version;
+			Console.WriteLine($"Kaciras 的系统优化工具 v{appVersion.ToString(3)}");
 
-			var osType = CheckOSSupport();
+			var clrVersion = Environment.Version;
+			Console.WriteLine($".Net Version: {clrVersion.Major}.{clrVersion.Minor}");
 
-			
-			var rule = new ExplorerFolderRule();
-			if (rule.Check())
-			{
-				rule.Optimize();
-			}
+			CheckOSSupport();
 
-			Console.WriteLine("优化完毕！按任意键结束程序");
+			//HandleRuleGroup(InternalRuleList.ContextMenuRules());
+			//HandleRuleGroup(InternalRuleList.SystemServiceRules());
+			//HandleRuleGroup(InternalRuleList.RegistryTaskRules());
+			HandleRuleGroup(InternalRuleList.OtherRules());
+
+			Console.WriteLine("优化完毕！可能需要重启下系统哦。");
 			Console.ReadKey();
 		}
 
@@ -64,6 +65,39 @@ namespace Win8InstallTool
 			Console.Error.WriteLine("本程序不支持该系统");
 			Environment.Exit(1);
 			throw new InvalidProgramException("前面一句已经结束了程序");
+		}
+
+		static void  HandleRuleGroup(List<Rule> rules)
+        {
+			foreach (var rule in rules)
+			{
+				if (!rule.Check())
+				{
+					continue;
+				}
+				Console.WriteLine(rule.Description);
+
+				var invalidInput = true;
+				while (invalidInput)
+				{
+					Console.Write("是否执行该优化？[Y/n]");
+					invalidInput = false;
+
+					switch (Console.ReadLine().ToLower())
+					{
+						case "":
+						case "y":
+							rule.Optimize();
+							break;
+						case "n":
+							break;
+						default:
+							invalidInput = true;
+							Console.WriteLine("无效的输入，请重选");
+							break;
+					}
+				}
+			}
 		}
 	}
 }
