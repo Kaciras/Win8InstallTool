@@ -76,5 +76,88 @@ namespace Win8InstallTool.Properties {
                 return ResourceManager.GetString("OpenWithNotepad", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HomeGroupProvider
+        ///不使用家庭组功能的可以禁用
+        ///
+        ///hidserv
+        ///不用特殊输入设备的不需要,该服务还容易被攻击者利用
+        ///
+        ///ShellHWDetection
+        ///这年头谁还玩光盘自动播放,该服务还容易被攻击者利用
+        ///
+        ///LanmanServer
+        ///服务器文件共享才需要,家用机可以关掉
+        ///
+        ///LanmanWorkstation
+        ///服务器文件共享才需要,家用机可以关掉
+        ///
+        ///lmhosts
+        ///办公室远程控制打印机、文件才需要
+        ///
+        ///WSearch
+        ///系统自带的搜索功能,并不是每个人都需要,还耗磁盘
+        ///
+        ///AeLookupSvc
+        ///我也不知道这服务有啥用,反正关了也没出事
+        ///
+        ///PcaSvc
+        ///啥卵用都没有的兼容性助手
+        ///
+        ///IKEEXT
+        ///某些协议的VPN需要这个服务，不用的话可以关掉
+        ///
+        ///DPS
+        ///出问题不谷歌,要你来诊断?这个关了后另外两个也不会启动
+        ///
+        ///WPDBusEnum
+        ///反正我是没用过什么可移动大容量存储设备
+        ///
+        ///TrkWks
+        ///没几个人会把NTFS文件链接到远程计算机
+        ///
+        ///PolicyAgent
+        ///关掉后防火墙不能使用IPSec策略,不过个人机一般用不着
+        ///
+        ///SSDP [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ServiceRules {
+            get {
+                return ResourceManager.GetString("ServiceRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Microsoft\Windows\Application Experience
+        ///客户体验改善计划相关的任务，没同意的可以删了
+        ///
+        ///Microsoft\Windows\Autochk
+        ///客户体验改善计划相关的任务，没同意的可以删了
+        ///
+        ///Microsoft\Windows\Customer Experience Improvement Program
+        ///全是客户体验改善计划,不参加的直接删光光
+        ///
+        ///:DISABLE
+        ///Microsoft\Windows\Application Experience\StartupAppTask
+        ///启动项应该自己注意,而不是靠它来扫描
+        ///
+        ///:DISABLE
+        ///Microsoft\Windows\DiskCleanup\SilentCleanup
+        ///磁盘空间不足还用你来提示？？？
+        ///
+        ///Microsoft\Windows\SkyDrive
+        ///SkyDrive目录，里头两个同步任务是万恶之源,老在日志里报错，不用就应该删掉
+        ///
+        ///:DISABLE
+        ///Microsoft\Windows\UPnP\UPnPHostConfig
+        ///用不用UPnp不是你说了算,还敢在后台偷偷改
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TaskSchdulerRules {
+            get {
+                return ResourceManager.GetString("TaskSchdulerRules", resourceCulture);
+            }
+        }
     }
 }

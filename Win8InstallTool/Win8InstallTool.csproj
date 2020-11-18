@@ -85,6 +85,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryHelper.cs" />
+    <Compile Include="RuleFileReader.cs" />
     <Compile Include="RuleSet.cs" />
     <Compile Include="Rules\ContextMenuRule.cs" />
     <Compile Include="Rules\ExplorerFolderRule.cs" />
@@ -94,8 +95,7 @@
     <Compile Include="Rules\ServiceRule.cs" />
     <Compile Include="Rules\ServiceState.cs" />
     <Compile Include="Rules\StartupMenuRule.cs" />
-    <Compile Include="Rules\TaskDirectoryRule.cs" />
-    <Compile Include="Rules\TaskItemRule.cs" />
+    <Compile Include="Rules\TaskSchdulerRule.cs" />
     <Compile Include="TaskShcdulerManager.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="MainWindow.resx">
@@ -149,7 +149,12 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\ServiceRules.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TaskSchdulerRules.txt" />
+  </ItemGroup>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>

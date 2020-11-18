@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
 using TaskScheduler;
 
 namespace Win8InstallTool
 {
-	/// <summary>
-	/// 对 TaskScheduler 的封装，提供了一些快捷方法。
-	/// </summary>
-	public static class TaskShcdulerManager
+    /// <summary>
+    /// 对 TaskScheduler 的封装，提供了一些快捷方法。
+    /// </summary>
+    public static class TaskShcdulerManager
 	{
 		static readonly TaskSchedulerClass taskScheduler;
 

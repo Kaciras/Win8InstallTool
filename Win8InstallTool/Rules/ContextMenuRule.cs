@@ -13,6 +13,8 @@ namespace Win8InstallTool.Rules
 
         public string Description => throw new NotImplementedException();
 
+        public string Name => throw new NotImplementedException();
+
         public ContextMenuRule(string @class)
         {
             this.@class = @class;

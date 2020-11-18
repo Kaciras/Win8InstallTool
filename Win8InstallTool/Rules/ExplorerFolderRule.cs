@@ -14,7 +14,7 @@ namespace Win8InstallTool.Rules
 		// HKEY_LOCAL_MACHINE
 		private const string KEY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace";
 
-		private readonly string[] names = {
+		private readonly string[] clsids = {
 			"{1CF1260C-4DD0-4ebb-811F-33C572699FDE}",
 			"{374DE290-123F-4565-9164-39C4925E467B}",
 			"{3ADD1653-EB32-4cb0-BBD7-DFA0ABB5ACCA}",
@@ -23,20 +23,22 @@ namespace Win8InstallTool.Rules
 			"{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}",
 		};
 
-		public string Description => "清除我的电脑界面上的6个文件夹,这些可以从个人文件夹里打开,放在我的电脑里只会占位置";
+		public string Name => "删除我的电脑界面上的6个文件夹";
+
+		public string Description => "他们可以从个人文件夹里打开,放在我的电脑里只会占位置，而且我不咋用";
 
         public bool Check()
 		{
 			using var nameSpage = Registry.LocalMachine.OpenSubKey(KEY, RegistryRights.FullControl);
-			return names.Any(k => nameSpage.ContainsSubKey(k));
+			return clsids.Any(k => nameSpage.ContainsSubKey(k));
 		}
 
 		// 注册表 32 跟 64 位存储是分开的，系统自带的注册表编辑器能同时操作两者，但C#的API不能。
-		// 如果架构对比上，则会出现找不到 key 的情况。
+		// 如果架构对不上，则会出现找不到 key 的情况。
 		public void Optimize()
 		{
 			using var nameSpage = Registry.LocalMachine.OpenSubKey(KEY, true);
-			names.ForEach(name => nameSpage.DeleteSubKeyTree(name));
+			clsids.ForEach(name => nameSpage.DeleteSubKeyTree(name));
 		}
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,55 +13,19 @@ namespace Win8InstallTool
 {
 	public sealed partial class MainWindow : Form
 	{
-		const int WINDOW_INIT_WIDTH = 1000;
-		const int WINDOW_INIT_HEIGHT = 600;
-
-		readonly Lazy<RestoreWindow> restoreWindow = new Lazy<RestoreWindow>(() => new RestoreWindow());
+		private readonly bool isElevated = Utils.IsElevated();
 
 		public MainWindow()
 		{
-			InitializeComponent();
 			CheckForIllegalCrossThreadCalls = false;
+			InitializeComponent();
 
-			foreach (var item in Program.Rules)
-			{
-				CreatePanel(item.Key, item.Value);
-			}
-
-			Text = "SystemOptimizer";
-			Width = WINDOW_INIT_WIDTH;
-			Height = WINDOW_INIT_HEIGHT;
-			Tab_SelectedIndexChanged(this, EventArgs.Empty);
+			var appVersion = Assembly.GetExecutingAssembly().GetName().Version;
+			Text = $"Kaciras的Win8优化工具 v{appVersion.ToString(3)}";
 		}
 
 		/// <summary>
-		/// 根据已注册的优化分类创建相应的面板
-		/// </summary>
-		/// <param name="type">分类名</param>
-		/// <param name="rules">包含的规则集</param>
-		void CreatePanel(string type, IEnumerable<IRuleSet> rules)
-		{
-			var treeView = new TreeView
-			{
-				CheckBoxes = true,
-				Dock = DockStyle.Fill,
-				FullRowSelect = true,
-				BorderStyle = BorderStyle.None,
-				Font = new Font("微软雅黑", 9.5F),
-			};
-			treeView.NodeMouseClick += TreeView_NodeMouseClick;
-			treeView.AfterCheck += TreeView_AfterCheck;
-			var page = new TabPage
-			{
-				Text = type,
-				UseVisualStyleBackColor = true
-			};
-			page.Controls.Add(treeView);
-			tabPanel.Controls.Add(page);
-		}
-
-		/// <summary>
-		/// 实现TreeViewItem的选项联动
+		/// 实现 TreeViewItem 的选项联动
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -84,101 +49,80 @@ namespace Win8InstallTool
 		{
 			if(e.Node.Parent != null)
 			{
-				var item = (IOptimizeItem)e.Node.Tag;
+				var item = (Optimizable) e.Node.Tag;
 				descBox.Text = item.Description;
-				descBox.Text += $"\r\n\r\n当前状态: {item.CurrentState}";
+				//descBox.Text += $"\r\n\r\n当前状态: {item.CurrentState}";
 			}
-		}
-
-		private void Tab_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			var tp = tabPanel.TabPages[tabPanel.SelectedIndex];
-			if (tp.Tag == null)
-			{
-				Task.Factory.StartNew(FindOptimizable);
-				tp.Tag = true;
-			}
-		}
-
-		private void BtnRefresh_Click(object sender, EventArgs e)
-		{
-			Task.Factory.StartNew(FindOptimizable);
-		}
-
-		TreeView GetCurrentList()
-		{
-			return (TreeView)tabPanel.TabPages[tabPanel.SelectedIndex].Controls[0];
-		}
-
-		void FindOptimizable()
-		{
-			var page = tabPanel.TabPages[tabPanel.SelectedIndex];
-			var tree = (TreeView)page.Controls[0];
-			var rSets = Program.Rules[page.Text];
-
-			tabPanel.Enabled = false;
-			tree.Nodes.Clear();
-			tree.BeginUpdate();
-
-			foreach (var set in rSets)
-			{
-				var setNode = tree.Nodes[set.Name] ?? new TreeNode(set.Name);
-				foreach (var item in set.FindOptimizeItems())
-				{
-					var itemView = new TreeNode($"[{item.Target}] {item.Name}");
-					itemView.Tag = item;
-					Invoke(new Action(() => setNode.Nodes.Add(itemView)));
-				}
-				if(setNode.Nodes.Count > 0)
-				{
-					Invoke(new Action(() => tree.Nodes.Add(setNode)));
-				}
-			}
-			tree.EndUpdate();
-			tabPanel.Enabled = true;
 		}
 
 		private void BtnOptimize_Click(object sender, EventArgs e)
 		{
-			var page = tabPanel.TabPages[tabPanel.SelectedIndex];
-
-			var checkeds = from TreeNode gp in GetCurrentList().Nodes
+			var checkeds = from TreeNode gp in treeView.Nodes
 						   from TreeNode item in gp.Nodes
 						   where item.Checked
 						   select item;
 
-			var r = new OptimizeResult(page.Text);
 			foreach (var vItem in checkeds)
 			{
-				var oItem = (IOptimizeItem)vItem.Tag;
-				var cmd = oItem.Command;
+				var optimizable = (Optimizable)vItem.Tag;
 				try
 				{
-					if (backupBox.Checked)
-						Program.AddRecord(page.Text, vItem.Parent.Text, oItem.Name, cmd);
-					cmd.Execute();
-					r.Success.Add(oItem);
+					optimizable.Optimize();
 				}
 				catch (SecurityException)
 				{
-					r.SecurtyFailure.Add(oItem);
+					break;
 				}
 			}
-			FindOptimizable();
-			new ReportDialog(r).ShowDialog(this);
 		}
 
-		private void BtnSelectAll_Click(object sender, EventArgs e)
-			=> GetCurrentList().ChangeAllChecked(ch => true);
+		private void BtnSelectAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => true);
 
-		private void BtnClearAll_Click(object sender, EventArgs e)
-			=> GetCurrentList().ChangeAllChecked(ch => false);
+		private void BtnClearAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => false);
 
-		private void ButtonRestore_Click(object sender, EventArgs e)
+		private void ChangeAllChecked(Func<bool, bool> func)
 		{
-			var window = restoreWindow.Value;
-			window.LoadBackups();
-			window.ShowDialog(this);
+			treeView.BeginUpdate();
+			foreach (TreeNode item in treeView.Nodes)
+			{
+				item.Checked = func(item.Checked);
+			}
+			treeView.EndUpdate();
 		}
-	}
+
+		private async void ScanButton_Click(object sender, EventArgs e)
+        {
+			btnClearAll.Enabled = false;
+			btnOptimize.Enabled = false;
+			btnSelectAll.Enabled = false;
+
+			await Task.Run(FindOptimizable);
+
+			btnClearAll.Enabled = true;
+			btnOptimize.Enabled = true;
+			btnSelectAll.Enabled = true;
+		}
+		
+		void FindOptimizable()
+		{
+			treeView.BeginUpdate();
+			treeView.Nodes.Clear();
+
+			foreach (var set in InternalRuleList.Scan(isElevated))
+			{
+				var setNode = new TreeNode(set.Name);
+
+				foreach (var item in set.Items)
+				{
+					var itemView = new TreeNode(item.Name);
+					itemView.Tag = item;
+					Invoke(new Action(() => setNode.Nodes.Add(itemView)));
+				}
+
+				Invoke(new Action(() => treeView.Nodes.Add(setNode)));
+			}
+
+			treeView.EndUpdate();
+		}
+    }
 }

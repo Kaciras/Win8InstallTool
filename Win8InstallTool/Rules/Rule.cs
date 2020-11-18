@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace Win8InstallTool.Rules
 {
-	public interface Rule
+	public interface Rule : Optimizable
 	{
-		string Description { get; }
-
 		bool Check();
-
-		void Optimize();
 	}
 }
