@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using TaskScheduler;
 
 namespace Win8InstallTool.Rules
 {
-    public class TaskSchdulerRule
+    public class TaskSchdulerRule : Rule
     {
         private readonly string path;
         private readonly string description;
@@ -20,24 +21,32 @@ namespace Win8InstallTool.Rules
             this.keep = keep;
         }
 
-        public Optimizable Check()
+        public Optimizable Scan()
         {
-            var folder = TaskShcdulerManager.Root.GetFolder(path);
-            if (folder != null)
+            try
             {
+                var folder = TaskShcdulerManager.Root.GetFolder(path);
                 return new FolderOptimizeItem(folder, description);
             }
+            catch (IOException e)
+            when (e is DirectoryNotFoundException || e is FileNotFoundException)
+            {
+                // Ignore, maybe path is a task.
+            }
 
-            var task = TaskShcdulerManager.Root.GetTask(path);
-            if (task == null)
+            try
             {
-                return null;
+                var task = TaskShcdulerManager.Root.GetTask(path);
+                if (keep && !task.Enabled)
+                {
+                    return null;
+                }
+                return new TaskOptimizeItem(task, keep, description);
             }
-            if(keep && !task.Enabled)
+            catch (FileNotFoundException)
             {
-                return null;
+                return null; // Task not found, cannot optimize
             }
-            return new TaskOptimizeItem(task, keep, description);
         }
 
         internal sealed class FolderOptimizeItem : Optimizable

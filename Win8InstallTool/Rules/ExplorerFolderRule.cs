@@ -9,7 +9,7 @@ using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
-	public class ExplorerFolderRule : Rule
+	public class ExplorerFolderRule : ImutatableRule
 	{
 		// HKEY_LOCAL_MACHINE
 		private const string KEY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace";
@@ -23,11 +23,11 @@ namespace Win8InstallTool.Rules
 			"{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}",
 		};
 
-		public string Name => "删除我的电脑界面上的6个文件夹";
+		public override string Name => "删除我的电脑界面上的6个文件夹";
 
-		public string Description => "他们可以从个人文件夹里打开,放在我的电脑里只会占位置，而且我不咋用";
+		public override string Description => "他们可以从个人文件夹里打开,放在我的电脑里只会占位置，而且我不咋用";
 
-        public bool Check()
+		protected override bool Check()
 		{
 			using var nameSpage = Registry.LocalMachine.OpenSubKey(KEY, RegistryRights.FullControl);
 			return clsids.Any(k => nameSpage.ContainsSubKey(k));
@@ -35,7 +35,7 @@ namespace Win8InstallTool.Rules
 
 		// 注册表 32 跟 64 位存储是分开的，系统自带的注册表编辑器能同时操作两者，但C#的API不能。
 		// 如果架构对不上，则会出现找不到 key 的情况。
-		public void Optimize()
+		public override void Optimize()
 		{
 			using var nameSpage = Registry.LocalMachine.OpenSubKey(KEY, true);
 			clsids.ForEach(name => nameSpage.DeleteSubKeyTree(name));

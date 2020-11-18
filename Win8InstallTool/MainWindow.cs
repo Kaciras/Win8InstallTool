@@ -15,8 +15,11 @@ namespace Win8InstallTool
 	{
 		private readonly bool isElevated = Utils.IsElevated();
 
-		public MainWindow()
+		private readonly InternalRuleList provider;
+
+		public MainWindow(InternalRuleList provider)
 		{
+			this.provider = provider;
 			CheckForIllegalCrossThreadCalls = false;
 			InitializeComponent();
 
@@ -96,19 +99,29 @@ namespace Win8InstallTool
 			btnOptimize.Enabled = false;
 			btnSelectAll.Enabled = false;
 
+			progressBar.Maximum = provider.ProgressMax;
+			progressBar.Value = 0;
+
+			provider.OnProgress += Provider_OnProgress;
 			await Task.Run(FindOptimizable);
+			provider.OnProgress -= Provider_OnProgress;
 
 			btnClearAll.Enabled = true;
 			btnOptimize.Enabled = true;
 			btnSelectAll.Enabled = true;
 		}
-		
+
+        private void Provider_OnProgress(object sender, int value)
+        {
+			progressBar.Value = value;
+		}
+
 		void FindOptimizable()
 		{
 			treeView.BeginUpdate();
 			treeView.Nodes.Clear();
 
-			foreach (var set in InternalRuleList.Scan(isElevated))
+			foreach (var set in provider.Scan())
 			{
 				var setNode = new TreeNode(set.Name);
 
@@ -119,6 +132,10 @@ namespace Win8InstallTool
 					Invoke(new Action(() => setNode.Nodes.Add(itemView)));
 				}
 
+				if (setNode.Nodes.Count == 0)
+				{
+					continue;
+				}
 				Invoke(new Action(() => treeView.Nodes.Add(setNode)));
 			}
 

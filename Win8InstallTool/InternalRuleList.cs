@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Win8InstallTool.Properties;
@@ -6,56 +7,71 @@ using Win8InstallTool.Rules;
 
 namespace Win8InstallTool
 {
+    internal struct RuleSet
+    {
+        public string Name;
+
+        public IList<Rule> Rules;
+    }
+
     /// <summary>
     /// 服务规则集列表
     /// </summary>
-    internal static class InternalRuleList
+    public sealed class InternalRuleList
     {
-        public static IEnumerable<RuleSet> Scan()
-        {
-            yield return ScanSystemService();
-            yield return OtherRules();
-        }
+        private readonly ICollection<RuleSet> ruleSets = new List<RuleSet>();
 
-        public static RuleSet ScanSystemService()
+        public int ProgressMax { get; private set; }
+
+        internal void Initialize()
         {
-            var rules = new List<ServiceRule>
+            var rules = LoadRuleFile(Resources.ServiceRules, ReadServiceRules);
+            ruleSets.Add(new RuleSet { Name = "系统服务", Rules = rules });
+
+            rules = LoadRuleFile(Resources.TaskSchdulerRules, ReadTaskRules);
+            ruleSets.Add(new RuleSet { Name = "任务计划程序", Rules = rules });
+
+            // 这是什么奇怪的写法
+            ruleSets.Add(new RuleSet
             {
-                new ServiceRule("HomeGroupProvider", "不使用家庭组功能的可以禁用"),
-                new ServiceRule("hidserv", "不用特殊输入设备的不需要,该服务还容易被攻击者利用"),
-                new ServiceRule("ShellHWDetection", "这年头谁还用光盘自动播放,该服务还容易被攻击者利用"),
-                new ServiceRule("LanmanServer","服务器文件共享才需要,家用机关掉"),
-                new ServiceRule("LanmanWorkstation","服务器文件共享才需要,家用机可以关掉"),
-                new ServiceRule("lmhosts","办公室远程控制打印机、文件才需要"),
-                new ServiceRule("WSearch","系统自带的搜索功能,并不是每个人都需要,还耗磁盘"),
-                new ServiceRule("AeLookupSvc","我也不知道这服务有啥用,反正关了也没出事"),
-                new ServiceRule( "PcaSvc","啥卵用都没有的兼容性助手"),
-                new ServiceRule( "IKEEXT","[注意] VPN需要这个服务"),
-                new ServiceRule("DPS","出问题不谷歌,要你来诊断?这个关了后另外两个也不会启动"),
-                new ServiceRule( "WPDBusEnum", "反正我是没用过什么可移动大容量存储设备"),
-                new ServiceRule("TrkWks","没几个人会把NTFS文件链接到远程计算机"),
-                new ServiceRule("PolicyAgent","关掉后防火墙不能使用IPSec策略,不过个人机一般用不着"),
-                new ServiceRule("SSDPSRV","Upnp设备个人机不常用"),
-                new ServiceRule("iphlpsvc","我从没用过它说的这些功能"),
-                new ServiceRule("WinHttpAutoProxySvc","该服务使应用程序支持WPAD协议的应用,因为大多数的情况下不会用到.建议关闭"),
-                new ServiceRule("SCardSvr","智能卡这东西一般用户用不到,你要没有就禁掉"),
-            };
-
-            return new RuleSet { Name = "系统服务", Items = rules.Where(r => r.Check()) };
-        }
-
-        public static RuleSet OtherRules()
-        {
-            var rules = new List<Rule>
+                Name = "其他优化项",
+                Rules = new List<Rule>
             {
                 new SchannelRule(),
                 new OpenWithNotepadRule(),
-            };
+            }
+            });
 
-            return new RuleSet { Name = "其他优化项", Items = rules.Where(r => r.Check()) };
+            ruleSets.Add(StartupRules());
+            ruleSets.Add(ContextMenuRules());
+
+            ProgressMax = ruleSets.Sum(set => set.Rules.Count);
         }
 
-        public static RuleSet StartupRules()
+        public event EventHandler<int> OnProgress;
+
+        public IEnumerable<OptimizeSet> Scan()
+        {
+            var progress = 0;
+
+            Optimizable DoScan(Rule rule)
+            {
+                var value = rule.Scan();
+                OnProgress?.Invoke(this, ++progress);
+                return value;
+            }
+
+            foreach (var ruleSet in ruleSets)
+            {
+                var items = ruleSet.Rules
+                    .Select(rule => DoScan(rule))
+                    .Where(o => o != null);
+
+                yield return new OptimizeSet(ruleSet.Name, items);
+            }
+        }
+
+        static RuleSet StartupRules()
         {
             var rules = new List<Rule>
             {
@@ -66,10 +82,10 @@ namespace Win8InstallTool
                 new StartupMenuRule("Visual Studio 2019", "都是些从来不用的垃圾"),
             };
 
-            return new RuleSet { Name = "开始菜单", Items = rules.Where(r => r.Check()) };
+            return new RuleSet { Name = "开始菜单", Rules = rules };
         }
 
-        public static List<Rule> ContextMenuRules()
+        static RuleSet ContextMenuRules()
         {
             var result = new List<Rule> {
 			// 兼容性疑难解答
@@ -99,40 +115,48 @@ namespace Win8InstallTool
                 result.Add(new ContextMenuRule(@"SystemFileAssociations\" + item));
             }
 
-            return result;
+            return new RuleSet { Name = "右键菜单清理", Rules = result };
         }
 
         // 只搜一层
-        public static List<string> RegSearch(string root, string key)
+        public static IEnumerable<string> RegSearch(string root, string key)
         {
             using var rootKey = RegistryHelper.OpenKey(root);
             return rootKey.GetSubKeyNames()
                 .Select(name => Path.Combine(name, key))
                 .Where(path => rootKey.ContainsSubKey(path))
-                .ToList();
+                .ToList(); // 必须要全部遍历完，因为 rootKey 会销毁
         }
 
-        public static List<Rule> RegistryTaskRules()
+        static List<Rule> LoadRuleFile(string content, Func<RuleFileReader, Rule> func)
         {
-            var reader = new RuleFileReader(Resources.TaskSchdulerRules);
-            var rules = new List<TaskSchdulerRule>();
-
+            var reader = new RuleFileReader(content);
+            var rules = new List<Rule>();
             while (reader.MoveNext())
             {
-                var first = reader.Read();
-                var disable = first == ":DISABLE";
-
-                if(disable)
-                {
-                    rules.Add(new TaskSchdulerRule(reader.Read(), reader.Read(), true));
-                }
-                else
-                {
-                    rules.Add(new TaskSchdulerRule(first, reader.Read(), false));
-                }
+                rules.Add(func(reader));
             }
+            return rules;
+        }
 
+        static Rule ReadServiceRules(RuleFileReader reader)
+        {
+            return new ServiceRule(reader.Read(), reader.Read());
+        }
 
+        static Rule ReadTaskRules(RuleFileReader reader)
+        {
+            var first = reader.Read();
+            var disable = first == ":DISABLE";
+
+            if (disable)
+            {
+                return new TaskSchdulerRule(reader.Read(), reader.Read(), true);
+            }
+            else
+            {
+                return new TaskSchdulerRule(first, reader.Read(), false);
+            }
         }
     }
 }

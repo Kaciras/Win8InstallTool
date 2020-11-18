@@ -7,25 +7,41 @@ using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
-    public class ContextMenuRule : Rule
+    public sealed class ContextMenuRule : ImutatableRule
     {
         private readonly string @class;
 
-        public string Description => throw new NotImplementedException();
+        // override 属性不能增加 setter，傻逼C#总有东西来恶心老子。
+        private string name;
 
-        public string Name => throw new NotImplementedException();
+        public override string Description => "";
+
+        public override string Name => name;
 
         public ContextMenuRule(string @class)
         {
             this.@class = @class;
         }
 
-        public bool Check()
+        protected override bool Check()
         {
-            return RegistryHelper.ContainsSubKey(Registry.ClassesRoot, @class);
+            using var key = Registry.ClassesRoot.OpenSubKey(@class);
+            if (key == null)
+            {
+                return false;
+            }
+            if (name == null)
+            {
+                name = key.GetValue(null, @class).ToString();
+                if (name.StartsWith("@"))
+                {
+                    name = Utils.ExtractStringFromDLL(name);
+                }
+            }
+            return true;
         }
 
-        public void Optimize()
+        public override void Optimize()
         {
             Registry.ClassesRoot.DeleteSubKeyTree(@class, false);
         }

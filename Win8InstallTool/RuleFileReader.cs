@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Win8InstallTool
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class RuleFileReader
     {
         private readonly string content;
@@ -37,10 +40,12 @@ namespace Win8InstallTool
 
         public string Read()
         {
-            var k = i;
-            for (; i < content.Length; i++)
+            var j = i;
+            var k = j;
+
+            for (; k < content.Length; k++)
             {
-                switch (content[i])
+                switch (content[k])
                 {
                     case '\r':
                     case '\n':
@@ -49,7 +54,22 @@ namespace Win8InstallTool
             }
 
         SearchEnd:
-            return content.Substring(k, i - k);
+
+            i = k;
+
+            // 跳过剩余的换行符
+            switch (content[k + 1])
+            {
+                case '\r':
+                case '\n':
+                    i += 2;
+                    break;
+                default:
+                    i += 1;
+                    break;
+            }
+
+            return content.Substring(j, k - j);
         }
     }
 }

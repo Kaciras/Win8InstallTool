@@ -15,7 +15,9 @@ namespace Win8InstallTool
 
             if (CheckOSSupport())
             {
-                Application.Run(new MainWindow());
+                var provider = new InternalRuleList();
+                provider.Initialize();
+                Application.Run(new MainWindow(provider));
             }
             else
             {

@@ -22,18 +22,20 @@ namespace Win8InstallTool.Rules
     /// 【参考】
     /// https://mp.weixin.qq.com/s?__biz=MjM5Nzc2MTU0MQ==&mid=2454671613&idx=2&sn=4dda0985adf0341bea436dac825eba71&chksm=b16ef79786197e81f63b1a2f8ed31ac04a5f451b710a0bade32ece9d3381ea4b8208cd36693f#rd
     /// </summary>
-    public sealed class SchannelRule : Rule
+    public sealed class SchannelRule : ImutatableRule
     {
         const string KEY = @"HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\SCHANNEL";
 
-        public string Description => "屏蔽系统日志里的 '从远程终点接收到一个严重警告' 错误";
+        public override string Name => "关闭 SChannel 事件日志";
 
-        public void Optimize()
+        public override string Description => "屏蔽系统日志里的 '从远程终点接收到一个严重警告' 错误";
+
+        public override void Optimize()
         {
             Registry.SetValue(KEY, "EventLogging", 0x0000);
         }
 
-        public bool Check()
+        protected override bool Check()
         {
             return !Registry.GetValue(KEY, "EventLogging", null).Equals(0x0000);
         }

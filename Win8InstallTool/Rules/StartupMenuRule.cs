@@ -11,11 +11,11 @@ namespace Win8InstallTool.Rules
     /// <summary>
     /// 开始菜单清理规则，有些八百年用不到的程序看着就烦，安装时还不能取消创建。
     /// </summary>
-    public class StartupMenuRule : Rule
+    public class StartupMenuRule : ImutatableRule
     {
-        public string Name { get; }
+        public override string Name { get; }
 
-        public string Description { get; }
+        public override string Description { get; }
 
         public StartupMenuRule(string name, string description)
         {
@@ -23,15 +23,16 @@ namespace Win8InstallTool.Rules
             Description = description;
         }
 
-        public bool Check()
+        protected override bool Check()
         {
             var path = Path.Combine(GetFolderPath(SpecialFolder.Startup), Name);
             return Directory.Exists(path);
         }
 
-        public void Optimize()
+        public override void Optimize()
         {
-            throw new NotImplementedException();
+            var path = Path.Combine(GetFolderPath(SpecialFolder.Startup), Name);
+            Directory.Delete(path, true);
         }
     }
 }

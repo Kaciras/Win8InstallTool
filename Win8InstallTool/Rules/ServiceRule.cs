@@ -7,9 +7,11 @@ using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
-	public class ServiceRule : Optimizable
+	public class ServiceRule : ImutatableRule
 	{
 		private const string SERVICE_DIR = @"SYSTEM\CurrentControlSet\Services\";
+
+		private string name;
 
 		/// <summary>
 		/// 服务在注册表里的目录名。
@@ -19,12 +21,12 @@ namespace Win8InstallTool.Rules
 		/// <summary>
 		/// 对此服务的简单介绍，以及需要优化的原因。
 		/// </summary>
-		public string Description { get; }
+		public override string Description { get; }
 
 		/// <summary>
-		/// 服务的显示名，改名称可读性较强。
+		/// 服务的显示名，该名称可读性较强。
 		/// </summary>
-		public string Name { get; private set; }
+		public override string Name => name;
 
 		/// <summary>
 		/// 此服务应当被优化为什么状态，默认禁用。
@@ -37,7 +39,7 @@ namespace Win8InstallTool.Rules
             Description = description;
         }
 
-        public bool Check()
+        protected override bool Check()
 		{
 			using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key);
 			if (config == null)
@@ -45,11 +47,14 @@ namespace Win8InstallTool.Rules
 				return false; // 不存在的服务没法优化
 			}
 
-			Name = (string)config.GetValue("DisplayName", Key);
-			if (Name.StartsWith("@"))
-            {
-				Name = Utils.ExtractStringFromDLL(Name);
-            }
+			if (name == null)
+			{
+				name = (string)config.GetValue("DisplayName", Key);
+				if (name.StartsWith("@"))
+				{
+					name = Utils.ExtractStringFromDLL(name);
+				}
+			}
 
 			var state = (ServiceState)config.GetValue("Start");
 			var delayed = (int)config.GetValue("DelayedAutostart", -1) == 1;
@@ -62,7 +67,7 @@ namespace Win8InstallTool.Rules
 			return state == TargetState;
 		}
 
-		public void Optimize()
+		public override void Optimize()
 		{
 			if (TargetState == ServiceState.Deleted)
 			{
