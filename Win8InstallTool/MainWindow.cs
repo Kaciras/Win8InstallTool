@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Security;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Win8InstallTool
 {
-	public sealed partial class MainWindow : Form
+    public sealed partial class MainWindow : Form
 	{
 		private readonly bool isElevated = Utils.IsElevated();
 
-		private readonly InternalRuleList provider;
+		private readonly RuleProvider provider;
 
-		public MainWindow(InternalRuleList provider)
+		public MainWindow(RuleProvider provider)
 		{
 			this.provider = provider;
 			CheckForIllegalCrossThreadCalls = false;
@@ -28,7 +24,7 @@ namespace Win8InstallTool
 		}
 
 		/// <summary>
-		/// 实现 TreeViewItem 的选项联动
+		/// 实现 TreeViewItem 的选项联动，可惜 WinForms 不自带三态复选框
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -50,9 +46,9 @@ namespace Win8InstallTool
 
 		private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
-			if(e.Node.Parent != null)
+			if (e.Node.Parent != null)
 			{
-				var item = (Optimizable) e.Node.Tag;
+				var item = (Optimizable)e.Node.Tag;
 				descBox.Text = item.Description;
 				//descBox.Text += $"\r\n\r\n当前状态: {item.CurrentState}";
 			}
@@ -60,23 +56,26 @@ namespace Win8InstallTool
 
 		private void BtnOptimize_Click(object sender, EventArgs e)
 		{
+			treeView.Enabled = false;
+
 			var checkeds = from TreeNode gp in treeView.Nodes
 						   from TreeNode item in gp.Nodes
 						   where item.Checked
-						   select item;
+						   select item.Tag;
 
-			foreach (var vItem in checkeds)
+			foreach (Optimizable vItem in checkeds)
 			{
-				var optimizable = (Optimizable)vItem.Tag;
 				try
 				{
-					optimizable.Optimize();
+					vItem.Optimize();
 				}
 				catch (SecurityException)
 				{
 					break;
 				}
 			}
+
+			treeView.Enabled = true;
 		}
 
 		private void BtnSelectAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => true);
@@ -94,7 +93,7 @@ namespace Win8InstallTool
 		}
 
 		private async void ScanButton_Click(object sender, EventArgs e)
-        {
+		{
 			btnClearAll.Enabled = false;
 			btnOptimize.Enabled = false;
 			btnSelectAll.Enabled = false;
@@ -111,8 +110,8 @@ namespace Win8InstallTool
 			btnSelectAll.Enabled = true;
 		}
 
-        private void Provider_OnProgress(object sender, int value)
-        {
+		private void Provider_OnProgress(object sender, int value)
+		{
 			progressBar.Value = value;
 		}
 
@@ -141,5 +140,5 @@ namespace Win8InstallTool
 
 			treeView.EndUpdate();
 		}
-    }
+	}
 }

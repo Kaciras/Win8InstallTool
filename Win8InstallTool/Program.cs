@@ -15,7 +15,7 @@ namespace Win8InstallTool
 
             if (CheckOSSupport())
             {
-                var provider = new InternalRuleList();
+                var provider = new RuleProvider();
                 provider.Initialize();
                 Application.Run(new MainWindow(provider));
             }
@@ -29,11 +29,10 @@ namespace Win8InstallTool
             }
         }
 
-		/// <summary>
-		/// 检查本程序是否支持所在的系统，如果不支持则会终止程序并返回退出码1，支持则返回系统类型。
-		/// </summary>
-		/// <returns>支持的系统类型</returns>
-		static bool CheckOSSupport()
+        /// <summary>
+        /// 检查所在的系统是否支持本程序，如果不支持则不应继续运行。
+        /// </summary>
+        static bool CheckOSSupport()
 		{
 			var os = Environment.OSVersion;
 			var version = os.Version;

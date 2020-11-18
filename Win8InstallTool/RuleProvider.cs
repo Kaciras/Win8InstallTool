@@ -17,7 +17,7 @@ namespace Win8InstallTool
     /// <summary>
     /// 服务规则集列表
     /// </summary>
-    public sealed class InternalRuleList
+    public sealed class RuleProvider
     {
         private readonly ICollection<RuleSet> ruleSets = new List<RuleSet>();
 
