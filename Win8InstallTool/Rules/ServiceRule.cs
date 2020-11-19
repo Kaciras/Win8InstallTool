@@ -9,7 +9,7 @@ namespace Win8InstallTool.Rules
 		private string name;
 
 		/// <summary>
-		/// 服务在注册表里的目录名。
+		/// 服务在注册表里的键，不同于显示名。
 		/// </summary>
 		public string Key { get; }
 
@@ -39,7 +39,7 @@ namespace Win8InstallTool.Rules
 			using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key);
 			if (config == null)
 			{
-				return false; // 不存在的服务没法优化
+				return false; // 服务不存在
 			}
 
 			if (name == null)
@@ -69,20 +69,21 @@ namespace Win8InstallTool.Rules
 				Registry.LocalMachine.DeleteSubKeyTree(SERVICE_DIR + Key);
 			}
 
-			using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key);
-			var startValue = (int)TargetState;
+			using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key, true);
+			var startValue = TargetState;
 
 			if (TargetState == ServiceState.LazyStart)
 			{
 				config.SetValue("DelayedAutostart", 1, RegistryValueKind.DWord);
-				startValue = 2;
+				startValue = ServiceState.Automatic;
 			}
 			else
 			{
-				config.DeleteValue("DelayedAutostart");
+				// 默认不存在会报错，需要添加第二个参数
+				config.DeleteValue("DelayedAutostart", false);
 			}
 
-			config.SetValue("Start", startValue, RegistryValueKind.DWord);
+			config.SetValue("Start", (int)startValue, RegistryValueKind.DWord);
 		}
 	}
 }
