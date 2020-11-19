@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System;
 
 namespace Win8InstallTool.Rules
 {
@@ -27,15 +28,25 @@ namespace Win8InstallTool.Rules
             }
             if (name == null)
             {
-                name = key.GetValue(null, @class).ToString();
-                if (name.StartsWith("@"))
-                {
-                    name = Utils.ExtractStringFromDLL(name);
-                }
+                DetermateName(key);
             }
             return true;
         }
 
+        void DetermateName(RegistryKey key)
+        {
+            var name = key.GetValue(null, @class).ToString();
+            if (name.StartsWith("@"))
+            {
+                name= Utils.ExtractStringFromDLL(name);
+            }
+            else if (Guid.TryParse(name, out _))
+            {
+                name = RegistryHelper.GetCLSIDValue(name);
+            }
+            this.name = $" -> {name}";
+        }
+        
         public override void Optimize()
         {
             Registry.ClassesRoot.DeleteSubKeyTree(@class, false);

@@ -129,6 +129,20 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WinRAR
+        ///Microsoft Office 2016 工具
+        ///Windows Kits
+        ///Music, Photos and Videos
+        ///Visual Studio 2019
+        ///.
+        /// </summary>
+        internal static string StartupRules {
+            get {
+                return ResourceManager.GetString("StartupRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Microsoft\Windows\Application Experience
         ///客户体验改善计划相关的任务，没同意的可以删了
         ///

@@ -1,17 +1,15 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
 
 namespace Win8InstallTool
 {
-	public static class RegistryHelper
+    public static class RegistryHelper
 	{
 		/// <summary>
 		/// 从 .NET 标准库里抄的快捷方法，为什么微软不直接提供？
@@ -77,16 +75,20 @@ namespace Win8InstallTool
 		private static void InvokeRegeditor(string args)
 		{
 			var startInfo = new ProcessStartInfo("regedt32", args);
-			var process = new Process { StartInfo = startInfo };
-			process.Start();
-			process.WaitForExit();
+			var process = Process.Start(startInfo);
 
+			process.WaitForExit();
 			if (process.ExitCode != 0)
 			{
 				throw new SystemException("注册表操作失败,返回码:" + process.ExitCode);
 			}
 		}
 
+		/// <summary>
+		/// 导出注册表键，相当于注册表编辑器里右键 -> 导出
+		/// </summary>
+		/// <param name="file">保存的文件</param>
+		/// <param name="path">注册表键</param>
 		public static void Export(string file, string path) => InvokeRegeditor($"/e {file} {path}");
 
 		public static void Import(string file) => InvokeRegeditor($"/s {file}");
@@ -100,6 +102,21 @@ namespace Win8InstallTool
 				throw new DirectoryNotFoundException("CLSID记录不存在");
 			}
 			return (string)key.GetValue(string.Empty);
+		}
+
+		/// <summary>
+		/// 在指定的目录中搜索含有某个路径的项，只搜一层。
+		/// </summary>
+		/// <param name="root">在此目录中搜索</param>
+		/// <param name="key">要搜索的键路径</param>
+		/// <returns>路径列表</returns>
+		public static IList<string> Search(string root, string key)
+		{
+			using var rootKey = OpenKey(root);
+			return rootKey.GetSubKeyNames()
+				.Select(name => Path.Combine(name, key))
+				.Where(path => rootKey.ContainsSubKey(path))
+				.ToList(); // rootKey 会销毁，必须全部遍历完
 		}
 
 		/// <summary>

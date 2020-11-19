@@ -31,7 +31,10 @@ namespace Win8InstallTool
             rules = LoadRuleFile(Resources.TaskSchdulerRules, ReadTaskRules);
             ruleSets.Add(new RuleSet { Name = "任务计划程序", Rules = rules });
 
-            // 这是什么奇怪的写法
+            rules = LoadRuleFile(Resources.StartupRules, r => new StartupMenuRule(r.Read()));
+            ruleSets.Add(new RuleSet { Name = "开始菜单", Rules = rules });
+
+            // 这是什么奇怪的写法，好像内部属性跟外层平级了
             ruleSets.Add(new RuleSet
             {
                 Name = "其他优化项",
@@ -42,7 +45,6 @@ namespace Win8InstallTool
             }
             });
 
-            ruleSets.Add(StartupRules());
             ruleSets.Add(ContextMenuRules());
 
             ProgressMax = ruleSets.Sum(set => set.Rules.Count);
@@ -71,28 +73,11 @@ namespace Win8InstallTool
             }
         }
 
-        static RuleSet StartupRules()
-        {
-            var rules = new List<Rule>
-            {
-                new StartupMenuRule("WinRAR", "都是些从来不用的垃圾"),
-                new StartupMenuRule("Microsoft Office 2016 工具", "都是些从来不用的垃圾"),
-                new StartupMenuRule("Windows Kits", "都是些从来不用的垃圾"),
-                new StartupMenuRule("Music, Photos and Videos", "都是些从来不用的垃圾"),
-                new StartupMenuRule("Visual Studio 2019", "都是些从来不用的垃圾"),
-            };
-
-            return new RuleSet { Name = "开始菜单", Rules = rules };
-        }
-
         static RuleSet ContextMenuRules()
         {
             var result = new List<Rule> {
 			// 兼容性疑难解答
 			new ContextMenuRule(@"exefile\shellex\ContextMenuHandlers\Compatibility"),
-
-			// 固定到任务栏
-			new ContextMenuRule(@"*\shellex\ContextMenuHandlers\{90AA3A4E-1CBA-4233-B8BB-535773D48449}"),
 
 			// Open in Visual Studio
 			new ContextMenuRule(@"Directory\shell\AnyCode"),
@@ -109,23 +94,13 @@ namespace Win8InstallTool
             new ContextMenuRule(@"SystemFileAssociations\text\shell\edit"),
         };
             // 设为桌面背景
-            var wallpapers = RegSearch(@"HKEY_CLASSES_ROOT\SystemFileAssociations", @"Shell\setdesktopwallpaper");
+            var wallpapers = RegistryHelper.Search(@"HKEY_CLASSES_ROOT\SystemFileAssociations", @"Shell\setdesktopwallpaper");
             foreach (var item in wallpapers)
             {
                 result.Add(new ContextMenuRule(@"SystemFileAssociations\" + item));
             }
 
             return new RuleSet { Name = "右键菜单清理", Rules = result };
-        }
-
-        // 只搜一层
-        public static IEnumerable<string> RegSearch(string root, string key)
-        {
-            using var rootKey = RegistryHelper.OpenKey(root);
-            return rootKey.GetSubKeyNames()
-                .Select(name => Path.Combine(name, key))
-                .Where(path => rootKey.ContainsSubKey(path))
-                .ToList(); // 必须要全部遍历完，因为 rootKey 会销毁
         }
 
         static List<Rule> LoadRuleFile(string content, Func<RuleFileReader, Rule> func)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.IO;
+using System.Text;
 using Win8InstallTool.Properties;
 
 namespace Win8InstallTool.Rules
@@ -18,8 +19,8 @@ namespace Win8InstallTool.Rules
 		public override void Optimize()
 		{
 			using var file = Utils.CreateTempFile();
-			File.WriteAllText(file.Path, Resources.OpenWithNotepad);
-			RegistryHelper.Import(file.Path);
-		}
+			File.WriteAllText(file.Path, Resources.OpenWithNotepad, Encoding.Unicode);
+            RegistryHelper.Import(file.Path);
+        }
 	}
 }

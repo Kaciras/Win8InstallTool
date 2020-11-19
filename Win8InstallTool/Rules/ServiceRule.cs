@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
-	public class ServiceRule : ImutatableRule
+    public class ServiceRule : ImutatableRule
 	{
 		private const string SERVICE_DIR = @"SYSTEM\CurrentControlSet\Services\";
 
@@ -64,7 +59,7 @@ namespace Win8InstallTool.Rules
 				state = ServiceState.LazyStart;
 			}
 
-			return state == TargetState;
+			return state != TargetState;
 		}
 
 		public override void Optimize()

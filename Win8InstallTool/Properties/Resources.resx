@@ -124,6 +124,9 @@
   <data name="ServiceRules" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ServiceRules.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;gb2312</value>
   </data>
+  <data name="StartupRules" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StartupRules.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;gb2312</value>
+  </data>
   <data name="TaskSchdulerRules" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\TaskSchdulerRules.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;gb2312</value>
   </data>

@@ -15,24 +15,23 @@ namespace Win8InstallTool.Rules
     {
         public override string Name { get; }
 
-        public override string Description { get; }
+        public override string Description => "都是些从来不用的垃圾";
 
-        public StartupMenuRule(string name, string description)
+        public StartupMenuRule(string name)
         {
             Name = name;
-            Description = description;
         }
 
         protected override bool Check()
         {
-            var path = Path.Combine(GetFolderPath(SpecialFolder.Startup), Name);
-            return Directory.Exists(path);
+            var startmenu = GetFolderPath(SpecialFolder.CommonStartMenu);
+            return Directory.Exists(Path.Combine(startmenu, "Programs", Name));
         }
 
         public override void Optimize()
         {
-            var path = Path.Combine(GetFolderPath(SpecialFolder.Startup), Name);
-            Directory.Delete(path, true);
+            var startmenu = GetFolderPath(SpecialFolder.CommonStartMenu);
+            Directory.Delete(Path.Combine(startmenu, "Programs", Name), true);
         }
     }
 }
