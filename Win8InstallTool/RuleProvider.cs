@@ -14,14 +14,13 @@ namespace Win8InstallTool
         public IList<Rule> Rules;
     }
 
-    /// <summary>
-    /// 服务规则集列表
-    /// </summary>
     public sealed class RuleProvider
     {
         private readonly ICollection<RuleSet> ruleSets = new List<RuleSet>();
 
         public int ProgressMax { get; private set; }
+
+        public event EventHandler<int> OnProgress;
 
         internal void Initialize()
         {
@@ -49,8 +48,6 @@ namespace Win8InstallTool
 
             ProgressMax = ruleSets.Sum(set => set.Rules.Count);
         }
-
-        public event EventHandler<int> OnProgress;
 
         public IEnumerable<OptimizeSet> Scan()
         {

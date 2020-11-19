@@ -18,18 +18,6 @@ namespace Win8InstallTool
         }
 
         /// <summary>
-        /// 检测当前程序是否具有管理员权限。
-        /// </summary>
-        /// <seealso cref="https://stackoverflow.com/a/5953294/7065321"/>
-        /// <returns>如果有则为 true</returns>
-        public static bool IsElevated()
-        {
-            using var identity = WindowsIdentity.GetCurrent();
-            var principal = new WindowsPrincipal(identity);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
-        }
-
-        /// <summary>
         /// 创建临时文件，搭配 using 语句使用，在销毁时删除。
         /// </summary>
         public static TempFileSession CreateTempFile()

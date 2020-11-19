@@ -20,6 +20,10 @@ namespace Win8InstallTool
             this.content = content;
         }
 
+        /// <summary>
+        /// 跳过空白和注释行，准备读取新的条目。
+        /// </summary>
+        /// <returns>如果读完则为false，否则返回true</returns>
         public bool MoveNext()
         {
             for (; i < content.Length; i++)
