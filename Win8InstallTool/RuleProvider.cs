@@ -38,10 +38,11 @@ namespace Win8InstallTool
             {
                 Name = "其他优化项",
                 Rules = new List<Rule>
-            {
-                new SchannelRule(),
-                new OpenWithNotepadRule(),
-            }
+                {
+                    new CrashDumpRule(),
+                    new SchannelRule(),
+                    new OpenWithNotepadRule(),
+                }
             });
 
             ruleSets.Add(ContextMenuRules());
