@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security;
@@ -9,9 +10,9 @@ namespace Win8InstallTool
 {
     public sealed partial class MainWindow : Form
 	{
-		private readonly bool isElevated = Utils.IsElevated();
+		readonly bool isElevated = Utils.IsElevated();
 
-		private readonly RuleProvider provider;
+		readonly RuleProvider provider;
 
 		public MainWindow(RuleProvider provider)
 		{
@@ -28,23 +29,27 @@ namespace Win8InstallTool
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void TreeView_AfterCheck(object sender, TreeViewEventArgs e)
+		void TreeView_AfterCheck(object sender, TreeViewEventArgs e)
 		{
-			e.Node.TreeView.AfterCheck -= TreeView_AfterCheck;
-			foreach (TreeNode node in e.Node.Nodes)
+			var current = e.Node;
+			current.TreeView.AfterCheck -= TreeView_AfterCheck;
+
+			foreach (TreeNode node in current.Nodes)
 			{
-				node.Checked = e.Node.Checked;
+				node.Checked = current.Checked;
 			}
-			var parent = e.Node.Parent;
-			if (e.Node.Parent != null)
+
+			var parent = current.Parent;
+			if (parent != null)
 			{
 				var setNodes = parent.Nodes;
 				parent.Checked = setNodes.Cast<TreeNode>().All(n => n.Checked);
 			}
-			e.Node.TreeView.AfterCheck += TreeView_AfterCheck;
+
+			current.TreeView.AfterCheck += TreeView_AfterCheck;
 		}
 
-		private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+		void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
 			if (e.Node.Parent != null)
 			{
@@ -54,35 +59,50 @@ namespace Win8InstallTool
 			}
 		}
 
-		private void BtnOptimize_Click(object sender, EventArgs e)
+		async void BtnOptimize_Click(object sender, EventArgs e)
 		{
+			var checkedNodes = treeView.Nodes
+				.Cast<TreeNode>()
+				.SelectMany(t => t.Nodes.Cast<TreeNode>())
+				.Where(item => item.Checked)
+				.ToList();
+
+			progressBar.Maximum = checkedNodes.Count;
+			progressBar.Value = 0;
+
 			treeView.Enabled = false;
-
-			var checkeds = from TreeNode gp in treeView.Nodes
-						   from TreeNode item in gp.Nodes
-						   where item.Checked
-						   select item.Tag;
-
-			foreach (Optimizable vItem in checkeds)
-			{
-				try
-				{
-					vItem.Optimize();
-				}
-				catch (SecurityException)
-				{
-					break;
-				}
-			}
-
+			await Task.Run(()=>RunOptimize(checkedNodes));
 			treeView.Enabled = true;
 		}
 
-		private void BtnSelectAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => true);
+		void RunOptimize(IEnumerable<TreeNode> nodes) 
+		{
+			foreach (var node in nodes)
+			{
+				((Optimizable)node.Tag).Optimize();
+				progressBar.Value++;
 
-		private void BtnClearAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => false);
+				var parent = node.Parent;
+				node.Remove();
 
-		private void ChangeAllChecked(Func<bool, bool> func)
+				if (parent.Nodes.Count == 0)
+				{
+					parent.Remove();
+				}
+				else
+				{
+					parent.Checked = parent.Nodes
+						.Cast<TreeNode>()
+						.All(n => n.Checked);
+				}
+			}
+		}
+
+		void BtnSelectAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => true);
+
+		void BtnClearAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => false);
+
+		void ChangeAllChecked(Func<bool, bool> func)
 		{
 			treeView.BeginUpdate();
 			foreach (TreeNode item in treeView.Nodes)
@@ -92,7 +112,7 @@ namespace Win8InstallTool
 			treeView.EndUpdate();
 		}
 
-		private async void ScanButton_Click(object sender, EventArgs e)
+		async void ScanButton_Click(object sender, EventArgs e)
 		{
 			btnClearAll.Enabled = false;
 			btnOptimize.Enabled = false;
@@ -110,7 +130,7 @@ namespace Win8InstallTool
 			btnSelectAll.Enabled = true;
 		}
 
-		private void Provider_OnProgress(object sender, int value)
+		void Provider_OnProgress(object sender, int value)
 		{
 			progressBar.Value = value;
 		}
