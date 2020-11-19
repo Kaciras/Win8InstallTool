@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -10,8 +10,6 @@ namespace Win8InstallTool
 {
     public sealed partial class MainWindow : Form
 	{
-		readonly bool isElevated = Utils.IsElevated();
-
 		readonly RuleProvider provider;
 
 		public MainWindow(RuleProvider provider)
@@ -71,7 +69,15 @@ namespace Win8InstallTool
 			progressBar.Value = 0;
 
 			treeView.Enabled = false;
-			await Task.Run(()=>RunOptimize(checkedNodes));
+			try
+			{
+				await Task.Run(() => RunOptimize(checkedNodes));
+			}
+			catch(Exception ex)
+            {
+				MessageBox.Show(ex.Message, "优化时出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				Debugger.Break();
+            }
 			treeView.Enabled = true;
 		}
 
@@ -146,9 +152,9 @@ namespace Win8InstallTool
 
 				foreach (var item in set.Items)
 				{
-					var itemView = new TreeNode(item.Name);
-					itemView.Tag = item;
-					Invoke(new Action(() => setNode.Nodes.Add(itemView)));
+					var node = new TreeNode(item.Name);
+					node.Tag = item;
+					Invoke(new Action(() => setNode.Nodes.Add(node)));
 				}
 
 				if (setNode.Nodes.Count == 0)
