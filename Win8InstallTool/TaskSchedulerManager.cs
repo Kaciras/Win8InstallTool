@@ -9,16 +9,18 @@ namespace Win8InstallTool
     /// </summary>
     public static class TaskSchedulerManager
 	{
-		static readonly TaskSchedulerClass taskScheduler;
+		static readonly TaskScheduler.TaskScheduler taskScheduler;
 
 		static TaskSchedulerManager()
 		{
-			taskScheduler = new TaskSchedulerClass();
+			// 必须把 Class 后缀去掉，或是使用外置 Interop Types
+			// https://stackoverflow.com/a/4553402/7065321
+			taskScheduler = new TaskScheduler.TaskScheduler();
 			taskScheduler.Connect();
 			Root = taskScheduler.GetFolder(@"\");
 		}
 
-		public static TaskSchedulerClass Instance => taskScheduler;
+		public static TaskScheduler.TaskScheduler Instance => taskScheduler;
 
 		public static ITaskFolder Root { get; }
 

@@ -74,6 +74,7 @@ namespace Win8InstallTool
 		/// <param name="args">运行参数</param>
 		private static void InvokeRegeditor(string args)
 		{
+			// 如果用 regedt32 可能无法导入
             var startInfo = new ProcessStartInfo("regedit.exe", args)
             {
                 UseShellExecute = false,
