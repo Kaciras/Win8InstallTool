@@ -45,9 +45,10 @@
             groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             groupBox1.Controls.Add(this.descBox);
-            groupBox1.Location = new System.Drawing.Point(506, 12);
+            groupBox1.Location = new System.Drawing.Point(500, 14);
+            groupBox1.Margin = new System.Windows.Forms.Padding(5);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new System.Drawing.Size(166, 288);
+            groupBox1.Size = new System.Drawing.Size(170, 277);
             groupBox1.TabIndex = 6;
             groupBox1.TabStop = false;
             groupBox1.Text = "描述";
@@ -63,13 +64,14 @@
             this.descBox.Multiline = true;
             this.descBox.Name = "descBox";
             this.descBox.ReadOnly = true;
-            this.descBox.Size = new System.Drawing.Size(150, 258);
+            this.descBox.Size = new System.Drawing.Size(154, 247);
             this.descBox.TabIndex = 0;
             // 
             // scanButton
             // 
             this.scanButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.scanButton.Location = new System.Drawing.Point(506, 340);
+            this.scanButton.Location = new System.Drawing.Point(500, 339);
+            this.scanButton.Margin = new System.Windows.Forms.Padding(5);
             this.scanButton.Name = "scanButton";
             this.scanButton.Size = new System.Drawing.Size(80, 28);
             this.scanButton.TabIndex = 2;
@@ -80,7 +82,8 @@
             // btnOptimize
             // 
             this.btnOptimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOptimize.Location = new System.Drawing.Point(592, 340);
+            this.btnOptimize.Location = new System.Drawing.Point(590, 339);
+            this.btnOptimize.Margin = new System.Windows.Forms.Padding(5);
             this.btnOptimize.Name = "btnOptimize";
             this.btnOptimize.Size = new System.Drawing.Size(80, 28);
             this.btnOptimize.TabIndex = 3;
@@ -91,7 +94,8 @@
             // btnSelectAll
             // 
             this.btnSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectAll.Location = new System.Drawing.Point(506, 306);
+            this.btnSelectAll.Location = new System.Drawing.Point(500, 301);
+            this.btnSelectAll.Margin = new System.Windows.Forms.Padding(5);
             this.btnSelectAll.Name = "btnSelectAll";
             this.btnSelectAll.Size = new System.Drawing.Size(80, 28);
             this.btnSelectAll.TabIndex = 4;
@@ -102,7 +106,8 @@
             // btnClearAll
             // 
             this.btnClearAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearAll.Location = new System.Drawing.Point(592, 306);
+            this.btnClearAll.Location = new System.Drawing.Point(590, 301);
+            this.btnClearAll.Margin = new System.Windows.Forms.Padding(5);
             this.btnClearAll.Name = "btnClearAll";
             this.btnClearAll.Size = new System.Drawing.Size(80, 28);
             this.btnClearAll.TabIndex = 5;
@@ -114,9 +119,9 @@
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(12, 374);
+            this.progressBar.Location = new System.Drawing.Point(12, 375);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(660, 25);
+            this.progressBar.Size = new System.Drawing.Size(660, 24);
             this.progressBar.TabIndex = 7;
             // 
             // treeView
@@ -128,8 +133,9 @@
             this.treeView.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.treeView.FullRowSelect = true;
             this.treeView.Location = new System.Drawing.Point(12, 12);
+            this.treeView.Margin = new System.Windows.Forms.Padding(5);
             this.treeView.Name = "treeView";
-            this.treeView.Size = new System.Drawing.Size(488, 356);
+            this.treeView.Size = new System.Drawing.Size(478, 355);
             this.treeView.TabIndex = 8;
             this.treeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.TreeView_AfterCheck);
             this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseClick);

@@ -15,11 +15,11 @@ namespace Win8InstallTool
 		public MainWindow(RuleProvider provider)
 		{
 			this.provider = provider;
-			CheckForIllegalCrossThreadCalls = false;
 			InitializeComponent();
+			CheckForIllegalCrossThreadCalls = false;
 
 			var appVersion = Assembly.GetExecutingAssembly().GetName().Version;
-			Text = $"Kaciras的Win8优化工具 v{appVersion.ToString(3)}";
+			Text = $"Kaciras 的 Win8 优化工具 v{appVersion.ToString(3)}";
 		}
 
 		/// <summary>
