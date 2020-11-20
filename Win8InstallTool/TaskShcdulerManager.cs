@@ -18,9 +18,15 @@ namespace Win8InstallTool
 			Root = taskScheduler.GetFolder(@"\");
 		}
 
+		public static TaskSchedulerClass Instance => taskScheduler;
+
 		public static ITaskFolder Root { get; }
 
-		public static void DeleteFolder(string path)
+		/// <summary>
+		/// 清空目录中的所有任务，考虑到有些目录无法删除所有把文件夹留下了。
+		/// </summary>
+		/// <param name="path">目录路径</param>
+		public static void ClearFolder(string path)
 		{
 			var folder = Root.GetFolder(path);
 
@@ -30,9 +36,7 @@ namespace Win8InstallTool
 
 			folder.GetFolders(0)
 				.Cast<ITaskFolder>()
-				.ForEach(f => DeleteFolder(f.Path));
-
-			Root.DeleteFolder(path, 0);
+				.ForEach(f => ClearFolder(f.Path));
 		}
 
 		public static void DeleteTask(string path)

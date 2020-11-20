@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
+using TaskScheduler;
 
 namespace Win8InstallTool.Test
 {
@@ -20,11 +22,39 @@ namespace Win8InstallTool.Test
 		}
 
 		[TestMethod]
-		public void DeleteFolder()
+		public void ClearFolder()
 		{
-			var folder = TaskShcdulerManager.Root.CreateFolder("Test");
-			folder.CreateFolder("SubFolder");
-			TaskShcdulerManager.DeleteFolder("Test");
+			var task = TaskShcdulerManager.Instance.NewTask(0);
+			var action = (IExecAction)task.Actions.Create(_TASK_ACTION_TYPE.TASK_ACTION_EXEC);
+			action.Id = "id";
+			action.Path = "cmd.exe";
+
+			// 目录会自动创建
+			TaskShcdulerManager.Root.RegisterTaskDefinition(
+				@"Test\SubFolder\测试任务", 
+				task,
+				(int)_TASK_CREATION.TASK_CREATE,
+				null,
+				null, 
+				_TASK_LOGON_TYPE.TASK_LOGON_INTERACTIVE_TOKEN); 
+
+			TaskShcdulerManager.ClearFolder("Test");
+
+            try
+            {
+				TaskShcdulerManager.Root.GetTask(@"Test\SubFolder\测试任务");
+				Assert.Fail("Expect to throw exception");
+			} 
+			catch(IOException e)
+			when (e is DirectoryNotFoundException || e is FileNotFoundException)
+			{
+				// Expect task is not exists.
+			}
+            finally
+            {
+				TaskShcdulerManager.Root.DeleteFolder(@"Test\SubFolder", 0);
+				TaskShcdulerManager.Root.DeleteFolder(@"Test", 0);
+			}
 		}
 	}
 }

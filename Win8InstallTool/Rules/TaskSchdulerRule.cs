@@ -26,6 +26,10 @@ namespace Win8InstallTool.Rules
             try
             {
                 var folder = TaskShcdulerManager.Root.GetFolder(path);
+                if (folder.GetTasks((int)_TASK_ENUM_FLAGS.TASK_ENUM_HIDDEN).Count == 0)
+                {
+                    return null;
+                }
                 return new FolderOptimizeItem(folder, description);
             }
             catch (IOException e)
@@ -66,7 +70,7 @@ namespace Win8InstallTool.Rules
 
             public void Optimize()
             {
-                TaskShcdulerManager.DeleteFolder(folder.Path);
+                TaskShcdulerManager.ClearFolder(folder.Path);
             }
         }
 
