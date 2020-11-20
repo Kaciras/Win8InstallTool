@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Win8InstallTool;
 
-namespace Test
+namespace Win8InstallTool.Test
 {
     [TestClass]
     public class RuleFileReaderTest
@@ -38,8 +37,8 @@ namespace Test
         }
 
         [DataRow("First\nSecond")]
-        [DataRow("First\n\nSecond\n")]
-        [DataRow("First\nSecond\n")]
+        [DataRow("\nFirst\nSecond\n")]
+        [DataRow("First\nSecond\n\n")]
         [DataTestMethod]
         public void ReadLines(string text)
         {
@@ -47,9 +46,6 @@ namespace Test
 
             Assert.IsTrue(reader.MoveNext());
             Assert.AreEqual("First", reader.Read());
-            Assert.AreEqual(string.Empty, reader.Read());
-
-            Assert.IsTrue(reader.MoveNext());
             Assert.AreEqual("Second", reader.Read());
 
             Assert.IsFalse(reader.MoveNext());

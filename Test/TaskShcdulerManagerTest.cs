@@ -24,7 +24,7 @@ namespace Win8InstallTool.Test
 		{
 			var folder = TaskShcdulerManager.Root.CreateFolder("Test");
 			folder.CreateFolder("SubFolder");
-			TaskShcdulerManager.DeleteFolder(@"Test\SubFolder");
+			TaskShcdulerManager.DeleteFolder("Test");
 		}
 	}
 }

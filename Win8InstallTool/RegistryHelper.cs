@@ -74,13 +74,18 @@ namespace Win8InstallTool
 		/// <param name="args">运行参数</param>
 		private static void InvokeRegeditor(string args)
 		{
-			var startInfo = new ProcessStartInfo("regedt32", args);
-			var process = Process.Start(startInfo);
+            var startInfo = new ProcessStartInfo("regedit.exe", args)
+            {
+                UseShellExecute = false,
+                RedirectStandardError = true,
+            };
 
+            var process = Process.Start(startInfo);
 			process.WaitForExit();
 			if (process.ExitCode != 0)
 			{
-				throw new SystemException("注册表操作失败,返回码:" + process.ExitCode);
+				var stderr = process.StandardError.ReadToEnd();
+				throw new SystemException($"注册表操作失败({process.ExitCode}):{stderr}");
 			}
 		}
 

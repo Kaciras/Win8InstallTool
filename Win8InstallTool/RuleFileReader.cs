@@ -54,10 +54,11 @@ namespace Win8InstallTool
         public string Read()
         {
             var j = i;
+            var k = j;
 
-            for (; i < content.Length; i++)
+            for (; k < content.Length; k++)
             {
-                switch (content[i])
+                switch (content[k])
                 {
                     case '\r':
                         ThrowCR();
@@ -68,7 +69,14 @@ namespace Win8InstallTool
             }
 
         SearchEnd:
-            return content.Substring(j, i - j);
+
+            if (k > content.Length)
+            {
+                return string.Empty;
+            }
+
+            i = k + 1;
+            return content.Substring(j, k - j);
         }
     }
 }

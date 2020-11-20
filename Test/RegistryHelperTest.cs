@@ -39,7 +39,7 @@ namespace Win8InstallTool.Test
 			}
 			finally
 			{
-				Registry.CurrentUser.DeleteSubKeyTree(@"Environment\Test_Win8Tool");
+				Registry.CurrentUser.DeleteSubKeyTree(@"Environment\Test_Win8Tool", false);
 			}
 		}
 
@@ -54,13 +54,13 @@ namespace Win8InstallTool.Test
 			{
 				RegistryHelper.Export("ExportTest.reg", @"HKEY_CURRENT_USER\Environment\Test_Win8Tool");
 
-				var expect = File.ReadAllBytes(@"Resources\ImportTest.reg");
 				var actual = File.ReadAllBytes("ExportTest.reg");
+				var expect = File.ReadAllBytes(@"Resources\ImportTest.reg");
 				CollectionAssert.AreEqual(expect, actual);
 			}
 			finally
 			{
-				Registry.CurrentUser.DeleteSubKeyTree(@"Environment\Test_Win8Tool");
+				Registry.CurrentUser.DeleteSubKeyTree(@"Environment\Test_Win8Tool", false);
 			}
 		}
 	}
