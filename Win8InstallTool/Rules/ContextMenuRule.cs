@@ -1,55 +1,39 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Win8InstallTool.Rules
 {
     public sealed class ContextMenuRule : ImutatableRule
     {
-        private readonly string @class;
+        private readonly string item;
+        private readonly IEnumerable<string> folders;
 
-        // override 属性不能增加 setter，傻逼C#总有东西来恶心老子。
-        private string name;
+        public override string Name { get; }
 
-        public override string Description => "";
+        public override string Description { get; }
 
-        public override string Name => name;
-
-        public ContextMenuRule(string @class)
+        public ContextMenuRule(string item, IEnumerable<string> folders, string name, string description)
         {
-            this.@class = @class;
+            this.item = item;
+            this.folders = folders;
+            Name = name;
+            Description = description;
         }
 
         protected override bool Check()
         {
-            using var key = Registry.ClassesRoot.OpenSubKey(@class);
-            if (key == null)
-            {
-                return false;
-            }
-            if (name == null)
-            {
-                DetermateName(key);
-            }
-            return true;
-        }
-
-        void DetermateName(RegistryKey key)
-        {
-            var name = key.GetValue(null, @class).ToString();
-            if (name.StartsWith("@"))
-            {
-                name= Utils.ExtractStringFromDLL(name);
-            }
-            else if (Guid.TryParse(name, out _))
-            {
-                name = RegistryHelper.GetCLSIDValue(name);
-            }
-            this.name = $" -> {name}";
+            return folders
+                .Select(folder => Path.Combine(folder, item))
+                .Any(Registry.ClassesRoot.ContainsSubKey);
         }
         
         public override void Optimize()
         {
-            Registry.ClassesRoot.DeleteSubKeyTree(@class, false);
+            folders.Select(folder => Path.Combine(folder, item))
+                .ForEach(key => Registry.ClassesRoot.DeleteSubKeyTree(key, false));
         }
     }
 }

@@ -51,6 +51,17 @@ namespace Win8InstallTool
             return false; // 文件读完了
         }
 
+        // 可以搞成扩展方法
+        public IEnumerable<string> Drain()
+        {
+            var line = Read();
+            while (line != string.Empty)
+            {
+                yield return line;
+                line = Read();
+            }
+        }
+
         public string Read()
         {
             var j = i;

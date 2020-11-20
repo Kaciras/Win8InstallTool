@@ -61,6 +61,45 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to shellex\ContextMenuHandlers\Compatibility
+        ///执行文件
+        ///出了问题不去谷歌，看着破解答有屁用
+        ///exefile
+        ///
+        ///shellex\ContextMenuHandlers\Library Location
+        ///文件夹
+        ///我现在还没用过这个系统自带的各种库文件夹，删了吧
+        ///Folder
+        ///
+        ///shell\AnyCode
+        ///文件夹及其背景
+        ///没啥用纯看着碍眼
+        ///Directory
+        ///Directory\background
+        ///
+        ///shell\edit
+        ///各种纯文本类文件
+        ///跟&quot;用记事本打开&quot;的功能重复了，删之
+        ///cmdfile
+        ///batfile
+        ///xmlfile
+        ///regfile
+        ///SystemFileAssociations\text
+        ///
+        ///Shell\setdesktopwallpaper
+        ///各种媒体文件
+        ///一般在播放器里都有这功能，就不放在菜单上占位置了
+        ///:SEARCH
+        ///SystemFileAssociations
+        ///.
+        /// </summary>
+        internal static string ContextMenuRules {
+            get {
+                return ResourceManager.GetString("ContextMenuRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Windows Registry Editor Version 5.00
         ///
         ///[HKEY_CLASSES_ROOT\*\shell\OpenWithNotepad]
@@ -78,29 +117,23 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HomeGroupProvider
-        ///不使用家庭组功能的可以禁用
-        ///
-        ///hidserv
-        ///不用特殊输入设备的不需要,该服务还容易被攻击者利用
+        ///   Looks up a localized string similar to hidserv
+        ///不用特殊输入设备的不需要，该服务还容易被攻击者利用
         ///
         ///ShellHWDetection
-        ///这年头谁还玩光盘自动播放,该服务还容易被攻击者利用
+        ///这年头谁还玩光盘自动播放，该服务还容易被攻击者利用
         ///
         ///LanmanServer
-        ///服务器文件共享才需要,家用机可以关掉
+        ///服务器文件共享才需要，家用机可以关掉
         ///
         ///LanmanWorkstation
-        ///服务器文件共享才需要,家用机可以关掉
+        ///用SMB协议做文件共享的服务，办公室可能需要，不用的话可以关掉。
         ///
         ///lmhosts
         ///办公室远程控制打印机、文件才需要
         ///
         ///WSearch
-        ///系统自带的搜索功能,并不是每个人都需要,还耗磁盘
-        ///
-        ///AeLookupSvc
-        ///我也不知道这服务有啥用,反正关了也没出事
+        ///系统自带的搜索功能，并不是每个人都需要，还耗磁盘
         ///
         ///PcaSvc
         ///啥卵用都没有的兼容性助手
@@ -109,7 +142,7 @@ namespace Win8InstallTool.Properties {
         ///某些协议的VPN需要这个服务，不用的话可以关掉
         ///
         ///DPS
-        ///出问题不谷歌,要你来诊断?这个关了后另外两个也不会启动
+        ///出问题不谷歌，要你来诊断?这个关了后另外两个也不会启动
         ///
         ///WPDBusEnum
         ///反正我是没用过什么可移动大容量存储设备
@@ -118,9 +151,16 @@ namespace Win8InstallTool.Properties {
         ///没几个人会把NTFS文件链接到远程计算机
         ///
         ///PolicyAgent
-        ///关掉后防火墙不能使用IPSec策略,不过个人机一般用不着
+        ///关掉后防火墙不能使用IPSec策略，个人机一般用不着
         ///
-        ///SSDP [rest of string was truncated]&quot;;.
+        ///SSDPSRV
+        ///Upnp设备个人机不常用
+        ///
+        ///iphlpsvc
+        ///我从没用过它说的这些高级功能
+        ///
+        ///WinHttpAutoProxySvc
+        ///该服务使应用程序支持WPAD协议的应用，因为大多数的情况下不会用到. [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ServiceRules {
             get {
@@ -166,7 +206,8 @@ namespace Win8InstallTool.Properties {
         ///:DISABLE
         ///Microsoft\Windows\UPnP\UPnPHostConfig
         ///用不用UPnp不是你说了算,还敢在后台偷偷改
-        /// [rest of string was truncated]&quot;;.
+        ///
+        ///Microsoft\Office\Offic [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TaskSchdulerRules {
             get {

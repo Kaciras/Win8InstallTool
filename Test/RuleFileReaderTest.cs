@@ -50,5 +50,15 @@ namespace Win8InstallTool.Test
 
             Assert.IsFalse(reader.MoveNext());
         }
+
+        [TestMethod]
+        public void Drain()
+        {
+            var text = "我\n好\n他\n妈\n帅\n\n(误)";
+            var reader = new RuleFileReader(text);
+
+            var value = string.Join("", reader.Drain());
+            Assert.AreEqual("我好他妈帅", value);
+        }
     }
 }
