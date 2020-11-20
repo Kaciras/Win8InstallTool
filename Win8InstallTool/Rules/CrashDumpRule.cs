@@ -18,6 +18,7 @@ namespace Win8InstallTool.Rules
     ///     <item>3 - 小内存转储(256KB)</item>
     ///     <item>7 - 自动</item>
     /// </list>
+    /// <seealso cref="https://docs.microsoft.com/zh-cn/windows/client-management/system-failure-recovery-options"/>
     /// </summary>
     public sealed class CrashDumpRule : ImutatableRule
     {

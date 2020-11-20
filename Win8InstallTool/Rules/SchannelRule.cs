@@ -37,7 +37,7 @@ namespace Win8InstallTool.Rules
 
         protected override bool Check()
         {
-            return !Registry.GetValue(KEY, "EventLogging", null).Equals(0x0000);
+            return !Registry.GetValue(KEY, "EventLogging", 0).Equals(0x0000);
         }
     }
 }

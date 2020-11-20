@@ -20,19 +20,6 @@ namespace Win8InstallTool
 
 		public static ITaskFolder Root { get; }
 
-		public static bool FolderExists(string path)
-		{
-			try
-			{
-				Root.GetFolder(path);
-				return true;
-			}
-			catch (FileNotFoundException)
-			{
-				return false;
-			}
-		}
-
 		public static void DeleteFolder(string path)
 		{
 			var folder = Root.GetFolder(path);
@@ -55,36 +42,10 @@ namespace Win8InstallTool
 			taskScheduler.GetFolder(folder).DeleteTask(name, 0);
 		}
 
-		public static void SetEnable(string path, bool enable)
-		{
-			var task = Root.GetTask(path);
-			if (task != null)
-			{
-				task.Enabled = enable;
-			}
-            else
-            {
-				throw new FileNotFoundException("找不到任务项");
-            }
-		}
-
-		public static bool? GetEnable(string path)
-		{
-			try
-			{
-				return Root.GetTask(path).Enabled;
-			}
-			catch(IOException ex)
-			when (ex is DirectoryNotFoundException || ex is FileNotFoundException)
-			{
-				return null;
-			}
-		}
-
 		public static void Import(string dir, string name, string xml)
 		{
 			taskScheduler.GetFolder(dir).RegisterTask(
-				"asd",
+				name,
 				xml,
 				(int) _TASK_CREATION.TASK_CREATE,
 				null,

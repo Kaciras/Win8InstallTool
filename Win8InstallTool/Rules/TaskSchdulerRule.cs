@@ -43,7 +43,8 @@ namespace Win8InstallTool.Rules
                 }
                 return new TaskOptimizeItem(task, keep, description);
             }
-            catch (FileNotFoundException)
+            catch (IOException e)
+            when (e is DirectoryNotFoundException || e is FileNotFoundException)
             {
                 return null; // Task not found, cannot optimize
             }
