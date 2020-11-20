@@ -7,11 +7,11 @@ namespace Win8InstallTool
     /// <summary>
     /// 对 TaskScheduler 的封装，提供了一些快捷方法。
     /// </summary>
-    public static class TaskShcdulerManager
+    public static class TaskSchedulerManager
 	{
 		static readonly TaskSchedulerClass taskScheduler;
 
-		static TaskShcdulerManager()
+		static TaskSchedulerManager()
 		{
 			taskScheduler = new TaskSchedulerClass();
 			taskScheduler.Connect();

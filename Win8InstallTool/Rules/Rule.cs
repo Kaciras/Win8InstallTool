@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Win8InstallTool.Rules
+﻿namespace Win8InstallTool.Rules
 {
     /// <summary>
     /// 表示一条优化规则，调用 Scan() 来检测是否可优化。

@@ -124,6 +124,12 @@ namespace Win8InstallTool
 				.ToList(); // rootKey 会销毁，必须全部遍历完
 		}
 
+		public static bool ContainsSubKey(this RegistryKey key, string name)
+		{
+			using var subKey = key.OpenSubKey(name);
+			return subKey != null;
+		}
+
 		/// <summary>
 		/// 尽管程序要求以管理员身份运行，但有些注册表键仍然没有修改权限，故需要添加一下权限。
 		/// 可以使用using语法来自动还原权限：
@@ -161,14 +167,6 @@ namespace Win8InstallTool
 				// TODO: key被删了咋办
 				key.SetAccessControl(accessControl);
 			}
-		}
-
-		// ============================ 扩展方法 ============================
-
-		public static bool ContainsSubKey(this RegistryKey key, string name)
-		{
-			using var subKey = key.OpenSubKey(name);
-			return subKey != null;
-		}
+		}		
 	}
 }

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
-	public class ExplorerFolderRule : ImutatableRule
+    public class ExplorerFolderRule : ImutatableRule
 	{
 		// HKEY_LOCAL_MACHINE
 		private const string KEY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace";

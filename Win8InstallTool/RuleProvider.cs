@@ -90,11 +90,11 @@ namespace Win8InstallTool
 
             if (disable)
             {
-                return new TaskSchdulerRule(reader.Read(), reader.Read(), true);
+                return new TaskSchedulerRule(reader.Read(), reader.Read(), true);
             }
             else
             {
-                return new TaskSchdulerRule(first, reader.Read(), false);
+                return new TaskSchedulerRule(first, reader.Read(), false);
             }
         }
 

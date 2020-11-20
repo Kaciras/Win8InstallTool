@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using TaskScheduler;
 
 namespace Win8InstallTool.Rules
 {
-    public class TaskSchdulerRule : Rule
+    public class TaskSchedulerRule : Rule
     {
         private readonly string path;
         private readonly string description;
         private readonly bool keep;
 
-        public TaskSchdulerRule(string path, string description, bool keep)
+        public TaskSchedulerRule(string path, string description, bool keep)
         {
             this.path = path;
             this.description = description;
@@ -25,7 +20,7 @@ namespace Win8InstallTool.Rules
         {
             try
             {
-                var folder = TaskShcdulerManager.Root.GetFolder(path);
+                var folder = TaskSchedulerManager.Root.GetFolder(path);
                 if (folder.GetTasks((int)_TASK_ENUM_FLAGS.TASK_ENUM_HIDDEN).Count == 0)
                 {
                     return null;
@@ -40,7 +35,7 @@ namespace Win8InstallTool.Rules
 
             try
             {
-                var task = TaskShcdulerManager.Root.GetTask(path);
+                var task = TaskSchedulerManager.Root.GetTask(path);
                 if (keep && !task.Enabled)
                 {
                     return null;
@@ -70,7 +65,7 @@ namespace Win8InstallTool.Rules
 
             public void Optimize()
             {
-                TaskShcdulerManager.ClearFolder(folder.Path);
+                TaskSchedulerManager.ClearFolder(folder.Path);
             }
         }
 
@@ -98,7 +93,7 @@ namespace Win8InstallTool.Rules
                 }
                 else
                 {
-                    TaskShcdulerManager.DeleteTask(task.Path);
+                    TaskSchedulerManager.DeleteTask(task.Path);
                 }
             }
         }

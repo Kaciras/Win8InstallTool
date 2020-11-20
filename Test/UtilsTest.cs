@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Win8InstallTool.Test
@@ -7,6 +6,7 @@ namespace Win8InstallTool.Test
 	[TestClass]
 	public class UtilsTest
 	{
+		// TODO: 总是出现莫名其妙的错误 2 or 1008
 		[TestMethod]
 		public void ExtractStringFromDLL()
 		{

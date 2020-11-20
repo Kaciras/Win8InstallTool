@@ -6,6 +6,7 @@ namespace Win8InstallTool.Rules
 	{
 		private const string SERVICE_DIR = @"SYSTEM\CurrentControlSet\Services\";
 
+		// override 属性不能增加 setter，傻逼C#总有东西来恶心老子。
 		private string name;
 
 		/// <summary>

@@ -96,8 +96,8 @@
     <Compile Include="Rules\ServiceRule.cs" />
     <Compile Include="Rules\ServiceState.cs" />
     <Compile Include="Rules\StartupMenuRule.cs" />
-    <Compile Include="Rules\TaskSchdulerRule.cs" />
-    <Compile Include="TaskShcdulerManager.cs" />
+    <Compile Include="Rules\TaskSchedulerRule.cs" />
+    <Compile Include="TaskSchedulerManager.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>

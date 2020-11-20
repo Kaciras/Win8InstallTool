@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Win8InstallTool.Rules
+﻿namespace Win8InstallTool.Rules
 {
-	public enum ServiceState
+    public enum ServiceState
 	{
 		/// <summary>
 		/// 启动类型：自动
