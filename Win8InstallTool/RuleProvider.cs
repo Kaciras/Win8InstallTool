@@ -24,14 +24,9 @@ namespace Win8InstallTool
 
         internal void Initialize()
         {
-            var rules = LoadRuleFile(Resources.ServiceRules, ReadServiceRules);
-            ruleSets.Add(new RuleSet { Name = "系统服务", Rules = rules });
-
-            rules = LoadRuleFile(Resources.TaskSchdulerRules, ReadTaskRules);
-            ruleSets.Add(new RuleSet { Name = "任务计划程序", Rules = rules });
-
-            rules = LoadRuleFile(Resources.StartupRules, r => new StartupMenuRule(r.Read()));
-            ruleSets.Add(new RuleSet { Name = "开始菜单", Rules = rules });
+            LoadRuleFile("系统服务", Resources.ServiceRules, ReadServiceRules);
+            LoadRuleFile("任务计划程序", Resources.TaskSchdulerRules, ReadTaskRules);
+            LoadRuleFile("开始菜单", Resources.StartupRules, r => new StartupMenuRule(r.Read()));
 
             // 这是什么奇怪的写法，好像内部属性跟外层平级了
             ruleSets.Add(new RuleSet
@@ -45,7 +40,6 @@ namespace Win8InstallTool
                 }
             });
 
-            ruleSets.Add(ContextMenuRules());
 
             ProgressMax = ruleSets.Sum(set => set.Rules.Count);
         }
@@ -101,7 +95,7 @@ namespace Win8InstallTool
             return new RuleSet { Name = "右键菜单清理", Rules = result };
         }
 
-        static List<Rule> LoadRuleFile(string content, Func<RuleFileReader, Rule> func)
+        void LoadRuleFile(string name, string content, Func<RuleFileReader, Rule> func)
         {
             var reader = new RuleFileReader(content);
             var rules = new List<Rule>();
@@ -109,7 +103,7 @@ namespace Win8InstallTool
             {
                 rules.Add(func(reader));
             }
-            return rules;
+            ruleSets.Add(new RuleSet { Name = name, Rules = rules });
         }
 
         static Rule ReadServiceRules(RuleFileReader reader)
