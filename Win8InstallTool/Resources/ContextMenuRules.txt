@@ -33,3 +33,9 @@ Shell\setdesktopwallpaper
 一般在播放器里都有这功能，就不放在菜单上占位置了
 :SEARCH
 SystemFileAssociations
+
+ShellEx\ContextMenuHandlers\ShellImagePreview
+各种媒体文件 - 预览
+想看图用默认的打开即可，这个完全没用啊
+:SEARCH
+SystemFileAssociations
