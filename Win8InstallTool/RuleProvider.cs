@@ -14,6 +14,9 @@ namespace Win8InstallTool
         public IList<Rule> Rules;
     }
 
+    /// <summary>
+    /// 优化方案的提供者，调用 Scan() 方法检测所有可优化的地方。
+    /// </summary>
     public sealed class RuleProvider
     {
         private readonly ICollection<RuleSet> ruleSets = new List<RuleSet>();
@@ -101,24 +104,30 @@ namespace Win8InstallTool
         static Rule ReadContextMenuRules(RuleFileReader reader)
         {
             var item = reader.Read();
-            var context = reader.Read();
+            var name = reader.Read();
             var description = reader.Read();
-
             var directive = reader.Read();
-            IList<string> folders;
 
-            if (directive[0] == ':')
+            IList<string> keys;
+
+            if (directive == ":SEARCH")
             {
-                var root = Path.Combine("HKEY_CLASSES_ROOT", reader.Read());
-                folders = RegistryHelper.Search(root, item);
+                var folder = reader.Read();
+                var root = Path.Combine("HKEY_CLASSES_ROOT", folder);
+
+                keys = RegistryHelper.Search(root, item)
+                    .Select(sub => Path.Combine(folder, sub))
+                    .ToList();
             }
             else
             {
-                folders = reader.Drain().ToList();
-                folders.Add(directive);
+                keys = reader.Drain()
+                    .Select(folder => Path.Combine(folder, item))
+                    .ToList();
+                keys.Add(Path.Combine(directive, item));
             }
 
-            return new ContextMenuRule(item, folders, context, description);
+            return new ContextMenuRule(keys, name, description);
         }
     }
 }
