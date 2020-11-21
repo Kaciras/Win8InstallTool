@@ -112,17 +112,18 @@ namespace Win8InstallTool
 
 		/// <summary>
 		/// 在指定的目录中搜索含有某个路径的项，只搜一层。
+		/// <br/>
+		/// 因为 rootKey 会销毁，必须在离开作用域前遍历完，所以返回IList。
 		/// </summary>
 		/// <param name="root">在此目录中搜索</param>
 		/// <param name="key">要搜索的键路径</param>
-		/// <returns>路径列表</returns>
+		/// <returns>子项名字列表</returns>
 		public static IList<string> Search(string root, string key)
 		{
 			using var rootKey = OpenKey(root);
 			return rootKey.GetSubKeyNames()
-				.Select(name => Path.Combine(name, key))
-				.Where(path => rootKey.ContainsSubKey(path))
-				.ToList(); // rootKey 会销毁，必须全部遍历完
+				.Where(name => rootKey.ContainsSubKey(Path.Combine(name, key)))
+				.ToList();
 		}
 
 		public static bool ContainsSubKey(this RegistryKey key, string name)

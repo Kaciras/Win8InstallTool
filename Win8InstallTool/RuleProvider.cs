@@ -108,26 +108,24 @@ namespace Win8InstallTool
             var description = reader.Read();
             var directive = reader.Read();
 
-            IList<string> keys;
+            IList<string> folders;
 
             if (directive == ":SEARCH")
             {
                 var folder = reader.Read();
                 var root = Path.Combine("HKEY_CLASSES_ROOT", folder);
 
-                keys = RegistryHelper.Search(root, item)
-                    .Select(sub => Path.Combine(folder, sub))
+                folders = RegistryHelper.Search(root, item)
+                    .Select(name => Path.Combine(folder, name))
                     .ToList();
             }
             else
             {
-                keys = reader.Drain()
-                    .Select(folder => Path.Combine(folder, item))
-                    .ToList();
-                keys.Add(Path.Combine(directive, item));
+                folders = reader.Drain().ToList();
+                folders.Add(directive);
             }
 
-            return new ContextMenuRule(keys, name, description);
+            return new ContextMenuRule(item, folders, name, description);
         }
     }
 }
