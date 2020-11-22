@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Security.Principal;
 using System.Windows.Forms;
 
 [assembly: InternalsVisibleTo("Test")]
@@ -7,6 +8,8 @@ namespace Win8InstallTool
 {
     static class Program
     {
+        internal static bool IsElevated { get; private set; }
+
         [STAThread]
         static void Main()
         {
@@ -15,14 +18,12 @@ namespace Win8InstallTool
 
             if (CheckOSSupport())
             {
-                var provider = new RuleProvider();
-                provider.Initialize();
-                Application.Run(new MainWindow(provider));
+                StartProgram();
             }
             else
             {
                 MessageBox.Show(
-                    "本程序仅支持64位Windows8.1",
+                    "本程序仅支持 64 位 Windows8.1",
                     "无法启动",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -41,5 +42,27 @@ namespace Win8InstallTool
 				&& os.Platform == PlatformID.Win32NT
 				&& version.Major == 6 && version.Minor == 3;
 		}
+
+        
+        static void StartProgram()
+		{
+            /*
+             * 获取当前用户，并检测是否具有管理员权限。
+             * https://stackoverflow.com/a/5953294/7065321
+             */
+            string currentUser;
+
+            using (var identity = WindowsIdentity.GetCurrent())
+            {
+                var principal = new WindowsPrincipal(identity);
+                currentUser = identity.Name;
+                IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+
+            var provider = new RuleProvider(currentUser, IsElevated);
+            provider.Initialize();
+
+            Application.Run(new MainWindow(provider));
+        }
 	}
 }

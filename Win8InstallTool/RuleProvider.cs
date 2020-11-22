@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using Win8InstallTool.Properties;
 using Win8InstallTool.Rules;
 
@@ -21,30 +22,44 @@ namespace Win8InstallTool
     {
         private readonly ICollection<RuleSet> ruleSets = new List<RuleSet>();
 
-        public int ProgressMax { get; private set; }
+        private readonly string userName;
+        private readonly bool includeSystem;
+
+		public RuleProvider(string userName, bool includeSystem)
+		{
+			this.userName = userName;
+			this.includeSystem = includeSystem;
+		}
+
+		public int ProgressMax { get; private set; }
 
         // 在新版 .NET 里事件参数无需继承 EventArg，这里也就不继承了
         public event EventHandler<int> OnProgress;
 
         internal void Initialize()
         {
-            LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenuRules);
-            LoadRuleFile("系统服务", Resources.ServiceRules, ReadServiceRules);
-            LoadRuleFile("任务计划程序", Resources.TaskSchdulerRules, ReadTaskRules);
-            LoadRuleFile("开始菜单", Resources.StartupRules, r => new StartupMenuRule(r.Read()));
+            LoadRuleFile("用户的开始菜单", Resources.StartupRules, r => new StartupMenuRule(r.Read()));
+            
 
-            // 这是什么奇怪的写法，好像内部属性跟外层平级了
-            ruleSets.Add(new RuleSet
+            if (includeSystem)
             {
-                Name = "其他优化项",
-                Rules = new List<Rule>
+                // 这是什么奇怪的写法，好像内部属性跟外层平级了
+                ruleSets.Add(new RuleSet
+                {
+                    Name = "其他优化项",
+                    Rules = new List<Rule>
                 {
                     new CrashDumpRule(),
                     new SchannelRule(),
                     new OpenWithNotepadRule(),
                 }
-            });
+                });
 
+                LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenu);
+                LoadRuleFile("系统服务", Resources.ServiceRules, ReadService);
+                LoadRuleFile("任务计划程序", Resources.TaskSchdulerRules, ReadTask);
+                LoadRuleFile("开始菜单（系统）", Resources.StartupRules, r => new StartupMenuRule(r.Read()));
+            }
 
             ProgressMax = ruleSets.Sum(set => set.Rules.Count);
         }
@@ -81,12 +96,14 @@ namespace Win8InstallTool
             ruleSets.Add(new RuleSet { Name = name, Rules = rules });
         }
 
-        static Rule ReadServiceRules(RuleFileReader reader)
+        // 下面是各种规则的加载逻辑，为了省点字把 Rule 后缀去掉了（ReadTaskRule -> ReadTask）
+
+        static Rule ReadService(RuleFileReader reader)
         {
             return new ServiceRule(reader.Read(), reader.Read());
         }
 
-        static Rule ReadTaskRules(RuleFileReader reader)
+        static Rule ReadTask(RuleFileReader reader)
         {
             var first = reader.Read();
             var disable = first == ":DISABLE";
@@ -101,7 +118,7 @@ namespace Win8InstallTool
             }
         }
 
-        static Rule ReadContextMenuRules(RuleFileReader reader)
+        static Rule ReadContextMenu(RuleFileReader reader)
         {
             var item = reader.Read();
             var name = reader.Read();

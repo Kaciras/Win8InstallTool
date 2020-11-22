@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -20,6 +21,12 @@ namespace Win8InstallTool
 
 			var appVersion = Assembly.GetExecutingAssembly().GetName().Version;
 			Text = $"Kaciras 的 Win8 优化工具 v{appVersion.ToString(3)}";
+
+			if (Program.IsElevated)
+			{
+				roleLabel.Text = "管理员";
+				roleLabel.ForeColor = Color.DeepPink;
+			}
 		}
 
 		/// <summary>
