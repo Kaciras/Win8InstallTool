@@ -2,28 +2,27 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Principal;
 using Win8InstallTool.Properties;
 using Win8InstallTool.Rules;
 
 namespace Win8InstallTool
 {
-    internal struct RuleSet
-    {
-        public string Name;
+	internal struct RuleSet
+	{
+		public string Name;
 
-        public IList<Rule> Rules;
-    }
+		public IList<Rule> Rules;
+	}
 
-    /// <summary>
-    /// 优化方案的提供者，调用 Scan() 方法检测所有可优化的地方。
-    /// </summary>
-    public sealed class RuleProvider
-    {
-        private readonly ICollection<RuleSet> ruleSets = new List<RuleSet>();
+	/// <summary>
+	/// 优化方案的提供者，调用 Scan() 方法检测所有可优化的地方。
+	/// </summary>
+	public sealed class RuleProvider
+	{
+		private readonly ICollection<RuleSet> ruleSets = new List<RuleSet>();
 
-        private readonly string userName;
-        private readonly bool includeSystem;
+		private readonly string userName;
+		private readonly bool includeSystem;
 
 		public RuleProvider(string userName, bool includeSystem)
 		{
@@ -33,116 +32,116 @@ namespace Win8InstallTool
 
 		public int ProgressMax { get; private set; }
 
-        // 在新版 .NET 里事件参数无需继承 EventArg，这里也就不继承了
-        public event EventHandler<int> OnProgress;
+		// 在新版 .NET 里事件参数无需继承 EventArg，这里也就不继承了
+		public event EventHandler<int> OnProgress;
 
-        internal void Initialize()
-        {
-            LoadRuleFile("用户的开始菜单", Resources.StartupRules, r => new StartupMenuRule(r.Read()));
-            
+		internal void Initialize()
+		{
+			LoadRuleFile("用户的开始菜单", Resources.StartupRules, r => new StartupMenuRule(r.Read()));
 
-            if (includeSystem)
-            {
-                // 这是什么奇怪的写法，好像内部属性跟外层平级了
-                ruleSets.Add(new RuleSet
-                {
-                    Name = "其他优化项",
-                    Rules = new List<Rule>
-                {
-                    new CrashDumpRule(),
-                    new SchannelRule(),
-                    new OpenWithNotepadRule(),
-                }
-                });
 
-                LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenu);
-                LoadRuleFile("系统服务", Resources.ServiceRules, ReadService);
-                LoadRuleFile("任务计划程序", Resources.TaskSchdulerRules, ReadTask);
-                LoadRuleFile("开始菜单（系统）", Resources.StartupRules, r => new StartupMenuRule(r.Read()));
-            }
+			if (includeSystem)
+			{
+				// 这是什么奇怪的写法，好像内部属性跟外层平级了
+				ruleSets.Add(new RuleSet
+				{
+					Name = "其他优化项",
+					Rules = new List<Rule>
+				{
+					new CrashDumpRule(),
+					new SchannelRule(),
+					new OpenWithNotepadRule(),
+				}
+				});
 
-            ProgressMax = ruleSets.Sum(set => set.Rules.Count);
-        }
+				LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenu);
+				LoadRuleFile("系统服务", Resources.ServiceRules, ReadService);
+				LoadRuleFile("任务计划程序", Resources.TaskSchdulerRules, ReadTask);
+				LoadRuleFile("开始菜单（系统）", Resources.StartupRules, r => new StartupMenuRule(r.Read()));
+			}
 
-        public IEnumerable<OptimizeSet> Scan()
-        {
-            var progress = 0;
+			ProgressMax = ruleSets.Sum(set => set.Rules.Count);
+		}
 
-            Optimizable DoScan(Rule rule)
-            {
-                var value = rule.Scan();
-                OnProgress?.Invoke(this, ++progress);
-                return value;
-            }
+		public IEnumerable<OptimizeSet> Scan()
+		{
+			var progress = 0;
 
-            foreach (var ruleSet in ruleSets)
-            {
-                var items = ruleSet.Rules
-                    .Select(rule => DoScan(rule))
-                    .Where(o => o != null);
+			Optimizable DoScan(Rule rule)
+			{
+				var value = rule.Scan();
+				OnProgress?.Invoke(this, ++progress);
+				return value;
+			}
 
-                yield return new OptimizeSet(ruleSet.Name, items);
-            }
-        }
+			foreach (var ruleSet in ruleSets)
+			{
+				var items = ruleSet.Rules
+					.Select(rule => DoScan(rule))
+					.Where(o => o != null);
 
-        void LoadRuleFile(string name, string content, Func<RuleFileReader, Rule> func)
-        {
-            var reader = new RuleFileReader(content);
-            var rules = new List<Rule>();
-            while (reader.MoveNext())
-            {
-                rules.Add(func(reader));
-            }
-            ruleSets.Add(new RuleSet { Name = name, Rules = rules });
-        }
+				yield return new OptimizeSet(ruleSet.Name, items);
+			}
+		}
 
-        // 下面是各种规则的加载逻辑，为了省点字把 Rule 后缀去掉了（ReadTaskRule -> ReadTask）
+		void LoadRuleFile(string name, string content, Func<RuleFileReader, Rule> func)
+		{
+			var reader = new RuleFileReader(content);
+			var rules = new List<Rule>();
+			while (reader.MoveNext())
+			{
+				rules.Add(func(reader));
+			}
+			ruleSets.Add(new RuleSet { Name = name, Rules = rules });
+		}
 
-        static Rule ReadService(RuleFileReader reader)
-        {
-            return new ServiceRule(reader.Read(), reader.Read());
-        }
+		// 下面是各种规则的加载逻辑，为了省点字把 Rule 后缀去掉了（ReadTaskRule -> ReadTask）
 
-        static Rule ReadTask(RuleFileReader reader)
-        {
-            var first = reader.Read();
-            var disable = first == ":DISABLE";
+		static Rule ReadService(RuleFileReader reader)
+		{
+			return new ServiceRule(reader.Read(), reader.Read());
+		}
 
-            if (disable)
-            {
-                return new TaskSchedulerRule(reader.Read(), reader.Read(), true);
-            }
-            else
-            {
-                return new TaskSchedulerRule(first, reader.Read(), false);
-            }
-        }
+		static Rule ReadTask(RuleFileReader reader)
+		{
+			var first = reader.Read();
+			var disable = first == ":DISABLE";
 
-        static Rule ReadContextMenu(RuleFileReader reader)
-        {
-            var item = reader.Read();
-            var name = reader.Read();
-            var description = reader.Read();
-            var directive = reader.Read();
+			if (disable)
+			{
+				return new TaskSchedulerRule(reader.Read(), reader.Read(), true);
+			}
+			else
+			{
+				return new TaskSchedulerRule(first, reader.Read(), false);
+			}
+		}
 
-            IList<string> folders;
+		static Rule ReadContextMenu(RuleFileReader reader)
+		{
+			var item = reader.Read();
+			var name = reader.Read();
+			var description = reader.Read();
+			var directive = reader.Read();
 
-            if (directive == ":SEARCH")
-            {
-                var folder = reader.Read();
-                var root = Path.Combine("HKEY_CLASSES_ROOT", folder);
+			IList<string> folders;
 
-                folders = RegistryHelper.Search(root, item)
-                    .Select(name => Path.Combine(folder, name))
-                    .ToList();
-            }
-            else
-            {
-                folders = reader.Drain().ToList();
-                folders.Add(directive);
-            }
+			if (directive == ":SEARCH")
+			{
+				var folder = reader.Read();
+				var root = Path.Combine("HKEY_CLASSES_ROOT", folder);
 
-            return new ContextMenuRule(item, folders, name, description);
-        }
-    }
+				folders = RegistryHelper.Search(root, item)
+					.Select(name => Path.Combine(folder, name))
+					.ToList();
+			}
+			else
+			{
+				folders = reader.Drain().ToList();
+				folders.Add(directive);
+			}
+
+			return new ContextMenuRule(item, folders, name, description);
+		}
+	}
 }

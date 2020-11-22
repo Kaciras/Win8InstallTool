@@ -2,7 +2,7 @@
 
 namespace Win8InstallTool.Rules
 {
-    public class ServiceRule : ImutatableRule
+	public class ServiceRule : ImutatableRule
 	{
 		private const string SERVICE_DIR = @"SYSTEM\CurrentControlSet\Services\";
 
@@ -29,13 +29,13 @@ namespace Win8InstallTool.Rules
 		/// </summary>
 		public ServiceState TargetState { get; set; } = ServiceState.Disabled;
 
-        public ServiceRule(string key, string description)
-        {
-            Key = key;
-            Description = description;
-        }
+		public ServiceRule(string key, string description)
+		{
+			Key = key;
+			Description = description;
+		}
 
-        protected override bool Check()
+		protected override bool Check()
 		{
 			using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key);
 			if (config == null)

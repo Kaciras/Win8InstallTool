@@ -4,7 +4,7 @@ using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
-    public class ExplorerFolderRule : ImutatableRule
+	public class ExplorerFolderRule : ImutatableRule
 	{
 		// HKEY_LOCAL_MACHINE
 		private const string KEY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace";

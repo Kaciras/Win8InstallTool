@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Win8InstallTool
 {
-    public sealed partial class MainWindow : Form
+	public sealed partial class MainWindow : Form
 	{
 		readonly RuleProvider provider;
 
@@ -80,15 +80,15 @@ namespace Win8InstallTool
 			{
 				await Task.Run(() => RunOptimize(checkedNodes));
 			}
-			catch(Exception ex)
-            {
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message, "优化时出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Debugger.Break();
-            }
+			}
 			treeView.Enabled = true;
 		}
 
-		void RunOptimize(IEnumerable<TreeNode> nodes) 
+		void RunOptimize(IEnumerable<TreeNode> nodes)
 		{
 			foreach (var node in nodes)
 			{

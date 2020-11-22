@@ -1,15 +1,15 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using Microsoft.Win32;
 
 namespace Win8InstallTool
 {
-    public static class RegistryHelper
+	public static class RegistryHelper
 	{
 		/// <summary>
 		/// 从 .NET 标准库里抄的快捷方法，为什么微软不直接提供？
@@ -75,13 +75,13 @@ namespace Win8InstallTool
 		private static void InvokeRegeditor(string args)
 		{
 			// 如果用 regedt32 可能无法导入
-            var startInfo = new ProcessStartInfo("regedit.exe", args)
-            {
-                UseShellExecute = false,
-                RedirectStandardError = true,
-            };
+			var startInfo = new ProcessStartInfo("regedit.exe", args)
+			{
+				UseShellExecute = false,
+				RedirectStandardError = true,
+			};
 
-            var process = Process.Start(startInfo);
+			var process = Process.Start(startInfo);
 			process.WaitForExit();
 			if (process.ExitCode != 0)
 			{
@@ -169,6 +169,6 @@ namespace Win8InstallTool
 				// TODO: key被删了咋办
 				key.SetAccessControl(accessControl);
 			}
-		}		
+		}
 	}
 }

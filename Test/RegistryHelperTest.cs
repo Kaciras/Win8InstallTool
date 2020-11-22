@@ -4,7 +4,7 @@ using Microsoft.Win32;
 
 namespace Win8InstallTool.Test
 {
-    [TestClass]
+	[TestClass]
 	public sealed class RegistryHelperTest
 	{
 		[TestMethod]

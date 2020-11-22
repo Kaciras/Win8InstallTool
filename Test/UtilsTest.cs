@@ -14,16 +14,16 @@ namespace Win8InstallTool.Test
 			Assert.AreEqual("解决所选项的同步错误", text);
 		}
 
-        [TestMethod]
-        public void CreateTempFile()
-        {
+		[TestMethod]
+		public void CreateTempFile()
+		{
 			Utils.TempFileSession file;
 
 			using (file = Utils.CreateTempFile())
-            {
+			{
 				Assert.IsTrue(File.Exists(file.Path));
-            }
+			}
 			Assert.IsFalse(File.Exists(file.Path));
-        }
+		}
 	}
 }

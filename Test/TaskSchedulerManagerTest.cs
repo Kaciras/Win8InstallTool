@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaskScheduler;
 
 namespace Win8InstallTool.Test
 {
-    [TestClass]
+	[TestClass]
 	public sealed class TaskSchedulerManagerTest
 	{
 		[TestMethod]
@@ -14,9 +14,9 @@ namespace Win8InstallTool.Test
 			Assert.IsTrue(windows.GetFolders(0).Count > 50);
 		}
 
-        [TestMethod]
-        public void GetEnabled()
-        {
+		[TestMethod]
+		public void GetEnabled()
+		{
 			var task = TaskSchedulerManager.Root.GetTask(@"Microsoft\Windows\Chkdsk\ProactiveScan");
 			Assert.IsTrue(task.Enabled);
 		}
@@ -31,27 +31,27 @@ namespace Win8InstallTool.Test
 
 			// 目录会自动创建
 			TaskSchedulerManager.Root.RegisterTaskDefinition(
-				@"Test\SubFolder\测试任务", 
+				@"Test\SubFolder\测试任务",
 				task,
 				(int)_TASK_CREATION.TASK_CREATE,
 				null,
-				null, 
-				_TASK_LOGON_TYPE.TASK_LOGON_INTERACTIVE_TOKEN); 
+				null,
+				_TASK_LOGON_TYPE.TASK_LOGON_INTERACTIVE_TOKEN);
 
 			TaskSchedulerManager.ClearFolder("Test");
 
-            try
-            {
+			try
+			{
 				TaskSchedulerManager.Root.GetTask(@"Test\SubFolder\测试任务");
 				Assert.Fail("Expect to throw exception");
-			} 
-			catch(IOException e)
+			}
+			catch (IOException e)
 			when (e is DirectoryNotFoundException || e is FileNotFoundException)
 			{
 				// Expect task is not exists.
 			}
-            finally
-            {
+			finally
+			{
 				TaskSchedulerManager.Root.DeleteFolder(@"Test\SubFolder", 0);
 				TaskSchedulerManager.Root.DeleteFolder(@"Test", 0);
 			}

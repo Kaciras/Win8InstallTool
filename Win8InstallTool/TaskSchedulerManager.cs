@@ -4,10 +4,10 @@ using TaskScheduler;
 
 namespace Win8InstallTool
 {
-    /// <summary>
-    /// 对 TaskScheduler 的封装，提供了一些快捷方法。
-    /// </summary>
-    public static class TaskSchedulerManager
+	/// <summary>
+	/// 对 TaskScheduler 的封装，提供了一些快捷方法。
+	/// </summary>
+	public static class TaskSchedulerManager
 	{
 		static readonly TaskScheduler.TaskScheduler taskScheduler;
 
@@ -53,7 +53,7 @@ namespace Win8InstallTool
 			taskScheduler.GetFolder(dir).RegisterTask(
 				name,
 				xml,
-				(int) _TASK_CREATION.TASK_CREATE,
+				(int)_TASK_CREATION.TASK_CREATE,
 				null,
 				null,
 				_TASK_LOGON_TYPE.TASK_LOGON_INTERACTIVE_TOKEN);

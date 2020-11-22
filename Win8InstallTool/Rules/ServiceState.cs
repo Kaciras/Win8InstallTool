@@ -1,6 +1,6 @@
 ﻿namespace Win8InstallTool.Rules
 {
-    public enum ServiceState
+	public enum ServiceState
 	{
 		/// <summary>
 		/// 启动类型：自动
