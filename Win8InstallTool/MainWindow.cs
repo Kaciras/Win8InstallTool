@@ -27,6 +27,12 @@ namespace Win8InstallTool
 				roleLabel.Text = "管理员";
 				roleLabel.ForeColor = Color.DeepPink;
 			}
+			else
+			{
+				var tooltip = new ToolTip();
+				tooltip.AutomaticDelay = 500;
+				tooltip.SetToolTip(roleLabel, "以管理员运行才能扫描系统优化项");
+			}
 		}
 
 		/// <summary>

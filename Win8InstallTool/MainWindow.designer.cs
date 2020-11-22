@@ -120,9 +120,9 @@
 			// 
 			this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.progressBar.Location = new System.Drawing.Point(12, 375);
+			this.progressBar.Location = new System.Drawing.Point(14, 375);
 			this.progressBar.Name = "progressBar";
-			this.progressBar.Size = new System.Drawing.Size(660, 24);
+			this.progressBar.Size = new System.Drawing.Size(656, 24);
 			this.progressBar.TabIndex = 7;
 			// 
 			// treeView
