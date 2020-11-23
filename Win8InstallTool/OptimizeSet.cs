@@ -2,6 +2,7 @@
 
 namespace Win8InstallTool
 {
+	// TODO: 纯值对象的设计不好，还是应该以规则组作为核心
 	public struct OptimizeSet
 	{
 		public readonly string Name;
