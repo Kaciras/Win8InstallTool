@@ -62,24 +62,29 @@ namespace Win8InstallTool.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to shellex\ContextMenuHandlers\Compatibility
-        ///执行文件
+        ///执行文件 - 兼容性疑难解答
         ///出了问题不去谷歌，看着破解答有屁用
         ///exefile
         ///
         ///shellex\ContextMenuHandlers\Library Location
-        ///文件夹
+        ///文件夹 - 包含到库中
         ///我现在还没用过这个系统自带的各种库文件夹，删了吧
         ///Folder
         ///
+        ///shellex\ContextMenuHandlers\{90AA3A4E-1CBA-4233-B8BB-535773D48449}
+        ///所有文件 - 固定到任务栏
+        ///直接往任务栏上拖即可
+        ///*
+        ///
         ///shell\AnyCode
-        ///文件夹及其背景
+        ///文件夹及其背景 - Open with Visual Studio
         ///没啥用纯看着碍眼
         ///Directory
         ///Directory\background
         ///
         ///shell\edit
-        ///各种纯文本类文件
-        ///跟&quot;用记事本打开&quot;的功能重复了，删之
+        ///各种纯文本类文件 - 编辑
+        ///跟&quot;记事本打开&quot;的功能重复了，删之
         ///cmdfile
         ///batfile
         ///xmlfile
@@ -87,11 +92,8 @@ namespace Win8InstallTool.Properties {
         ///SystemFileAssociations\text
         ///
         ///Shell\setdesktopwallpaper
-        ///各种媒体文件
-        ///一般在播放器里都有这功能，就不放在菜单上占位置了
-        ///:SEARCH
-        ///SystemFileAssociations
-        ///.
+        ///各种媒体文件 - 设为桌面背景
+        ///一般在播放器里都 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ContextMenuRules {
             get {
@@ -117,6 +119,23 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Compressed (zipped) Folder.ZFSendToTarget
+        ///有专门压缩软件来做了
+        ///
+        ///Mail Recipient.MAPIMail
+        ///邮件这么正式的东西还是不用这么快捷的方法
+        ///
+        ///文档.mydocs
+        ///就是个直接复制到用户的文档目录，可惜我不用它
+        ///.
+        /// </summary>
+        internal static string SendToRules {
+            get {
+                return ResourceManager.GetString("SendToRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to hidserv
         ///不用特殊输入设备的不需要，该服务还容易被攻击者利用
         ///
@@ -127,7 +146,7 @@ namespace Win8InstallTool.Properties {
         ///服务器文件共享才需要，家用机可以关掉
         ///
         ///LanmanWorkstation
-        ///用SMB协议做文件共享的服务，办公室可能需要，不用的话可以关掉。
+        ///用SMB协议做文件共享的服务，办公室可能需要，不用的话可以关掉
         ///
         ///lmhosts
         ///办公室远程控制打印机、文件才需要
@@ -160,7 +179,7 @@ namespace Win8InstallTool.Properties {
         ///我从没用过它说的这些高级功能
         ///
         ///WinHttpAutoProxySvc
-        ///该服务使应用程序支持WPAD协议的应用，因为大多数的情况下不会用到. [rest of string was truncated]&quot;;.
+        ///该服务使应用程序支持WPAD协议的应用，因为大多数的情况下不会用到.建 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ServiceRules {
             get {

@@ -59,7 +59,7 @@ namespace Win8InstallTool
 				IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
 			}
 
-			var provider = new RuleProvider(currentUser, IsElevated);
+			var provider = new RuleProvider(IsElevated);
 			provider.Initialize();
 
 			Application.Run(new MainWindow(provider));

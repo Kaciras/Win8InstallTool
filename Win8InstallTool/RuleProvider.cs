@@ -21,12 +21,10 @@ namespace Win8InstallTool
 	{
 		private readonly ICollection<RuleSet> ruleSets = new List<RuleSet>();
 
-		private readonly string userName;
 		private readonly bool includeSystem;
 
-		public RuleProvider(string userName, bool includeSystem)
+		public RuleProvider(bool includeSystem)
 		{
-			this.userName = userName;
 			this.includeSystem = includeSystem;
 		}
 
@@ -37,8 +35,8 @@ namespace Win8InstallTool
 
 		internal void Initialize()
 		{
-			LoadRuleFile("用户的开始菜单", Resources.StartupRules, r => new StartupMenuRule(r.Read()));
-
+			LoadRuleFile("开始菜单（用户）", Resources.StartupRules, r => new StartupMenuRule(false, r.Read()));
+			LoadRuleFile("右键菜单 - 发送到", Resources.SendToRules, ReadSendTo);
 
 			if (includeSystem)
 			{
@@ -57,7 +55,7 @@ namespace Win8InstallTool
 				LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenu);
 				LoadRuleFile("系统服务", Resources.ServiceRules, ReadService);
 				LoadRuleFile("任务计划程序", Resources.TaskSchdulerRules, ReadTask);
-				LoadRuleFile("开始菜单（系统）", Resources.StartupRules, r => new StartupMenuRule(r.Read()));
+				LoadRuleFile("开始菜单（系统）", Resources.StartupRules, r => new StartupMenuRule(true, r.Read()));
 			}
 
 			ProgressMax = ruleSets.Sum(set => set.Rules.Count);
@@ -100,6 +98,11 @@ namespace Win8InstallTool
 		static Rule ReadService(RuleFileReader reader)
 		{
 			return new ServiceRule(reader.Read(), reader.Read());
+		}
+
+		static Rule ReadSendTo(RuleFileReader reader)
+		{
+			return new SendToRule(reader.Read(), reader.Read());
 		}
 
 		static Rule ReadTask(RuleFileReader reader)
