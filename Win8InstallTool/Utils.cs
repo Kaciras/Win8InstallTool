@@ -74,7 +74,7 @@ namespace Win8InstallTool
 		public static string ExtractStringFromDLL(string file, int number)
 		{
 			file = Environment.ExpandEnvironmentVariables(file);
-			var lib = LoadLibrary(file);
+			var lib = LoadLibraryEx(file, IntPtr.Zero, 0x00000020 | 0x00000002);
 
 			var code = Marshal.GetLastWin32Error();
 			if (code != 0)
@@ -88,8 +88,12 @@ namespace Win8InstallTool
 			return buffer.ToString();
 		}
 
+		// 使用 LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE + LOAD_LIBRARY_AS_IMAGE_RESOURCE 两个标志，
+		// 避免加载多余的依赖，防止出现 12 错误码。
+		// https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw
+
 		[DllImport("kernel32.dll", SetLastError = true)]
-		static extern IntPtr LoadLibrary(string lpFileName);
+		static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hFile, int flags);
 
 		[DllImport("user32.dll")]
 		static extern int LoadString(IntPtr hInstance, int ID, StringBuilder lpBuffer, int nBufferMax);
