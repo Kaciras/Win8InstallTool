@@ -4,9 +4,14 @@ using System.Collections.Generic;
 namespace Win8InstallTool
 {
 	/// <summary>
-	/// 一大片规则卸载代码里看着不输入，所以就单独提出来一个文本文件放在资源里。
+	/// 一大片规则卸载代码里看着不输入，所以就单独提出来一个文本文件放在资源里，本类专门用于读取这些文本文件。
 	/// <br/>
-	/// 本类专门用于读取这些文本文件。
+	/// 规则文件是一种以行为单位，低冗余的紧凑格式，具有以下特点：
+	/// <list>
+	/// <item>只能用LF换行符</item>
+	/// <item>使用空行分隔项目，项目内不允许空行</item>
+	/// <item>一行是一个属性，上层怎么解析随意</item>
+	/// </list>
 	/// </summary>
 	public sealed class RuleFileReader
 	{
@@ -37,6 +42,9 @@ namespace Win8InstallTool
 					case '\r':
 						ThrowCR();
 						break;
+					case '#':
+						i = content.IndexOf('\n', i);
+						break;
 					case '\n':
 					case '\t':
 					case ' ':
@@ -59,6 +67,10 @@ namespace Win8InstallTool
 			}
 		}
 
+		/// <summary>
+		/// 读取一行，请先使用 MoveNext() 确保读取位置在有效行上。
+		/// </summary>
+		/// <returns>一行内容</returns>
 		public string Read()
 		{
 			var j = i;

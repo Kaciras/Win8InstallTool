@@ -23,6 +23,15 @@ namespace Win8InstallTool.Test
 		}
 
 		[TestMethod]
+		public void SkipComment()
+		{
+			var text = "#foo\n#bar\n\nFirst";
+			var reader = new RuleFileReader(text);
+			Assert.IsTrue(reader.MoveNext());
+			Assert.AreEqual("First", reader.Read());
+		}
+
+		[TestMethod]
 		public void RepeatReadEnpty()
 		{
 			var reader = new RuleFileReader("\n");

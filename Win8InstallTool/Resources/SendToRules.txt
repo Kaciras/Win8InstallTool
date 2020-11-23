@@ -1,3 +1,5 @@
+# 发传真的那个关闭系统功能后会自动删除。
+
 Compressed (zipped) Folder.ZFSendToTarget
 有专门压缩软件来做了
 
