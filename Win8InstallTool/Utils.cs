@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using Shell32;
 
 namespace Win8InstallTool
 {
@@ -14,6 +15,29 @@ namespace Win8InstallTool
 		public static void ForEach<T>(this IEnumerable<T> ienum, Action<T> action)
 		{
 			foreach (var item in ienum) action(item);
+		}
+
+		/// <summary>
+		/// 获取快捷方式所指向的文件路径。
+		/// </summary>
+		/// <seealso cref="https://stackoverflow.com/a/9414495/7065321"/>
+		/// <param name="filename">快捷方式文件</param>
+		/// <returns>目标文件的路径</returns>
+		/// <exception cref="UnauthorizedAccessException">无权限，或者是特殊的链接，比如开始菜单里的桌面</exception>
+		/// <exception cref="FileNotFoundException">如果所给的快捷方式不存在</exception>
+		public static string GetShortcutTarget(string filename)
+		{
+			var pathOnly = Path.GetDirectoryName(filename);
+			var filenameOnly = Path.GetFileName(filename);
+			var shell = new Shell();
+
+			var folder = shell.NameSpace(Path.GetFullPath(pathOnly))
+				?? throw new FileNotFoundException("File not exists", filename);
+
+			var folderItem = folder.ParseName(filenameOnly)
+				?? throw new FileNotFoundException("File not exists", filename);
+
+			return ((ShellLinkObject)folderItem.GetLink).Path;
 		}
 
 		/// <summary>

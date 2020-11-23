@@ -5,6 +5,7 @@ using System.Linq;
 using Win8InstallTool.Properties;
 using Win8InstallTool.Rules;
 
+// TODO: 本来想加个清理无效快捷方式的，Utils.GetShortcutTarget 都写好了，但Win8时代用不上所以算了。
 namespace Win8InstallTool
 {
 	internal struct RuleSet

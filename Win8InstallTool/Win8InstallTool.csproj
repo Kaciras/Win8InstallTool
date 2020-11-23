@@ -93,6 +93,7 @@
     <Compile Include="Rules\OpenWithNotepadRule.cs" />
     <Compile Include="Rules\Rule.cs" />
     <Compile Include="Rules\SchannelRule.cs" />
+    <Compile Include="Rules\SendToRule.cs" />
     <Compile Include="Rules\ServiceRule.cs" />
     <Compile Include="Rules\ServiceState.cs" />
     <Compile Include="Rules\StartupMenuRule.cs" />
@@ -140,6 +141,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <COMReference Include="Shell32">
+      <Guid>{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
     <COMReference Include="TaskScheduler">
       <Guid>{E34CB9F1-C7F7-424C-BE29-027DCC09363A}</Guid>
       <VersionMajor>1</VersionMajor>
@@ -162,6 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ContextMenuRules.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SendToRules.txt" />
   </ItemGroup>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
