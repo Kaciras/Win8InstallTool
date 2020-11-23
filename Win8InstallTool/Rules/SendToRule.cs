@@ -18,9 +18,18 @@ namespace Win8InstallTool.Rules
 
 		public SendToRule(string name, string description)
 		{
-			var appData = GetFolderPath(SpecialFolder.ApplicationData);
-			path = Path.Combine(appData, @"Microsoft\Windows\SendTo", name);
-			Name = name;
+			var appRoaming = GetFolderPath(SpecialFolder.ApplicationData);
+			var folder = Path.Combine(appRoaming, @"Microsoft\Windows\SendTo");
+
+			var desktopIni = new SimpleIniFile(Path.Combine(folder, "desktop.ini"));
+			var localized = desktopIni.Read("LocalizedFileNames", name, name);
+			if (localized[0] == '@')
+			{
+				localized = Utils.ExtractStringFromDLL(localized);
+			}
+
+			path = Path.Combine(folder, name);
+			Name = localized;
 			Description = description;
 		}
 

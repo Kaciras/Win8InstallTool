@@ -98,6 +98,7 @@
     <Compile Include="Rules\ServiceState.cs" />
     <Compile Include="Rules\StartupMenuRule.cs" />
     <Compile Include="Rules\TaskSchedulerRule.cs" />
+    <Compile Include="SimpleIniFile.cs" />
     <Compile Include="TaskSchedulerManager.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="MainWindow.resx">
