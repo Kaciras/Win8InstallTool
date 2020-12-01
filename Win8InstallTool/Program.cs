@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 [assembly: InternalsVisibleTo("Test")]
 namespace Win8InstallTool
@@ -15,6 +16,10 @@ namespace Win8InstallTool
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+
+			ComputerGroupPolicyObject.SetPolicySetting(
+				@"HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext!DisableAddonLoadTimePerformanceNotifications", 
+				0, RegistryValueKind.DWord);
 
 			if (CheckOSSupport())
 			{

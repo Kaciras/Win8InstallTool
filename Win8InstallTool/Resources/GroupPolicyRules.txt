@@ -1,0 +1,5 @@
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext
+DisableAddonLoadTimePerformanceNotifications
+1
+关闭加载项性能通知
+防止出现打开IE浏览器状态栏提示关闭加载项来提高浏览器运行速度的提示

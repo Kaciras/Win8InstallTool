@@ -102,6 +102,20 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext
+        ///DisableAddonLoadTimePerformanceNotifications
+        ///1
+        ///关闭加载项性能通知
+        ///防止出现打开IE浏览器状态栏提示关闭加载项来提高浏览器运行速度的提示
+        ///.
+        /// </summary>
+        internal static string GroupPolicyRules {
+            get {
+                return ResourceManager.GetString("GroupPolicyRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Windows Registry Editor Version 5.00
         ///
         ///[HKEY_CLASSES_ROOT\*\shell\OpenWithNotepad]
@@ -119,7 +133,9 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Compressed (zipped) Folder.ZFSendToTarget
+        ///   Looks up a localized string similar to # 发传真的那个关闭系统功能后会自动删除。
+        ///
+        ///Compressed (zipped) Folder.ZFSendToTarget
         ///有专门压缩软件来做了
         ///
         ///Mail Recipient.MAPIMail
@@ -136,7 +152,10 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to hidserv
+        ///   Looks up a localized string similar to BFE
+        ///Windows安全平台的核心服务，防火墙和杀毒软件都需要，如果不用它们倒是可以关了
+        ///
+        ///hidserv
         ///不用特殊输入设备的不需要，该服务还容易被攻击者利用
         ///
         ///ShellHWDetection
@@ -161,7 +180,7 @@ namespace Win8InstallTool.Properties {
         ///某些协议的VPN需要这个服务，不用的话可以关掉
         ///
         ///DPS
-        ///出问题不谷歌，要你来诊断?这个关了后另外两个也不会启动
+        ///出问题不谷歌，要你来诊断?这个关了后另外两个也不会启动。注意禁用此服务后事件日志里会经常出现DCOM没有注册的错误。
         ///
         ///WPDBusEnum
         ///反正我是没用过什么可移动大容量存储设备
@@ -175,11 +194,7 @@ namespace Win8InstallTool.Properties {
         ///SSDPSRV
         ///Upnp设备个人机不常用
         ///
-        ///iphlpsvc
-        ///我从没用过它说的这些高级功能
-        ///
-        ///WinHttpAutoProxySvc
-        ///该服务使应用程序支持WPAD协议的应用，因为大多数的情况下不会用到.建 [rest of string was truncated]&quot;;.
+        ///ip [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ServiceRules {
             get {
