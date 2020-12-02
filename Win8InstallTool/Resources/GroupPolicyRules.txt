@@ -22,6 +22,7 @@ NoDriveTypeAutoRun
 关闭自动播放
 纯属垃圾功能还有安全风险，不是残疾人都该禁掉
 
+# 这个是用户配置里的，注意不要带 GUID 部分，因为底层 API 会处理。
 HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments
 SaveZoneInformation
 1
