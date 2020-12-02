@@ -28,12 +28,12 @@ namespace Win8InstallTool.Rules
 
 		protected override bool Check()
 		{
-			return ComputerGroupPolicyObject.GetPolicySetting(key, item)?.ToString() != value;
+			return GroupPolicy.GetPolicySetting(key, item)?.ToString() != value;
 		}
 
 		public override void Optimize()
 		{
-			ComputerGroupPolicyObject.SetPolicySetting(key, item, value, RegistryValueKind.DWord);
+			GroupPolicy.SetPolicySetting(key, item, value, RegistryValueKind.DWord);
 		}
 	}
 }

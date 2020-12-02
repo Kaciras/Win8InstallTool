@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GroupPolicy.cs" />
+    <Compile Include="GroupPolicyObject.cs" />
     <Compile Include="RuleProvider.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
