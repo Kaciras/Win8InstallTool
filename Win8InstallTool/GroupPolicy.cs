@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 
@@ -86,7 +88,7 @@ namespace Win8InstallTool
 
 		internal GroupPolicyObject()
 		{
-			Instance = GetInstance();
+			Instance = (IGroupPolicyObject)new GPClass();
 		}
 
 		public void Save()
@@ -119,7 +121,8 @@ namespace Win8InstallTool
 			var result = Instance.GetRegistryKey((uint)section, out IntPtr key);
 			if (result != 0)
 			{
-				throw new Exception(string.Format("Unable to get section '{0}'", Enum.GetName(typeof(GroupPolicySection), section)));
+				var name = Enum.GetName(typeof(GroupPolicySection), section);
+				throw new Exception("Unable to get section: " + name);
 			}
 
 			var handle = new SafeRegistryHandle(key, true);
@@ -127,12 +130,6 @@ namespace Win8InstallTool
 		}
 
 		public abstract string GetPathTo(GroupPolicySection section);
-
-		protected static IGroupPolicyObject GetInstance()
-		{
-			var concrete = new GPClass();
-			return (IGroupPolicyObject)concrete;
-		}
 	}
 
 	public class GroupPolicyObjectSettings
@@ -190,80 +187,83 @@ namespace Win8InstallTool
 			var result = Instance.OpenRemoteMachineGPO(computerName, options.Flag);
 			if (result != 0)
 			{
-				throw new Exception(string.Format("Unable to open GPO on remote machine '{0}'", computerName));
+				throw new Exception("Unable to open GPO on remote machine: " + computerName);
 			}
 			IsLocal = false;
 		}
 
-		public static void SetPolicySetting(string registryInformation, object settingValue, RegistryValueKind registryValueKind)
+		public static void SetPolicySetting(string key, string item, object value, RegistryValueKind kind)
 		{
-			string key = Key(registryInformation, out string valueName, out GroupPolicySection section);
-
-			var gpo = new ComputerGroupPolicyObject();
-			using (RegistryKey rootRegistryKey = gpo.GetRootRegistryKey(section))
+			RunOnSTAThread(() =>
 			{
-				// Data can't be null so we can use this value to indicate key must be delete
-				if (settingValue == null)
+				var gpo = new ComputerGroupPolicyObject();
+				var section = Key(key, out string subkey);
+
+				using (var rootRegistryKey = gpo.GetRootRegistryKey(section))
 				{
-					using RegistryKey subKey = rootRegistryKey.OpenSubKey(key, true);
-					if (subKey != null)
+					// Data can't be null so we can use this value to indicate key must be delete
+					if (value == null)
 					{
-						subKey.DeleteValue(valueName);
+						using var subKey = rootRegistryKey.OpenSubKey(subkey, true);
+						if (subKey != null)
+						{
+							subKey.DeleteValue(item);
+						}
+					}
+					else
+					{
+						using var subKey = rootRegistryKey.CreateSubKey(subkey);
+						subKey.SetValue(item, value, kind);
 					}
 				}
-				else
-				{
-					using RegistryKey subKey = rootRegistryKey.CreateSubKey(key);
-					subKey.SetValue(valueName, settingValue, registryValueKind);
-				}
-			}
 
-			gpo.Save();
+				gpo.Save();
+			});
 		}
 
-		public static object GetPolicySetting(string registryInformation)
+		public static object GetPolicySetting(string key, string item)
 		{
-			string key = Key(registryInformation, out string valueName, out GroupPolicySection section);
-
-			object result = null;
-			var gpo = new ComputerGroupPolicyObject();
-			using (RegistryKey rootRegistryKey = gpo.GetRootRegistryKey(section))
+			return RunOnSTAThread(() =>
 			{
-				// Data can't be null so we can use this value to indicate key must be delete
-				using RegistryKey subKey = rootRegistryKey.OpenSubKey(key, true);
-				if (subKey == null)
-				{
-					result = null;
-				}
-				else
-				{
-					result = subKey.GetValue(valueName);
-				}
-			}
+				var gpo = new ComputerGroupPolicyObject();
+				var section = Key(key, out string subkey);
 
-			return result;
+				using var root = gpo.GetRootRegistryKey(section);
+				using var subKey = root.OpenSubKey(subkey, true);
+				return subKey?.GetValue(item);
+			});
 		}
 
-		private static string Key(string registryInformation, out string value, out GroupPolicySection section)
+		internal static R RunOnSTAThread<R>(Func<R> function)
 		{
-			// Parse parameter of format HKCU\Software\Policies\Microsoft\Windows\Personalization!NoChangingSoundScheme
-			string[] split = registryInformation.Split('!');
-			string key = split[0];
-			string hive = key.Substring(0, key.IndexOf('\\'));
-			key = key.Substring(key.IndexOf('\\') + 1);
+			R returnValue = default;
+			var thread = new Thread(() => returnValue = function());
+			thread.SetApartmentState(ApartmentState.STA);
+			thread.Start();
+			thread.Join();
+			return returnValue;
+		}
 
-			value = split[1];
+		internal static void RunOnSTAThread(ThreadStart action)
+		{
+			var thread = new Thread(action);
+			thread.SetApartmentState(ApartmentState.STA);
+			thread.Start();
+			thread.Join();
+		}
 
-			if (hive.Equals(@"HKLM", StringComparison.OrdinalIgnoreCase)
-				|| hive.Equals(@"HKEY_LOCAL_MACHINE", StringComparison.OrdinalIgnoreCase))
+		private static GroupPolicySection Key(string path, out string subkey)
+		{
+			var i = path.IndexOf('\\');
+			var hive = path.Substring(0, i);
+			subkey = path.Substring(i + 1);
+
+			return hive.ToUpper() switch
 			{
-				section = GroupPolicySection.Machine;
-			}
-			else
-			{
-				section = GroupPolicySection.User;
-			}
-			return key;
+				"HKEY_LOCAL_MACHINE" or "HKLM" => GroupPolicySection.Machine,
+				"HKEY_CURRENT_USER" or "HKCU" => GroupPolicySection.User,
+				_ => throw new Exception($"错误的注册表 Root key: {hive}"),
+			};
 		}
 
 		/// <summary>
@@ -276,7 +276,8 @@ namespace Win8InstallTool
 			var result = Instance.GetFileSysPath((uint)section, sb, MaxLength);
 			if (result != 0)
 			{
-				throw new Exception(string.Format("Unable to retrieve path to section '{0}'", Enum.GetName(typeof(GroupPolicySection), section)));
+				var name = Enum.GetName(typeof(GroupPolicySection), section);
+				throw new Exception("Unable to retrieve path to section: "+ name);
 			}
 
 			return sb.ToString();

@@ -17,10 +17,6 @@ namespace Win8InstallTool
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			ComputerGroupPolicyObject.SetPolicySetting(
-				@"HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext!DisableAddonLoadTimePerformanceNotifications", 
-				0, RegistryValueKind.DWord);
-
 			if (CheckOSSupport())
 			{
 				StartProgram();

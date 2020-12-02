@@ -54,6 +54,7 @@ namespace Win8InstallTool
 				}
 				});
 
+				LoadRuleFile("组策略", Resources.GroupPolicyRules, ReadGroupPolicy);
 				LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenu);
 				LoadRuleFile("系统服务", Resources.ServiceRules, ReadService);
 				LoadRuleFile("任务计划程序", Resources.TaskSchdulerRules, ReadTask);
@@ -147,6 +148,11 @@ namespace Win8InstallTool
 			}
 
 			return new ContextMenuRule(item, folders, name, description);
+		}
+
+		static Rule ReadGroupPolicy(RuleFileReader reader)
+		{
+			return new GroupPolicyRule(reader.Read(), reader.Read(), reader.Read(), reader.Read(), reader.Read());
 		}
 	}
 }
