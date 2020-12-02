@@ -66,7 +66,6 @@ namespace Win8InstallTool
 			{
 				var item = (Optimizable)e.Node.Tag;
 				textBox.Text = item.Description;
-				//descBox.Text += $"\r\n\r\n当前状态: {item.CurrentState}";
 			}
 		}
 
@@ -133,6 +132,7 @@ namespace Win8InstallTool
 
 		async void ScanButton_Click(object sender, EventArgs e)
 		{
+			scanButton.Enabled = false;
 			btnClearAll.Enabled = false;
 			btnOptimize.Enabled = false;
 			btnSelectAll.Enabled = false;
@@ -144,6 +144,7 @@ namespace Win8InstallTool
 			await Task.Run(FindOptimizable);
 			provider.OnProgress -= Provider_OnProgress;
 
+			scanButton.Enabled = true;
 			btnClearAll.Enabled = true;
 			btnOptimize.Enabled = true;
 			btnSelectAll.Enabled = true;

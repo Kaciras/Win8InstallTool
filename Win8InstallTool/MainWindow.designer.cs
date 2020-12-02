@@ -143,10 +143,14 @@
 			// 
 			// textBox
 			// 
+			this.textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBox.BackColor = System.Drawing.SystemColors.Control;
 			this.textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.textBox.Location = new System.Drawing.Point(6, 20);
 			this.textBox.Name = "textBox";
+			this.textBox.ReadOnly = true;
 			this.textBox.Size = new System.Drawing.Size(158, 218);
 			this.textBox.TabIndex = 0;
 			this.textBox.Text = "";
