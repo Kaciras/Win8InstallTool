@@ -29,7 +29,6 @@
 		private void InitializeComponent()
 		{
 			System.Windows.Forms.GroupBox groupBox1;
-			this.descBox = new System.Windows.Forms.TextBox();
 			this.scanButton = new System.Windows.Forms.Button();
 			this.btnOptimize = new System.Windows.Forms.Button();
 			this.btnSelectAll = new System.Windows.Forms.Button();
@@ -37,6 +36,7 @@
 			this.progressBar = new System.Windows.Forms.ProgressBar();
 			this.treeView = new System.Windows.Forms.TreeView();
 			this.roleLabel = new System.Windows.Forms.Label();
+			this.textBox = new System.Windows.Forms.RichTextBox();
 			groupBox1 = new System.Windows.Forms.GroupBox();
 			groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -45,7 +45,7 @@
 			// 
 			groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			groupBox1.Controls.Add(this.descBox);
+			groupBox1.Controls.Add(this.textBox);
 			groupBox1.Location = new System.Drawing.Point(500, 47);
 			groupBox1.Margin = new System.Windows.Forms.Padding(5);
 			groupBox1.Name = "groupBox1";
@@ -53,20 +53,6 @@
 			groupBox1.TabIndex = 6;
 			groupBox1.TabStop = false;
 			groupBox1.Text = "描述";
-			// 
-			// descBox
-			// 
-			this.descBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.descBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.descBox.Location = new System.Drawing.Point(8, 22);
-			this.descBox.Margin = new System.Windows.Forms.Padding(5);
-			this.descBox.Multiline = true;
-			this.descBox.Name = "descBox";
-			this.descBox.ReadOnly = true;
-			this.descBox.Size = new System.Drawing.Size(154, 214);
-			this.descBox.TabIndex = 0;
 			// 
 			// scanButton
 			// 
@@ -150,10 +136,20 @@
 			this.roleLabel.Location = new System.Drawing.Point(508, 14);
 			this.roleLabel.Margin = new System.Windows.Forms.Padding(5);
 			this.roleLabel.Name = "roleLabel";
-			this.roleLabel.Size = new System.Drawing.Size(154, 23);
+			this.roleLabel.Size = new System.Drawing.Size(156, 23);
 			this.roleLabel.TabIndex = 9;
 			this.roleLabel.Text = "标准权限";
 			this.roleLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// textBox
+			// 
+			this.textBox.BackColor = System.Drawing.SystemColors.Control;
+			this.textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textBox.Location = new System.Drawing.Point(6, 20);
+			this.textBox.Name = "textBox";
+			this.textBox.Size = new System.Drawing.Size(158, 218);
+			this.textBox.TabIndex = 0;
+			this.textBox.Text = "";
 			// 
 			// MainWindow
 			// 
@@ -172,7 +168,6 @@
 			this.Name = "MainWindow";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			groupBox1.ResumeLayout(false);
-			groupBox1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -182,10 +177,10 @@
 		private System.Windows.Forms.Button btnOptimize;
 		private System.Windows.Forms.Button btnSelectAll;
 		private System.Windows.Forms.Button btnClearAll;
-		private System.Windows.Forms.TextBox descBox;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.TreeView treeView;
 		private System.Windows.Forms.Label roleLabel;
+		private System.Windows.Forms.RichTextBox textBox;
 	}
 }
 

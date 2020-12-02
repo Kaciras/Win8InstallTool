@@ -65,7 +65,7 @@ namespace Win8InstallTool
 			if (e.Node.Parent != null)
 			{
 				var item = (Optimizable)e.Node.Tag;
-				descBox.Text = item.Description;
+				textBox.Text = item.Description;
 				//descBox.Text += $"\r\n\r\n当前状态: {item.CurrentState}";
 			}
 		}
