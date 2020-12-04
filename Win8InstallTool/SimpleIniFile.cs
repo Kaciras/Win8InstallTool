@@ -19,6 +19,7 @@ namespace Win8InstallTool
 			this.path = path;
 		}
 
+		// 好像没法读取无 Section 的键
 		public string Read(string section, string key, string @default)
 		{
 			var RetVal = new StringBuilder(255);
@@ -27,7 +28,11 @@ namespace Win8InstallTool
 		}
 
 		[DllImport("kernel32", CharSet = CharSet.Unicode)]
-		static extern int GetPrivateProfileString(string Section, string Key,
-			string Default, StringBuilder RetVal, int Size, string FilePath);
+		static extern int GetPrivateProfileString(
+			string appName, 
+			string keyName, 
+			string @default, 
+			StringBuilder reurnString, 
+			int nSize, string filename);
 	}
 }

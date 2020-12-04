@@ -13,12 +13,12 @@ namespace Win8InstallTool
 				var gpo = new ComputerGroupPolicyObject();
 				var section = Key(key, out string subkey);
 
-				using (var rootRegistryKey = gpo.GetRootRegistryKey(section))
+				using (var root = gpo.GetRootRegistryKey(section))
 				{
 					// Data can't be null so we can use this value to indicate key must be delete
 					if (value == null)
 					{
-						using var subKey = rootRegistryKey.OpenSubKey(subkey, true);
+						using var subKey = root.OpenSubKey(subkey, true);
 						if (subKey != null)
 						{
 							subKey.DeleteValue(item);
@@ -26,7 +26,7 @@ namespace Win8InstallTool
 					}
 					else
 					{
-						using var subKey = rootRegistryKey.CreateSubKey(subkey);
+						using var subKey = root.CreateSubKey(subkey);
 						subKey.SetValue(item, value, kind);
 					}
 				}
@@ -47,6 +47,7 @@ namespace Win8InstallTool
 				return subKey?.GetValue(item);
 			});
 		}
+
 		private static GroupPolicySection Key(string path, out string subkey)
 		{
 			var i = path.IndexOf('\\');

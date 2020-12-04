@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.Windows.Forms;
-using Microsoft.Win32;
 
 [assembly: InternalsVisibleTo("Test")]
 namespace Win8InstallTool

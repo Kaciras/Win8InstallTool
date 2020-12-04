@@ -30,18 +30,9 @@ namespace Win8InstallTool
 		/// <summary>
 		/// This application
 		/// </summary>
-		private static readonly Guid LocalGuid = new Guid(GetAssemblyAttribute<GuidAttribute>(Assembly.GetExecutingAssembly()).Value);
+		private static readonly Guid LocalGuid = new Guid(Assembly.GetExecutingAssembly().GetCustomAttribute<GuidAttribute>().Value);
 
 		protected IGroupPolicyObject Instance = null;
-
-		static T GetAssemblyAttribute<T>(ICustomAttributeProvider assembly) where T : Attribute
-		{
-			object[] attributes = assembly.GetCustomAttributes(typeof(T), true);
-			if (attributes.Length == 0)
-				return null;
-
-			return (T)attributes[0];
-		}
 
 		internal GroupPolicyObject()
 		{
@@ -52,7 +43,7 @@ namespace Win8InstallTool
 			catch (InvalidCastException)
 			when (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
 			{
-				throw new Exception("GPO can only access on STA thread");
+				throw new Exception("GPO can only be accessed in STA thread");
 			}
 		}
 
@@ -61,13 +52,13 @@ namespace Win8InstallTool
 			var result = Instance.Save(true, true, RegistryExtension, LocalGuid);
 			if (result != 0)
 			{
-				throw new Exception("Error saving machine settings");
+				throw new Exception("Error saving machine settings, code=" + result);
 			}
 
 			result = Instance.Save(false, true, RegistryExtension, LocalGuid);
 			if (result != 0)
 			{
-				throw new Exception("Error saving user settings");
+				throw new Exception("Error saving user settings, code=" + result);
 			}
 		}
 
@@ -76,7 +67,7 @@ namespace Win8InstallTool
 			var result = Instance.Delete();
 			if (result != 0)
 			{
-				throw new Exception("Error deleting the GPO");
+				throw new Exception("Error deleting the GPO, code=" + result);
 			}
 			Instance = null;
 		}
