@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
 			System.Windows.Forms.GroupBox groupBox1;
+			this.textBox = new System.Windows.Forms.RichTextBox();
 			this.scanButton = new System.Windows.Forms.Button();
 			this.btnOptimize = new System.Windows.Forms.Button();
 			this.btnSelectAll = new System.Windows.Forms.Button();
@@ -36,7 +37,6 @@
 			this.progressBar = new System.Windows.Forms.ProgressBar();
 			this.treeView = new System.Windows.Forms.TreeView();
 			this.roleLabel = new System.Windows.Forms.Label();
-			this.textBox = new System.Windows.Forms.RichTextBox();
 			groupBox1 = new System.Windows.Forms.GroupBox();
 			groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -54,6 +54,20 @@
 			groupBox1.TabStop = false;
 			groupBox1.Text = "描述";
 			// 
+			// textBox
+			// 
+			this.textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBox.BackColor = System.Drawing.SystemColors.Control;
+			this.textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textBox.Location = new System.Drawing.Point(6, 20);
+			this.textBox.Name = "textBox";
+			this.textBox.ReadOnly = true;
+			this.textBox.Size = new System.Drawing.Size(158, 218);
+			this.textBox.TabIndex = 0;
+			this.textBox.Text = "";
+			// 
 			// scanButton
 			// 
 			this.scanButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -69,6 +83,7 @@
 			// btnOptimize
 			// 
 			this.btnOptimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnOptimize.Enabled = false;
 			this.btnOptimize.Location = new System.Drawing.Point(590, 339);
 			this.btnOptimize.Margin = new System.Windows.Forms.Padding(5);
 			this.btnOptimize.Name = "btnOptimize";
@@ -81,6 +96,7 @@
 			// btnSelectAll
 			// 
 			this.btnSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnSelectAll.Enabled = false;
 			this.btnSelectAll.Location = new System.Drawing.Point(500, 301);
 			this.btnSelectAll.Margin = new System.Windows.Forms.Padding(5);
 			this.btnSelectAll.Name = "btnSelectAll";
@@ -93,6 +109,7 @@
 			// btnClearAll
 			// 
 			this.btnClearAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnClearAll.Enabled = false;
 			this.btnClearAll.Location = new System.Drawing.Point(590, 301);
 			this.btnClearAll.Margin = new System.Windows.Forms.Padding(5);
 			this.btnClearAll.Name = "btnClearAll";
@@ -140,20 +157,6 @@
 			this.roleLabel.TabIndex = 9;
 			this.roleLabel.Text = "标准权限";
 			this.roleLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-			// 
-			// textBox
-			// 
-			this.textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBox.BackColor = System.Drawing.SystemColors.Control;
-			this.textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textBox.Location = new System.Drawing.Point(6, 20);
-			this.textBox.Name = "textBox";
-			this.textBox.ReadOnly = true;
-			this.textBox.Size = new System.Drawing.Size(158, 218);
-			this.textBox.TabIndex = 0;
-			this.textBox.Text = "";
 			// 
 			// MainWindow
 			// 

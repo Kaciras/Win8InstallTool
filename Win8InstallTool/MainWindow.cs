@@ -124,10 +124,15 @@ namespace Win8InstallTool
 
 		void ChangeAllChecked(Func<bool, bool> func)
 		{
+			var queue = new Queue<TreeNode>();
+			treeView.Nodes.Cast<TreeNode>().ForEach(queue.Enqueue);
+
 			treeView.BeginUpdate();
-			foreach (TreeNode item in treeView.Nodes)
+			while (queue.Count > 0)
 			{
-				item.Checked = func(item.Checked);
+				var node = queue.Dequeue();
+				node.Nodes.Cast<TreeNode>().ForEach(queue.Enqueue);
+				node.Checked = func(node.Checked);
 			}
 			treeView.EndUpdate();
 		}
@@ -159,8 +164,8 @@ namespace Win8InstallTool
 
 		void FindOptimizable()
 		{
-			treeView.BeginUpdate();
 			treeView.Nodes.Clear();
+			treeView.BeginUpdate();
 
 			foreach (var set in provider.Scan())
 			{
