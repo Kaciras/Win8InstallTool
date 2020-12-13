@@ -24,8 +24,8 @@ namespace Win8InstallTool
 
 			if (Program.IsElevated)
 			{
-				roleLabel.Text = "管理员";
 				roleLabel.ForeColor = Color.DeepPink;
+				roleLabel.Text = "管理员";
 			}
 			else
 			{
@@ -36,28 +36,30 @@ namespace Win8InstallTool
 		}
 
 		/// <summary>
-		/// 实现 TreeViewItem 的选项联动，可惜 WinForms 不自带三态复选框
+		/// 实现 TreeViewItem 的选项联动，可惜 WinForms 不自带三态复选框。
+		/// <br/>
+		/// TODO: 点太快会导致冲突。
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		void TreeView_AfterCheck(object sender, TreeViewEventArgs e)
 		{
-			var current = e.Node;
-			current.TreeView.AfterCheck -= TreeView_AfterCheck;
-
-			foreach (TreeNode node in current.Nodes)
+			// 跳过非交互事件，避免自身触发导致死循环
+			if (e.Action != TreeViewAction.Unknown)
 			{
-				node.Checked = current.Checked;
-			}
+				treeView.BeginUpdate();
+				var current = e.Node;
 
-			var parent = current.Parent;
-			if (parent != null)
-			{
-				var setNodes = parent.Nodes;
-				parent.Checked = setNodes.Cast<TreeNode>().All(n => n.Checked);
-			}
+				current.Nodes.Cast<TreeNode>().ForEach(n => n.Checked = current.Checked);
 
-			current.TreeView.AfterCheck += TreeView_AfterCheck;
+				var parent = current.Parent;
+				if (parent != null)
+				{
+					parent.Checked = parent.Nodes.Cast<TreeNode>().All(n => n.Checked);
+				}
+
+				treeView.EndUpdate();
+			}
 		}
 
 		void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
