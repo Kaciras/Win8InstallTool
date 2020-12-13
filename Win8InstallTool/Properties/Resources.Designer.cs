@@ -102,12 +102,28 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext
+        ///   Looks up a localized string similar to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext
         ///DisableAddonLoadTimePerformanceNotifications
         ///1
-        ///关闭加载项性能通知
+        ///关闭IE加载项性能通知
         ///防止出现打开IE浏览器状态栏提示关闭加载项来提高浏览器运行速度的提示
-        ///.
+        ///
+        ///HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Suggested Sites
+        ///Enabled
+        ///0
+        ///IE打开建议的网站
+        ///建议你妈逼，老子看啥要你指点？
+        ///
+        ///HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Main
+        ///DisableFirstRunCustomize
+        ///1
+        ///禁用首次运行向导
+        ///全是没卵用的配置，浪费启动时间
+        ///
+        ///HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
+        ///NoDriveTypeAutoRun
+        ///255
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GroupPolicyRules {
             get {
@@ -246,6 +262,26 @@ namespace Win8InstallTool.Properties {
         internal static string TaskSchdulerRules {
             get {
                 return ResourceManager.GetString("TaskSchdulerRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 增加 ReadyBoot 日志文件大小
+        ///解决事件日志里 Circular Kernel Context Logger 停止的问题
+        ///HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\ReadyBoot
+        ///null
+        ///40
+        ///
+        ///启用 AirSpaceChannel 日志文件循环选项
+        ///解决事件日志里 EventLog-AirSpaceChannel 已停止的问题
+        ///HKLM\System\CurrentControlSet\Control\WMI\Autologger\EventLog-AirSpaceChannel\LogFileMode
+        ///true
+        ///null
+        ///.
+        /// </summary>
+        internal static string WMILoggerRules {
+            get {
+                return ResourceManager.GetString("WMILoggerRules", resourceCulture);
             }
         }
     }

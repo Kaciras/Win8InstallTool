@@ -47,13 +47,15 @@ namespace Win8InstallTool
 				{
 					Name = "其他优化项",
 					Rules = new List<Rule>
-				{
-					new CrashDumpRule(),
-					new SchannelRule(),
-					new OpenWithNotepadRule(),
-				}
+					{
+						new PerfCounterRule(),
+						new CrashDumpRule(),
+						new SchannelRule(),
+						new OpenWithNotepadRule(),
+					}
 				});
 
+				LoadRuleFile("性能数据收集器", Resources.WMILoggerRules, ReadWmiLogger);
 				LoadRuleFile("组策略", Resources.GroupPolicyRules, ReadGroupPolicy);
 				LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenu);
 				LoadRuleFile("系统服务", Resources.ServiceRules, ReadService);
@@ -110,17 +112,7 @@ namespace Win8InstallTool
 
 		static Rule ReadTask(RuleFileReader reader)
 		{
-			var first = reader.Read();
-			var disable = first == ":DISABLE";
-
-			if (disable)
-			{
-				return new TaskSchedulerRule(reader.Read(), reader.Read(), true);
-			}
-			else
-			{
-				return new TaskSchedulerRule(first, reader.Read(), false);
-			}
+			return new TaskSchedulerRule(reader.Read(), reader.Read(), reader.Read() == ":DISABLE");
 		}
 
 		static Rule ReadContextMenu(RuleFileReader reader)
@@ -153,6 +145,21 @@ namespace Win8InstallTool
 		static Rule ReadGroupPolicy(RuleFileReader reader)
 		{
 			return new GroupPolicyRule(reader.Read(), reader.Read(), reader.Read(), reader.Read(), reader.Read());
+		}
+
+		static Rule ReadWmiLogger(RuleFileReader reader)
+		{
+			var name = reader.Read();
+			var description = reader.Read();
+			var key = reader.Read();
+
+			var cy = reader.Read();
+			bool? cycle = cy == "null" ? null : bool.Parse(cy);
+
+			var fs = reader.Read();
+			int? fileSize = fs == "null" ? null : int.Parse(fs);
+
+			return new WMILoggerRule(name, description, key, cycle, fileSize);
 		}
 	}
 }
