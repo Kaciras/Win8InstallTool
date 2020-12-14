@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -15,6 +16,35 @@ namespace Win8InstallTool
 		public static void ForEach<T>(this IEnumerable<T> ienum, Action<T> action)
 		{
 			foreach (var item in ienum) action(item);
+		}
+
+		/// <summary>
+		/// 执行命令并等待完成，检查退出码，已经设置来重定向了输入和禁止显示窗口。
+		/// </summary>
+		/// <param name="file">文件名</param>
+		/// <param name="args">参数</param>
+		/// <returns>进程对象</returns>
+		/// <exception cref="SystemException">如果命令执行失败</exception>
+		public static Process Execute(string file, string args = "")
+		{
+			var startInfo = new ProcessStartInfo(file)
+			{
+				Arguments = args,
+				UseShellExecute = false,
+				RedirectStandardOutput = true,
+				RedirectStandardError = true,
+				CreateNoWindow = true,
+			};
+			var process = Process.Start(startInfo);
+
+			process.WaitForExit();
+			if (process.ExitCode == 0)
+			{
+				return process;
+			}
+
+			var stderr = process.StandardError.ReadToEnd();
+			throw new SystemException($"命令执行失败 - {process.ExitCode}：{stderr}");
 		}
 
 		/// <summary>
