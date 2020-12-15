@@ -28,39 +28,17 @@ namespace Win8InstallTool
 				basekeyName = path.Substring(0, i);
 			}
 
-			RegistryKey basekey;
-
-			switch (basekeyName.ToUpper())
+			var basekey = basekeyName.ToUpper() switch
 			{
-				case "HKEY_CURRENT_USER":
-				case "HKCU":
-					basekey = Registry.CurrentUser;
-					break;
-				case "HKEY_LOCAL_MACHINE":
-				case "HKLM":
-					basekey = Registry.LocalMachine;
-					break;
-				case "HKEY_CLASSES_ROOT":
-				case "HKCR":
-					basekey = Registry.ClassesRoot;
-					break;
-				case "HKEY_USERS":
-				case "HKU":
-					basekey = Registry.Users;
-					break;
-				case "HKEY_CURRENT_CONFIG":
-				case "HKCC":
-					basekey = Registry.CurrentConfig;
-					break;
-				case "HKEY_PERFORMANCE_DATA":
-					basekey = Registry.PerformanceData;
-					break;
-				case "HKEY_DYN_DATA":
-					basekey = RegistryKey.OpenBaseKey(RegistryHive.DynData, RegistryView.Default);
-					break;
-				default:
-					throw new ArgumentException("InvalidKeyName: " + basekeyName);
-			}
+				"HKEY_CURRENT_USER" or "HKCU" => Registry.CurrentUser,
+				"HKEY_LOCAL_MACHINE" or "HKLM" => Registry.LocalMachine,
+				"HKEY_CLASSES_ROOT" or "HKCR" => Registry.ClassesRoot,
+				"HKEY_USERS" or "HKU" => Registry.Users,
+				"HKEY_CURRENT_CONFIG" or "HKCC" => Registry.CurrentConfig,
+				"HKEY_PERFORMANCE_DATA" => Registry.PerformanceData,
+				"HKEY_DYN_DATA" => RegistryKey.OpenBaseKey(RegistryHive.DynData, RegistryView.Default),
+				_ => throw new ArgumentException("InvalidKeyName: " + basekeyName),
+			};
 
 			if (i == -1 || i == path.Length)
 			{
@@ -74,41 +52,20 @@ namespace Win8InstallTool
 		}
 
 		/// <summary>
-		/// 调用 Regedit.exe 程序，用来做一些 Win32 库没有提供的功能，比如导入导出。
-		/// </summary>
-		/// <param name="args">运行参数</param>
-		private static void InvokeRegeditor(string args)
-		{
-			// 如果用 regedt32 可能无法导入
-			var startInfo = new ProcessStartInfo("regedit.exe", args)
-			{
-				UseShellExecute = false,
-				RedirectStandardError = true,
-			};
-
-			var process = Process.Start(startInfo);
-			process.WaitForExit();
-			if (process.ExitCode != 0)
-			{
-				var stderr = process.StandardError.ReadToEnd();
-				throw new SystemException($"注册表操作失败({process.ExitCode}):{stderr}");
-			}
-		}
-
-		/// <summary>
-		/// 导出注册表键，相当于注册表编辑器里右键 -> 导出
+		/// 导出注册表键，相当于注册表编辑器里右键 -> 导出。
 		/// </summary>
 		/// <param name="file">保存的文件</param>
 		/// <param name="path">注册表键</param>
-		public static void Export(string file, string path) => InvokeRegeditor($"/e {file} {path}");
+		public static void Export(string file, string path) => Utils.Execute("regedit", $"/e {file} {path}");
 
-		public static void Import(string file) => InvokeRegeditor($"/s {file}");
+		// 必须用 regedit.exe，如果用 regedt32 可能出错，上面的一样
+		public static void Import(string file) => Utils.Execute("regedit", $"/s {file}");
 
 		// CLSDI 格式 {8-4-4-4-12}
 		public static string GetCLSIDValue(string clsid)
 		{
 			using var key = OpenKey(@"HKEY_CLASSES_ROOT\CLSID\" + clsid);
-			if (clsid == null)
+			if (key == null)
 			{
 				throw new DirectoryNotFoundException("CLSID记录不存在");
 			}

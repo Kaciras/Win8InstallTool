@@ -8,6 +8,12 @@ namespace Win8InstallTool.Test
 	public sealed class RegistryHelperTest
 	{
 		[TestMethod]
+		public void GetCLSIDValueException()
+		{
+			Assert.ThrowsException<DirectoryNotFoundException>(() => RegistryHelper.GetCLSIDValue("{66666666-0000-0000-6666-000000000000}"));
+		}
+
+		[TestMethod]
 		public void GetCLSIDValue()
 		{
 			var value = RegistryHelper.GetCLSIDValue("{C7657C4A-9F68-40fa-A4DF-96BC08EB3551}");
