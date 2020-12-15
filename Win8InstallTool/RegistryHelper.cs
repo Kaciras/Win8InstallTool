@@ -12,7 +12,7 @@ namespace Win8InstallTool
 	public static class RegistryHelper
 	{
 		/// <summary>
-		/// 从 .NET 标准库里抄的快捷方法，为什么微软不直接提供？
+		/// 从 .NET 标准库里抄的快捷方法，增加了根键的缩写，为什么微软不直接提供？
 		/// </summary>
 		public static RegistryKey OpenKey(string path, bool wirte = false)
 		{
@@ -33,22 +33,27 @@ namespace Win8InstallTool
 			switch (basekeyName.ToUpper())
 			{
 				case "HKEY_CURRENT_USER":
+				case "HKCU":
 					basekey = Registry.CurrentUser;
 					break;
 				case "HKEY_LOCAL_MACHINE":
+				case "HKLM":
 					basekey = Registry.LocalMachine;
 					break;
 				case "HKEY_CLASSES_ROOT":
+				case "HKCR":
 					basekey = Registry.ClassesRoot;
 					break;
 				case "HKEY_USERS":
+				case "HKU":
 					basekey = Registry.Users;
+					break;
+				case "HKEY_CURRENT_CONFIG":
+				case "HKCC":
+					basekey = Registry.CurrentConfig;
 					break;
 				case "HKEY_PERFORMANCE_DATA":
 					basekey = Registry.PerformanceData;
-					break;
-				case "HKEY_CURRENT_CONFIG":
-					basekey = Registry.CurrentConfig;
 					break;
 				case "HKEY_DYN_DATA":
 					basekey = RegistryKey.OpenBaseKey(RegistryHive.DynData, RegistryView.Default);
