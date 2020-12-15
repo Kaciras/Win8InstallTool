@@ -47,21 +47,5 @@ namespace Win8InstallTool
 			var name = Path.GetFileName(path);
 			taskScheduler.GetFolder(folder).DeleteTask(name, 0);
 		}
-
-		public static void Import(string dir, string name, string xml)
-		{
-			taskScheduler.GetFolder(dir).RegisterTask(
-				name,
-				xml,
-				(int)_TASK_CREATION.TASK_CREATE,
-				null,
-				null,
-				_TASK_LOGON_TYPE.TASK_LOGON_INTERACTIVE_TOKEN);
-		}
-
-		public static string Export(string dir, string name)
-		{
-			return taskScheduler.GetFolder(dir).GetTask(name).Xml;
-		}
 	}
 }
