@@ -7,6 +7,23 @@ namespace Win8InstallTool.Test
 	[TestClass]
 	public sealed class TaskSchedulerManagerTest
 	{
+		void CreateTestTasks(string path)
+		{
+			var task = TaskSchedulerManager.Instance.NewTask(0);
+			var action = (IExecAction)task.Actions.Create(_TASK_ACTION_TYPE.TASK_ACTION_EXEC);
+			action.Id = "id";
+			action.Path = "cmd.exe";
+
+			// 目录会自动创建
+			TaskSchedulerManager.Root.RegisterTaskDefinition(
+				path,
+				task,
+				(int)_TASK_CREATION.TASK_CREATE,
+				null,
+				null,
+				_TASK_LOGON_TYPE.TASK_LOGON_INTERACTIVE_TOKEN);
+		}
+
 		[TestMethod]
 		public void InitRoot()
 		{
@@ -22,22 +39,17 @@ namespace Win8InstallTool.Test
 		}
 
 		[TestMethod]
+		public void DeleteTask()
+		{
+			CreateTestTasks("TestTask");
+			Assert.IsTrue(TaskSchedulerManager.DeleteTask(@"TestTask"));
+			Assert.IsFalse(TaskSchedulerManager.DeleteTask(@"TestTask"));
+		}
+
+		[TestMethod]
 		public void ClearFolder()
 		{
-			var task = TaskSchedulerManager.Instance.NewTask(0);
-			var action = (IExecAction)task.Actions.Create(_TASK_ACTION_TYPE.TASK_ACTION_EXEC);
-			action.Id = "id";
-			action.Path = "cmd.exe";
-
-			// 目录会自动创建
-			TaskSchedulerManager.Root.RegisterTaskDefinition(
-				@"Test\SubFolder\测试任务",
-				task,
-				(int)_TASK_CREATION.TASK_CREATE,
-				null,
-				null,
-				_TASK_LOGON_TYPE.TASK_LOGON_INTERACTIVE_TOKEN);
-
+			CreateTestTasks(@"Test\SubFolder\测试任务");
 			TaskSchedulerManager.ClearFolder("Test");
 
 			try

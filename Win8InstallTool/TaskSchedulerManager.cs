@@ -25,6 +25,25 @@ namespace Win8InstallTool
 		public static ITaskFolder Root { get; }
 
 		/// <summary>
+		/// 从任务计划程序中删除指定的任务。
+		/// </summary>
+		/// <param name="path">任务路径</param>
+		/// <returns>是否成功删除</returns>
+		public static bool DeleteTask(string path)
+		{
+			try
+			{
+				Root.DeleteTask(path, 0);
+				return true;
+			}
+			catch (IOException e)
+			when (e is DirectoryNotFoundException || e is FileNotFoundException)
+			{
+				return false; // 不存在的情况有两种异常
+			}
+		}
+
+		/// <summary>
 		/// 清空目录中的所有任务，考虑到有些目录无法删除所有把文件夹留下了。
 		/// </summary>
 		/// <param name="path">目录路径</param>
@@ -39,13 +58,6 @@ namespace Win8InstallTool
 			folder.GetFolders(0)
 				.Cast<ITaskFolder>()
 				.ForEach(f => ClearFolder(f.Path));
-		}
-
-		public static void DeleteTask(string path)
-		{
-			var folder = Path.GetDirectoryName(path);
-			var name = Path.GetFileName(path);
-			taskScheduler.GetFolder(folder).DeleteTask(name, 0);
 		}
 	}
 }
