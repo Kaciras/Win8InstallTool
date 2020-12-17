@@ -2,12 +2,9 @@
 
 namespace Win8InstallTool.Rules
 {
-	public class ServiceRule : ImutatableRule
+	public class ServiceRule : Rule
 	{
 		private const string SERVICE_DIR = @"SYSTEM\CurrentControlSet\Services\";
-
-		// override 属性不能增加 setter，傻逼C#总有东西来恶心老子。
-		private string name;
 
 		/// <summary>
 		/// 服务在注册表里的键，不同于显示名。
@@ -17,12 +14,12 @@ namespace Win8InstallTool.Rules
 		/// <summary>
 		/// 对此服务的简单介绍，以及需要优化的原因。
 		/// </summary>
-		public override string Description { get; }
+		public  string Description { get; }
 
 		/// <summary>
 		/// 服务的显示名，该名称可读性较强。
 		/// </summary>
-		public override string Name => name;
+		public  string Name { get; private set; }
 
 		/// <summary>
 		/// 此服务应当被优化为什么状态，默认禁用。
@@ -35,7 +32,7 @@ namespace Win8InstallTool.Rules
 			Description = description;
 		}
 
-		protected override bool Check()
+		public bool Check()
 		{
 			using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key);
 			if (config == null)
@@ -43,12 +40,12 @@ namespace Win8InstallTool.Rules
 				return false; // 服务不存在
 			}
 
-			if (name == null)
+			if (Name == null)
 			{
-				name = (string)config.GetValue("DisplayName", Key);
-				if (name.StartsWith("@"))
+				Name = (string)config.GetValue("DisplayName", Key);
+				if (Name.StartsWith("@"))
 				{
-					name = Utils.ExtractStringFromDLL(name);
+					Name = Utils.ExtractStringFromDLL(Name);
 				}
 			}
 
@@ -63,7 +60,7 @@ namespace Win8InstallTool.Rules
 			return state != TargetState;
 		}
 
-		public override void Optimize()
+		public void Optimize()
 		{
 			if (TargetState == ServiceState.Deleted)
 			{

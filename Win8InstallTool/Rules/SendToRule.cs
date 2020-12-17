@@ -3,11 +3,11 @@ using static System.Environment;
 
 namespace Win8InstallTool.Rules
 {
-	public class SendToRule : ImutatableRule
+	public class SendToRule : Rule
 	{
-		public override string Name { get; }
+		public string Name { get; }
 
-		public override string Description { get; }
+		public string Description { get; }
 
 		private readonly string path;
 
@@ -28,8 +28,8 @@ namespace Win8InstallTool.Rules
 			Description = description;
 		}
 
-		protected override bool Check() => File.Exists(path);
+		public bool Check() => File.Exists(path);
 
-		public override void Optimize() => File.Delete(path);
+		public void Optimize() => File.Delete(path);
 	}
 }

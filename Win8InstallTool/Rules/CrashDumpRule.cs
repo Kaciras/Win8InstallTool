@@ -15,23 +15,23 @@ namespace Win8InstallTool.Rules
 	/// </list>
 	/// <seealso cref="https://docs.microsoft.com/zh-cn/windows/client-management/system-failure-recovery-options"/>
 	/// </summary>
-	public sealed class CrashDumpRule : ImutatableRule
+	public sealed class CrashDumpRule : Rule
 	{
 		const string KEY = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl";
 
-		public override string Name => "系统失败 -> 写入调试信息";
+		public string Name => "系统失败 -> 写入调试信息";
 
-		public override string Description => "不做系统相关开发的话" +
+		public string Description => "不做系统相关开发的话" +
 			"这些调试信息鸟用没有，如果禁用了虚拟内存还会在事件日志里报错";
 
-		public override void Optimize()
-		{
-			Registry.SetValue(KEY, "CrashDumpEnabled", 0);
-		}
-
-		protected override bool Check()
+		public bool Check()
 		{
 			return !Registry.GetValue(KEY, "CrashDumpEnabled", 0).Equals(0);
+		}
+
+		public void Optimize()
+		{
+			Registry.SetValue(KEY, "CrashDumpEnabled", 0);
 		}
 	}
 }

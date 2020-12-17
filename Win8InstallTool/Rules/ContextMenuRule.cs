@@ -6,7 +6,7 @@ using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
-	public sealed class ContextMenuRule : ImutatableRule
+	public sealed class ContextMenuRule : Rule
 	{
 		/// <summary>
 		/// 当没有子目录时它们也可以被删除，这些目录内不应该有值。
@@ -20,9 +20,9 @@ namespace Win8InstallTool.Rules
 		private readonly string item;
 		private readonly IEnumerable<string> folders;
 
-		public override string Name { get; }
+		public string Name { get; }
 
-		public override string Description { get; }
+		public string Description { get; }
 
 		public ContextMenuRule(string item, IEnumerable<string> folders, string name, string description)
 		{
@@ -32,14 +32,14 @@ namespace Win8InstallTool.Rules
 			Description = description;
 		}
 
-		protected override bool Check()
+		public bool Check()
 		{
 			return folders
 				.Select(folder => Path.Combine(folder, item))
 				.Any(Registry.ClassesRoot.ContainsSubKey);
 		}
 
-		public override void Optimize()
+		public void Optimize()
 		{
 			foreach (var folder in folders)
 			{

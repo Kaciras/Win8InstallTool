@@ -1,31 +1,37 @@
-﻿namespace Win8InstallTool.Rules
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Win8InstallTool.Rules
 {
 	/// <summary>
-	/// 表示一条优化规则，调用 Scan() 来检测是否可优化。
+	/// 表示一条优化规则，调用 Check() 来检测是否可优化。
 	/// <br/>
 	/// 不知道这么做是否多余，使用可变对象好像也没有什么问题。
 	/// </summary>
-	public interface Rule
+	public interface Rule : Optimizable
 	{
 		/// <summary>
-		/// 检测该规则是否可优化，如果是返回优化项，否则返回null
+		/// 检测该规则是否可优化，该方法一定会在 Optimize() 之前调用。
 		/// </summary>
-		Optimizable Scan();
+		bool Check();
 	}
 
-	/// <summary>
-	/// 简单的规则同时也是优化项，该规则的状态必须在多次扫描中保持一致。
-	/// </summary>
-	public abstract class ImutatableRule : Rule, Optimizable
+	public class RuleList : OptimizableSet
 	{
-		public abstract string Name { get; }
+		private readonly Func<IEnumerable<Rule>> factory;
 
-		public abstract string Description { get; }
+		public string Name { get; }
 
-		public abstract void Optimize();
+		public RuleList(string name, Func<IEnumerable<Rule>> factory)
+		{
+			Name = name;
+			this.factory = factory;
+		}
 
-		protected abstract bool Check();
-
-		public Optimizable Scan() => Check() ? this : null;
+		public IEnumerable<Optimizable> Scan()
+		{
+			return factory().Where(rule => rule.Check());
+		}
 	}
 }

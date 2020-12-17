@@ -9,7 +9,7 @@
 	/// <seealso cref="https://support.microsoft.com/en-us/help/3209092/event-id-513-when-running-vss-in-windows-server"/>
 	/// <seealso cref="https://social.technet.microsoft.com/Forums/forefront/en-US/156d3b56-0863-47fb-851f-82ea78a7cff2/error-source-capi2-id-513-cryptographic-services-failed-while-processing-the-onidentity-call-in?forum=w8itprogeneral"/>
 	/// </summary>
-	public sealed class LLDPSecurityRule : ImutatableRule
+	public sealed class LLDPSecurityRule : Rule
 	{
 		/// <summary>
 		/// 权限描述符的字符串形式，被分号分为三部分。
@@ -20,20 +20,20 @@
 		/// </summary>
 		const string SERVICE_PERM = "(A;;CCLCSWLOCRRC;;;SU)";
 
-		public override string Name => "给 LLDP 驱动添加服务帐户权限";
+		public string Name => "给 LLDP 驱动添加服务帐户权限";
 
-		public override string Description => "解决事件日志里的 CAPI2 513 “加密服务处理系统写入程序对象中的 OnIdentity() 调用时失败” 错误";
+		public string Description => "解决事件日志里的 CAPI2 513 “加密服务处理系统写入程序对象中的 OnIdentity() 调用时失败” 错误";
 
 		private string descriptor;
 
-		protected override bool Check()
+		public bool Check()
 		{
 			var sc = Utils.Execute("sc.exe", "sdshow mslldp");
 			descriptor = sc.StandardOutput.ReadToEnd().Trim();
 			return !descriptor.Contains(";SU)");
 		}
 
-		public override void Optimize()
+		public void Optimize()
 		{
 			var i = descriptor.IndexOf("S:");
 			var newDescriptor = (i != -1)

@@ -9,19 +9,12 @@ using Win8InstallTool.Rules;
 // TODO: 开始菜单清除用户跟系统重复的项。
 namespace Win8InstallTool
 {
-	internal struct RuleSet
-	{
-		public string Name;
-
-		public IList<Rule> Rules;
-	}
-
 	/// <summary>
 	/// 优化方案的提供者，调用 Scan() 方法检测所有可优化的地方。
 	/// </summary>
 	public sealed class RuleProvider
 	{
-		private readonly ICollection<RuleSet> ruleSets = new List<RuleSet>();
+		private readonly ICollection<OptimizableSet> ruleSets = new List<OptimizableSet>();
 
 		private readonly bool includeSystem;
 
@@ -42,19 +35,15 @@ namespace Win8InstallTool
 
 			if (includeSystem)
 			{
-				// 这是什么奇怪的写法，好像内部属性跟外层平级了
-				ruleSets.Add(new RuleSet
-				{
-					Name = "其他优化项",
-					Rules = new List<Rule>
+				var rules = new List<Rule>
 					{
 						new LLDPSecurityRule(),
 						new CrashDumpRule(),
 						new PerfCounterRule(),
 						new SchannelRule(),
 						new OpenWithNotepadRule(),
-					}
-				});
+					};
+				ruleSets.Add(new RuleList("其它优化项", () => rules));
 
 				LoadRuleFile("性能数据收集器", Resources.WMILoggerRules, ReadWmiLogger);
 				LoadRuleFile("组策略", Resources.GroupPolicyRules, ReadGroupPolicy);
@@ -64,7 +53,7 @@ namespace Win8InstallTool
 				LoadRuleFile("开始菜单（系统）", Resources.StartupRules, r => new StartupMenuRule(true, r.Read()));
 			}
 
-			ProgressMax = ruleSets.Sum(set => set.Rules.Count);
+			ProgressMax = ruleSets.Count;
 		}
 
 		public IEnumerable<OptimizeSet> Scan()
@@ -90,8 +79,8 @@ namespace Win8InstallTool
 
 		void LoadRuleFile(string name, string content, Func<RuleFileReader, Rule> func)
 		{
-			var rules = RuleFileReader.Iter(content).Select(func).ToList();
-			ruleSets.Add(new RuleSet { Name = name, Rules = rules });
+			IEnumerable<Rule> factory() => RuleFileReader.Iter(content).Select(func).ToList();
+			ruleSets.Add(new RuleList(name, factory));
 		}
 
 		// 下面是各种规则的加载逻辑，为了省点字把 Rule 后缀去掉了（ReadTaskRule -> ReadTask）

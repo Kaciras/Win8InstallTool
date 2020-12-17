@@ -2,15 +2,15 @@
 
 namespace Win8InstallTool.Rules
 {
-	public sealed class GroupPolicyRule : ImutatableRule
+	public sealed class GroupPolicyRule : Rule
 	{
 		private readonly string key;
 		private readonly string item;
 		private readonly string value;
 
-		public override string Name { get; }
+		public string Name { get; }
 
-		public override string Description { get; }
+		public string Description { get; }
 
 		public GroupPolicyRule(string key, string item, string value, string name, string description)
 		{
@@ -21,12 +21,12 @@ namespace Win8InstallTool.Rules
 			Description = description;
 		}
 
-		protected override bool Check()
+		public bool Check()
 		{
 			return GroupPolicy.GetPolicySetting(key, item)?.ToString() != value;
 		}
 
-		public override void Optimize()
+		public void Optimize()
 		{
 			GroupPolicy.SetPolicySetting(key, item, value, RegistryValueKind.DWord);
 		}

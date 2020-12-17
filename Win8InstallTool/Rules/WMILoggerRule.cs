@@ -8,7 +8,7 @@ using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
-	public class WMILoggerRule : ImutatableRule
+	public class WMILoggerRule : Rule
 	{
 		public override string Name { get; }
 
@@ -31,7 +31,7 @@ namespace Win8InstallTool.Rules
 			this.maxFileSize = maxFileSize;
 		}
 
-		protected override bool Check()
+		public bool Check()
 		{
 			if (cycle.HasValue)
 			{
@@ -54,7 +54,7 @@ namespace Win8InstallTool.Rules
 			return fileModeTarget.HasValue || fileSizeTarget.HasValue;
 		}
 
-		public override void Optimize()
+		public  void Optimize()
 		{
 			if (fileModeTarget.HasValue)
 			{
