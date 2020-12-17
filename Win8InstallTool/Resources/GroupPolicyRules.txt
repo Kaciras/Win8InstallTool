@@ -33,7 +33,7 @@ HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender
 DisableAntiSpyware
 1
 关闭 Windows Defender
-我自己是不用杀毒软件的，一律关掉
+我自己是不用杀毒软件的，如果你要用还是别关。
 
 HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat
 DisablePCA
@@ -52,9 +52,3 @@ AutoDownload
 2
 关闭应用商店的自动更新
 看到自动更新就烦
-
-HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore
-RemoveWindowsStore
-1
-关闭应用商店
-我还从没用过这商店里的程序呢
