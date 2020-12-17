@@ -65,5 +65,21 @@ namespace Win8InstallTool.Test
 			var value = string.Join("", reader.Drain());
 			Assert.AreEqual("我好他妈帅", value);
 		}
+
+		[TestMethod]
+		public void Iter()
+		{
+			var text = "\n\n\n\nFirst\n\n";
+			var enumerable  = RuleFileReader.Iter(text);
+
+			var enumerator = enumerable.GetEnumerator();
+			Assert.IsTrue(enumerator.MoveNext());
+			Assert.AreEqual("First", enumerator.Current.Read());
+			Assert.IsFalse(enumerator.MoveNext());
+
+			enumerator.Reset();
+			Assert.IsTrue(enumerator.MoveNext());
+			Assert.AreEqual("First", enumerator.Current.Read());
+		}
 	}
 }

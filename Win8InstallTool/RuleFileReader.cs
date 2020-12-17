@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Win8InstallTool
 {
@@ -31,6 +33,8 @@ namespace Win8InstallTool
 
 		/// <summary>
 		/// 跳过空白和注释行，准备读取新的条目。
+		/// <br/>
+		/// 调用该方法前必须使用 Read() 或 Drain() 读取完当前的项目，否则无法前进到新项目。
 		/// </summary>
 		/// <returns>如果读完则为false，否则返回true</returns>
 		public bool MoveNext()
@@ -56,7 +60,9 @@ namespace Win8InstallTool
 			return false; // 文件读完了
 		}
 
-		// 可以搞成扩展方法
+		/// <summary>
+		/// Read() 的枚举形式，迭代返回项目的每一行，在项目读完后终止。
+		/// </summary>
 		public IEnumerable<string> Drain()
 		{
 			var line = Read();
@@ -97,6 +103,52 @@ namespace Win8InstallTool
 
 			i = k + 1;
 			return content.Substring(j, k - j);
+		}
+
+		/// <summary>
+		/// RuleFileReader 支持枚举模式，迭代每一个项目。
+		/// <br/>
+		/// 注意与规范不同的是 MoveNext() 前必须读完当前项目，否则无法前进到新项目。
+		/// </summary>
+		public static IEnumerable<RuleFileReader> Iter(string content)
+		{
+			return new JustEnumerable(content);
+		}
+
+		class JustEnumerable : IEnumerable<RuleFileReader>
+		{
+			private readonly string content;
+
+			public JustEnumerable(string content)
+			{
+				this.content = content;
+			}
+
+			public IEnumerator<RuleFileReader> GetEnumerator()
+			{
+				return new Enumerator(new RuleFileReader(content));
+			}
+
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		}
+
+		// 这里其实可以分为两层：每一项和项目内的每一行，这样的话暴露的方法就更少，不过我懒得搞叻。
+		struct Enumerator : IEnumerator<RuleFileReader>
+		{
+			public RuleFileReader Current { get; }
+
+			object IEnumerator.Current => Current;
+
+			public Enumerator(RuleFileReader current)
+			{
+				Current = current;
+			}
+
+			public void Dispose() {}
+
+			public bool MoveNext() => Current.MoveNext();
+
+			public void Reset() => Current.i = 0;
 		}
 	}
 }

@@ -90,12 +90,7 @@ namespace Win8InstallTool
 
 		void LoadRuleFile(string name, string content, Func<RuleFileReader, Rule> func)
 		{
-			var reader = new RuleFileReader(content);
-			var rules = new List<Rule>();
-			while (reader.MoveNext())
-			{
-				rules.Add(func(reader));
-			}
+			var rules = RuleFileReader.Iter(content).Select(func).ToList();
 			ruleSets.Add(new RuleSet { Name = name, Rules = rules });
 		}
 
