@@ -4,12 +4,12 @@
 	/// 事件查看器中有时会出现 “CAPI2 513 加密服务处理系统写入程序对象中的 OnIdentity() 调用时失败” 错误。
 	/// 原因是 VSS Writer 没有读取 NT AUTHORITY\SERVICE （服务帐户） 的权限，当其尝试访问 Mslldp.sys 时会出现此错误。
 	/// <br/>
-	/// 解决方案是给 LLDP 驱动添加服务帐户权限，通过 sc 命令可以做到。
+	/// 解决方案是给 LLDP 驱动添加权限，通过 sc 命令可以做到。
 	/// <br/>
 	/// <seealso cref="https://support.microsoft.com/en-us/help/3209092/event-id-513-when-running-vss-in-windows-server"/>
 	/// <seealso cref="https://social.technet.microsoft.com/Forums/forefront/en-US/156d3b56-0863-47fb-851f-82ea78a7cff2/error-source-capi2-id-513-cryptographic-services-failed-while-processing-the-onidentity-call-in?forum=w8itprogeneral"/>
 	/// </summary>
-	public sealed class LLDPServiceSecurityRule : ImutatableRule
+	public sealed class LLDPSecurityRule : ImutatableRule
 	{
 		/// <summary>
 		/// 权限描述符的字符串形式，被分号分为三部分。

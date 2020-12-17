@@ -48,7 +48,7 @@ namespace Win8InstallTool
 					Name = "其他优化项",
 					Rules = new List<Rule>
 					{
-						new LLDPServiceSecurityRule(),
+						new LLDPSecurityRule(),
 						new CrashDumpRule(),
 						new PerfCounterRule(),
 						new SchannelRule(),
