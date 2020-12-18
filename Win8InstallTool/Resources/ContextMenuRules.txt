@@ -1,27 +1,27 @@
 shellex\ContextMenuHandlers\Compatibility
-ִ���ļ� - ���������ѽ��
-�������ⲻȥ�ȸ裬�����ƽ����ƨ��
+执行文件 - 兼容性疑难解答
+出了问题不去谷歌，看着破解答有屁用
 exefile
 
 shellex\ContextMenuHandlers\Library Location
-�ļ��� - ����������
-�����ڻ�û�ù����ϵͳ�Դ��ĸ��ֿ��ļ��У�ɾ�˰�
+文件夹 - 包含到库中
+我现在还没用过这个系统自带的各种库文件夹，删了吧
 Folder
 
 shellex\ContextMenuHandlers\{90AA3A4E-1CBA-4233-B8BB-535773D48449}
-�����ļ� - �̶���������
-ֱ�������������ϼ���
+所有文件 - 固定到任务栏
+直接往任务栏上拖即可
 *
 
 shell\AnyCode
-�ļ��м��䱳�� - Open with Visual Studio
-ûɶ�ô����Ű���
+文件夹及其背景 - Open with Visual Studio
+没啥用纯看着碍眼
 Directory
 Directory\background
 
 shell\edit
-���ִ��ı����ļ� - �༭
-��"���±���"�Ĺ����ظ��ˣ�ɾ֮
+各种纯文本类文件 - 编辑
+跟"记事本打开"的功能重复了，删之
 cmdfile
 batfile
 xmlfile
@@ -29,13 +29,13 @@ regfile
 SystemFileAssociations\text
 
 Shell\setdesktopwallpaper
-����ý���ļ� - ��Ϊ���汳��
-һ���ڲ������ﶼ���⹦�ܣ��Ͳ����ڲ˵���ռλ����
+各种媒体文件 - 设为桌面背景
+一般在播放器里都有这功能，就不放在菜单上占位置了
 :SEARCH
 SystemFileAssociations
 
 ShellEx\ContextMenuHandlers\ShellImagePreview
-����ý���ļ� - Ԥ��
-�뿴ͼ��Ĭ�ϵĴ򿪼��ɣ������ȫû�ð�
+各种媒体文件 - 预览
+想看图用默认的打开即可，这个完全没用啊
 :SEARCH
 SystemFileAssociations

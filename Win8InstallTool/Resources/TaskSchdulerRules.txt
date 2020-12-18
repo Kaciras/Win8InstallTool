@@ -1,33 +1,33 @@
 Microsoft\Windows\Application Experience
-�ͻ�������Ƽƻ���ص�����ûͬ��Ŀ���ɾ��
+客户体验改善计划相关的任务，没同意的可以删了
 
 Microsoft\Windows\Autochk
-�ͻ�������Ƽƻ���ص�����ûͬ��Ŀ���ɾ��
+客户体验改善计划相关的任务，没同意的可以删了
 
 Microsoft\Windows\Customer Experience Improvement Program
-ȫ�ǿͻ�������Ƽƻ������μӵ�ֱ��ɾ���
+全是客户体验改善计划，不参加的直接删光光
 
 Microsoft\Windows\Application Experience\StartupAppTask
-������Ӧ���Լ�ע�⣬�����ǿ�����ɨ��
+启动项应该自己注意，而不是靠它来扫描
 :DISABLE
 
 Microsoft\Windows\DiskCleanup\SilentCleanup
-ʲôɵ�����񣬴��̿ռ䲻�㻹��������ʾ������
+什么傻逼任务，磁盘空间不足还用你来提示？？？
 :DISABLE
 
 Microsoft\Windows\SkyDrive
-SkyDrive Ŀ¼������ͬ�����������֮Դ��������־�ﱨ�������þ�ɾ��
+SkyDrive 目录里两个同步任务是万恶之源，老在日志里报错，不用就删掉
 
 Microsoft\Windows\UPnP\UPnPHostConfig
-�ò��� UPnp ��������˵���㣬�����ں�̨͵͵��
+用不用 UPnp 服务不是你说了算，还敢在后台偷偷改
 :DISABLE
 
 Microsoft\Office\Office 15 Subscription Heartbeat
-�����û�ж��� Office �Ϳ���ɾ��������
+如果你没有订阅 Office 就可以删除此任务
 
 Microsoft\Windows\Mobile Broadband Accounts\MNO Metadata Parser
-û�õ���������˵�����ռ����ݣ�ֱ�ӽ���
+没用的垃圾，听说还会收集数据，直接禁用
 :DISABLE
 
 Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector
-�ͻ�������Ƽƻ���ص�����ûͬ��Ŀ���ɾ��
+客户体验改善计划相关的任务，没同意的可以删了

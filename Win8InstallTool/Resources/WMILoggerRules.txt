@@ -1,11 +1,11 @@
-Ôö¼Ó ReadyBoot ÈÕÖ¾ÎÄ¼ş´óĞ¡
-Ôö¼ÓÈÕÖ¾ÎÄ¼şÉÏÏŞµ½40MB£¬½â¾öÊÂ¼şÈÕÖ¾Àï Circular Kernel Context Logger Í£Ö¹µÄÎÊÌâ
+å¢åŠ  ReadyBoot æ—¥å¿—æ–‡ä»¶å¤§å°
+å¢åŠ æ—¥å¿—æ–‡ä»¶ä¸Šé™åˆ°40MBï¼Œè§£å†³äº‹ä»¶æ—¥å¿—é‡Œ Circular Kernel Context Logger åœæ­¢çš„é—®é¢˜
 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\ReadyBoot
 null
 40
 
-ÆôÓÃ AirSpaceChannel ÈÕÖ¾ÎÄ¼şÑ­»·Ñ¡Ïî
-½â¾öÈÕÖ¾ÎÄ¼şÒçÂúµ¼ÖÂ EventLog-AirSpaceChannel ÒÑÍ£Ö¹µÄÎÊÌâ
+å¯ç”¨ AirSpaceChannel æ—¥å¿—æ–‡ä»¶å¾ªç¯é€‰é¡¹
+è§£å†³æ—¥å¿—æ–‡ä»¶æº¢æ»¡å¯¼è‡´ EventLog-AirSpaceChannel å·²åœæ­¢çš„é—®é¢˜
 HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\WMI\Autologger\EventLog-AirSpaceChannel
 true
 null

@@ -240,24 +240,24 @@ namespace Win8InstallTool.Properties {
         ///客户体验改善计划相关的任务，没同意的可以删了
         ///
         ///Microsoft\Windows\Customer Experience Improvement Program
-        ///全是客户体验改善计划,不参加的直接删光光
+        ///全是客户体验改善计划，不参加的直接删光光
         ///
-        ///:DISABLE
         ///Microsoft\Windows\Application Experience\StartupAppTask
-        ///启动项应该自己注意,而不是靠它来扫描
-        ///
+        ///启动项应该自己注意，而不是靠它来扫描
         ///:DISABLE
+        ///
         ///Microsoft\Windows\DiskCleanup\SilentCleanup
-        ///磁盘空间不足还用你来提示？？？
+        ///什么傻逼任务，磁盘空间不足还用你来提示？？？
+        ///:DISABLE
         ///
         ///Microsoft\Windows\SkyDrive
-        ///SkyDrive目录，里头两个同步任务是万恶之源,老在日志里报错，不用就应该删掉
+        ///SkyDrive 目录里两个同步任务是万恶之源，老在日志里报错，不用就删掉
         ///
-        ///:DISABLE
         ///Microsoft\Windows\UPnP\UPnPHostConfig
-        ///用不用UPnp不是你说了算,还敢在后台偷偷改
+        ///用不用 UPnp 服务不是你说了算，还敢在后台偷偷改
+        ///:DISABLE
         ///
-        ///Microsoft\Office\Offic [rest of string was truncated]&quot;;.
+        ///Microsoft\Offi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TaskSchdulerRules {
             get {
@@ -267,14 +267,14 @@ namespace Win8InstallTool.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 增加 ReadyBoot 日志文件大小
-        ///解决事件日志里 Circular Kernel Context Logger 停止的问题
+        ///增加日志文件上限到40MB，解决事件日志里 Circular Kernel Context Logger 停止的问题
         ///HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\ReadyBoot
         ///null
         ///40
         ///
         ///启用 AirSpaceChannel 日志文件循环选项
-        ///解决事件日志里 EventLog-AirSpaceChannel 已停止的问题
-        ///HKLM\System\CurrentControlSet\Control\WMI\Autologger\EventLog-AirSpaceChannel\LogFileMode
+        ///解决日志文件溢满导致 EventLog-AirSpaceChannel 已停止的问题
+        ///HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\WMI\Autologger\EventLog-AirSpaceChannel
         ///true
         ///null
         ///.
