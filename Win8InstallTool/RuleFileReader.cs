@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Win8InstallTool
 {
@@ -144,7 +143,7 @@ namespace Win8InstallTool
 				Current = current;
 			}
 
-			public void Dispose() {}
+			public void Dispose() { }
 
 			public bool MoveNext() => Current.MoveNext();
 

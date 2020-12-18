@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules
 {
 	public class WMILoggerRule : Rule
 	{
-		public override string Name { get; }
+		public string Name { get; }
 
-		public override string Description { get; }
+		public string Description { get; }
 
 		private readonly string key;
 
@@ -45,7 +39,7 @@ namespace Win8InstallTool.Rules
 			if (maxFileSize.HasValue)
 			{
 				var size = (int)Registry.GetValue(key, "MaxFileSize", 0);
-				if(maxFileSize.Value > size)
+				if (maxFileSize.Value > size)
 				{
 					fileSizeTarget = maxFileSize;
 				}
@@ -54,7 +48,7 @@ namespace Win8InstallTool.Rules
 			return fileModeTarget.HasValue || fileSizeTarget.HasValue;
 		}
 
-		public  void Optimize()
+		public void Optimize()
 		{
 			if (fileModeTarget.HasValue)
 			{

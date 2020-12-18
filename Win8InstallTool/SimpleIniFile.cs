@@ -29,10 +29,10 @@ namespace Win8InstallTool
 
 		[DllImport("kernel32", CharSet = CharSet.Unicode)]
 		static extern int GetPrivateProfileString(
-			string appName, 
-			string keyName, 
-			string @default, 
-			StringBuilder reurnString, 
+			string appName,
+			string keyName,
+			string @default,
+			StringBuilder reurnString,
 			int nSize, string filename);
 	}
 }

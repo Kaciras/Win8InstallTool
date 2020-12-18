@@ -5,7 +5,7 @@ using System.Linq;
 using Win8InstallTool.Properties;
 using Win8InstallTool.Rules;
 
-// TODO: 本来想加个清理无效快捷方式的，Utils.GetShortcutTarget 都写好了，但Win8时代用不上所以算了。
+// TODO: 本来想加个清理无效快捷方式的，Utils.GetShortcutTarget 都写好了，但用不上所以算了。
 // TODO: 开始菜单清除用户跟系统重复的项。
 namespace Win8InstallTool
 {
@@ -14,7 +14,7 @@ namespace Win8InstallTool
 	/// </summary>
 	public sealed class RuleProvider
 	{
-		private readonly ICollection<OptimizableSet> ruleSets = new List<OptimizableSet>();
+		public ICollection<OptimizableSet> RuleSets { get; } = new List<OptimizableSet>();
 
 		private readonly bool includeSystem;
 
@@ -22,11 +22,6 @@ namespace Win8InstallTool
 		{
 			this.includeSystem = includeSystem;
 		}
-
-		public int ProgressMax { get; private set; }
-
-		// 在新版 .NET 里事件参数无需继承 EventArg，这里也就不继承了
-		public event EventHandler<int> OnProgress;
 
 		internal void Initialize()
 		{
@@ -43,44 +38,21 @@ namespace Win8InstallTool
 						new SchannelRule(),
 						new OpenWithNotepadRule(),
 					};
-				ruleSets.Add(new RuleList("其它优化项", () => rules));
+				RuleSets.Add(new RuleList("其它优化项", () => rules));
 
 				LoadRuleFile("性能数据收集器", Resources.WMILoggerRules, ReadWmiLogger);
 				LoadRuleFile("组策略", Resources.GroupPolicyRules, ReadGroupPolicy);
 				LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenu);
 				LoadRuleFile("系统服务", Resources.ServiceRules, ReadService);
-				LoadRuleFile("任务计划程序", Resources.TaskSchdulerRules, ReadTask);
+				RuleSets.Add(new TaskSchedulerOptimizeSet());
 				LoadRuleFile("开始菜单（系统）", Resources.StartupRules, r => new StartupMenuRule(true, r.Read()));
-			}
-
-			ProgressMax = ruleSets.Count;
-		}
-
-		public IEnumerable<OptimizeSet> Scan()
-		{
-			var progress = 0;
-
-			Optimizable DoScan(Rule rule)
-			{
-				var value = rule.Scan();
-				OnProgress?.Invoke(this, ++progress);
-				return value;
-			}
-
-			foreach (var ruleSet in ruleSets)
-			{
-				var items = ruleSet.Rules
-					.Select(rule => DoScan(rule))
-					.Where(o => o != null);
-
-				yield return new OptimizeSet(ruleSet.Name, items);
 			}
 		}
 
 		void LoadRuleFile(string name, string content, Func<RuleFileReader, Rule> func)
 		{
 			IEnumerable<Rule> factory() => RuleFileReader.Iter(content).Select(func).ToList();
-			ruleSets.Add(new RuleList(name, factory));
+			RuleSets.Add(new RuleList(name, factory));
 		}
 
 		// 下面是各种规则的加载逻辑，为了省点字把 Rule 后缀去掉了（ReadTaskRule -> ReadTask）
@@ -93,11 +65,6 @@ namespace Win8InstallTool
 		static Rule ReadSendTo(RuleFileReader reader)
 		{
 			return new SendToRule(reader.Read(), reader.Read());
-		}
-
-		static Rule ReadTask(RuleFileReader reader)
-		{
-			return new TaskSchedulerRule(reader.Read(), reader.Read(), reader.Read() == ":DISABLE");
 		}
 
 		static Rule ReadContextMenu(RuleFileReader reader)

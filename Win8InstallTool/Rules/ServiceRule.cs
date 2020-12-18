@@ -14,12 +14,12 @@ namespace Win8InstallTool.Rules
 		/// <summary>
 		/// 对此服务的简单介绍，以及需要优化的原因。
 		/// </summary>
-		public  string Description { get; }
+		public string Description { get; }
 
 		/// <summary>
 		/// 服务的显示名，该名称可读性较强。
 		/// </summary>
-		public  string Name { get; private set; }
+		public string Name { get; private set; }
 
 		/// <summary>
 		/// 此服务应当被优化为什么状态，默认禁用。

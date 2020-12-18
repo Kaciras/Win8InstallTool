@@ -10,9 +10,9 @@ namespace Win8InstallTool.Rules
 	{
 		private readonly string path;
 
-		public  string Name { get; }
+		public string Name { get; }
 
-		public  string Description => "都是些从来不用的垃圾";
+		public string Description => "都是些从来不用的垃圾";
 
 		public StartupMenuRule(bool isSystem, string name)
 		{
@@ -26,7 +26,7 @@ namespace Win8InstallTool.Rules
 			return Directory.Exists(path);
 		}
 
-		public  void Optimize()
+		public void Optimize()
 		{
 			Directory.Delete(path, true);
 		}

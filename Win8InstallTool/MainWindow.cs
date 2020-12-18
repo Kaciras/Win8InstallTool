@@ -144,12 +144,10 @@ namespace Win8InstallTool
 			btnOptimize.Enabled = false;
 			btnSelectAll.Enabled = false;
 
-			progressBar.Maximum = provider.ProgressMax;
+			progressBar.Maximum = provider.RuleSets.Count;
 			progressBar.Value = 0;
 
-			provider.OnProgress += Provider_OnProgress;
 			await Task.Run(FindOptimizable);
-			provider.OnProgress -= Provider_OnProgress;
 
 			scanButton.Enabled = true;
 			btnClearAll.Enabled = true;
@@ -157,26 +155,22 @@ namespace Win8InstallTool
 			btnSelectAll.Enabled = true;
 		}
 
-		void Provider_OnProgress(object sender, int value)
-		{
-			progressBar.Value = value;
-		}
-
 		void FindOptimizable()
 		{
 			treeView.Nodes.Clear();
 			treeView.BeginUpdate();
 
-			foreach (var set in provider.Scan())
+			foreach (var set in provider.RuleSets)
 			{
 				var setNode = new TreeNode(set.Name);
 
-				foreach (var item in set.Items)
+				foreach (var item in set.Scan())
 				{
 					var node = new TreeNode(item.Name);
 					node.Tag = item;
 					Invoke(new Action(() => setNode.Nodes.Add(node)));
 				}
+				progressBar.Value++;
 
 				if (setNode.Nodes.Count == 0)
 				{

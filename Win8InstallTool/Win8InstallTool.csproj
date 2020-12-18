@@ -91,6 +91,7 @@
     <Compile Include="Rules\ExplorerFolderRule.cs" />
     <Compile Include="Rules\GroupPolicyRule.cs" />
     <Compile Include="Rules\OpenWithNotepadRule.cs" />
+    <Compile Include="Rules\TaskSchedulerOptimizeSet.cs" />
     <Compile Include="Rules\WMILoggerRule.cs" />
     <Compile Include="Rules\Rule.cs" />
     <Compile Include="Rules\SchannelRule.cs" />
@@ -98,7 +99,6 @@
     <Compile Include="Rules\ServiceRule.cs" />
     <Compile Include="Rules\ServiceState.cs" />
     <Compile Include="Rules\StartupMenuRule.cs" />
-    <Compile Include="Rules\TaskSchedulerRule.cs" />
     <Compile Include="SimpleIniFile.cs" />
     <Compile Include="TaskSchedulerManager.cs" />
     <Compile Include="Utils.cs" />
