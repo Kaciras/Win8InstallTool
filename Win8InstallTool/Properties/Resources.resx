@@ -127,6 +127,9 @@
   <data name="OpenWithNotepad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpenWithNotepad.reg;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
   </data>
+  <data name="RegistryRules" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RegistryRules.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;gb2312</value>
+  </data>
   <data name="SendToRules" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SendToRules.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

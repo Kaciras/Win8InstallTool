@@ -1,0 +1,70 @@
+# 关闭系统崩溃时的内存转储功能，一般人用不上，还会在日志里报错。
+# 该项值与面板中的项的对应如下：
+#	0 - 无
+#	1 - 完全内存转储
+#	2 - 核心内存转储
+#	3 - 小内存转储(256KB)
+#	7 - 自动
+# https://docs.microsoft.com/zh-cn/windows/client-management/system-failure-recovery-options
+
+禁止系统失败后写入调试信息
+不做系统相关开发的话这些调试信息鸟用没有，如果禁用了虚拟内存还会在事件日志里报错
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl]
+"CrashDumpEnabled"=dword:00000000
+
+禁用性能计数器
+统计系统底层性能的东西，一般人用不到，还老是在日志里报错 “无法打开服务器服务性能对象……”
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfNet\Performance]
+"Disable Performance Counters"=dword:00000001
+
+# 一些系统程序出现了TLS连接错误时会产生一个事件记录，但是连接失败很正常，比如网络卡或是服务端证书有问题，故忽略此错误。
+# 
+# "从远程终点接收到一个严重警告。TLS 协议所定义的严重警告代码为 xx。"
+# 
+# 【警告代码的意义】
+# https://docs.microsoft.com/en-us/archive/blogs/kaushal/ssltls-alert-protocol-the-alert-codes
+# 
+# 【注册表值】
+# https://support.microsoft.com/zh-cn/help/260729/how-to-enable-schannel-event-logging-in-windows-and-windows-server
+# 
+# 【参考】
+# https://mp.weixin.qq.com/s?__biz=MjM5Nzc2MTU0MQ==&mid=2454671613&idx=2&sn=4dda0985adf0341bea436dac825eba71&chksm=b16ef79786197e81f63b1a2f8ed31ac04a5f451b710a0bade32ece9d3381ea4b8208cd36693f#rd
+
+关闭 SChannel 事件日志
+屏蔽系统日志里的 '从远程终点接收到一个严重警告' 错误
+[HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\SCHANNEL]
+"EventLogging"=dword:00000000
+
+禁用已经过时的SSL系列协议
+SSL协议已经被TLS所淘汰，在Windows10系统中默认被禁用，这些功能不应该再被使用。
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 2.0\Client]
+"Enabled"=dword:00000000
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 2.0\Server]
+"Enabled"=dword:00000000
+"DisabledByDefault"=dword:00000001
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Client]
+"Enabled"=dword:00000000
+"DisabledByDefault"=dword:00000001
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Server]
+"Enabled"=dword:00000000
+"DisabledByDefault"=dword:00000001
+
+# https://docs.microsoft.com/zh-cn/troubleshoot/windows-server/identity/disable-and-replace-tls-1dot0#disable-old-protocols-in-the-registry
+
+禁用TLS1.0和RC4协议
+这俩协议存在安全漏洞且已经被更新的标准所替代，建议禁用，但要注意仍有一些古老的软件使用它们。
+[HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client]
+"Enabled"=dword:00000000
+"DisabledByDefault"=dword:00000001
+[HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server]
+"Enabled"=dword:00000000
+"DisabledByDefault"=dword:00000001
+[HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128]
+"Enabled"=dword:00000000
+[HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128]
+"Enabled"=dword:00000000
+[HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128]
+"Enabled"=dword:00000000
+
+#优化IE浏览器设置
+#启用增加安全性的选项，禁用过时的SSL协议

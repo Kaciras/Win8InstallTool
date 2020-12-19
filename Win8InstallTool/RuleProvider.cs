@@ -5,8 +5,7 @@ using System.Linq;
 using Win8InstallTool.Properties;
 using Win8InstallTool.Rules;
 
-// TODO: 本来想加个清理无效快捷方式的，Utils.GetShortcutTarget 都写好了，但用不上所以算了。
-// TODO: 开始菜单清除用户跟系统重复的项。
+// 本来想加个清理无效快捷方式的，Utils.GetShortcutTarget 都写好了，但用不上所以算了。
 namespace Win8InstallTool
 {
 	/// <summary>
@@ -30,14 +29,14 @@ namespace Win8InstallTool
 
 			if (includeSystem)
 			{
-				var rules = new List<Rule>
-					{
-						new LLDPSecurityRule(),
-						new CrashDumpRule(),
-						new PerfCounterRule(),
-						new SchannelRule(),
-						new OpenWithNotepadRule(),
-					};
+				var rules = new Rule[]
+				{
+					new LLDPSecurityRule(),
+					new CrashDumpRule(),
+					new PerfCounterRule(),
+					new SchannelRule(),
+					new OpenWithNotepadRule(),
+				};
 				RuleSets.Add(new RuleList("其它优化项", () => rules));
 
 				LoadRuleFile("性能数据收集器", Resources.WMILoggerRules, ReadWmiLogger);

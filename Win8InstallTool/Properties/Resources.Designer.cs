@@ -149,6 +149,15 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string RegistryRules {
+            get {
+                return ResourceManager.GetString("RegistryRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to # 发传真的那个关闭系统功能后会自动删除。
         ///
         ///Compressed (zipped) Folder.ZFSendToTarget
