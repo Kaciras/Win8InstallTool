@@ -11,6 +11,7 @@ namespace Win8InstallTool
 	/// <list>
 	/// <item>只能用LF换行符</item>
 	/// <item>使用空行分隔项目，项目内不允许空行</item>
+	/// <item>最后一行结尾也必须有换行符</item>
 	/// <item>一行是一个属性，上层怎么解析随意</item>
 	/// </list>
 	/// </summary>

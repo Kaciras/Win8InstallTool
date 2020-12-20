@@ -71,6 +71,8 @@
   <ItemGroup>
     <Compile Include="GroupPolicy.cs" />
     <Compile Include="GroupPolicyObject.cs" />
+    <Compile Include="RegFileTokenizer.cs" />
+    <Compile Include="RegFileTokenType.cs" />
     <Compile Include="RuleProvider.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -88,7 +90,7 @@
     <Compile Include="Rules\LLDPSecurityRule.cs" />
     <Compile Include="Rules\ExplorerFolderRule.cs" />
     <Compile Include="Rules\GroupPolicyRule.cs" />
-    <Compile Include="Rules\OpenWithNotepadRule.cs" />
+    <Compile Include="Rules\RegFileRule.cs" />
     <Compile Include="Rules\TaskSchedulerOptimizeSet.cs" />
     <Compile Include="Rules\WMILoggerRule.cs" />
     <Compile Include="Rules\Rule.cs" />
@@ -122,7 +124,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\OpenWithNotepad.reg" />
+    <EmbeddedResource Include="RegFiles\DisableCrashDump.reg" />
+    <EmbeddedResource Include="RegFiles\DisablePerfCounter.reg" />
+    <EmbeddedResource Include="RegFiles\DisableSchannelLog.reg" />
+    <EmbeddedResource Include="RegFiles\IESecurity.reg" />
+    <EmbeddedResource Include="RegFiles\DisableTLS1_0.reg" />
+    <EmbeddedResource Include="RegFiles\DisableSSL.reg" />
+    <EmbeddedResource Include="RegFiles\OpenWithNotepad.reg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

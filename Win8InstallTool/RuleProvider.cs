@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using Win8InstallTool.Properties;
 using Win8InstallTool.Rules;
 
@@ -32,19 +34,18 @@ namespace Win8InstallTool
 				var rules = new Rule[]
 				{
 					new LLDPSecurityRule(),
-					new CrashDumpRule(),
-					new PerfCounterRule(),
-					new SchannelRule(),
-					new OpenWithNotepadRule(),
+					new RegFileRule("把用记事本打开添加到右键菜单", "很常用的功能，稍微会点电脑的都懂", "OpenWithNotepad"),
 				};
 				RuleSets.Add(new RuleList("其它优化项", () => rules));
+
+				RuleSets.Add(new TaskSchedulerOptimizeSet());
 
 				LoadRuleFile("性能数据收集器", Resources.WMILoggerRules, ReadWmiLogger);
 				LoadRuleFile("组策略", Resources.GroupPolicyRules, ReadGroupPolicy);
 				LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenu);
 				LoadRuleFile("系统服务", Resources.ServiceRules, ReadService);
-				RuleSets.Add(new TaskSchedulerOptimizeSet());
 				LoadRuleFile("开始菜单（系统）", Resources.StartupRules, r => new StartupMenuRule(true, r.Read()));
+				LoadRuleFile("其它系统设置", Resources.RegistryRules, ReadRegistry);
 			}
 		}
 
@@ -55,6 +56,11 @@ namespace Win8InstallTool
 		}
 
 		// 下面是各种规则的加载逻辑，为了省点字把 Rule 后缀去掉了（ReadTaskRule -> ReadTask）
+
+		static Rule ReadRegistry(RuleFileReader reader)
+		{
+			return new RegFileRule(reader.Read(), reader.Read(), reader.Read());
+		}
 
 		static Rule ReadService(RuleFileReader reader)
 		{

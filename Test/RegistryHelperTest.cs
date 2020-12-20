@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Win32;
 
@@ -62,6 +63,17 @@ namespace Win8InstallTool.Test
 			{
 				Registry.CurrentUser.DeleteSubKeyTree(@"Environment\Test_Win8Tool", false);
 			}
+		}
+
+		/// <summary>
+		/// 验证 Registry.SetValue() 无法直接接受 .reg 文件里的值格式，必须要先转换。
+		/// </summary>
+		[TestMethod]
+		public void AutoConvertOnSetValue()
+		{
+			var text = "50,2d,02,09,60,d1,d6,01";
+			var kind = RegistryValueKind.QWord;
+			Assert.ThrowsException<ArgumentException>(() => Registry.SetValue(@"HKEY_CURRENT_USER\_Test", "a", text, kind));
 		}
 	}
 }

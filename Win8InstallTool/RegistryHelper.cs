@@ -26,18 +26,7 @@ namespace Win8InstallTool
 			{
 				basekeyName = path.Substring(0, i);
 			}
-
-			var basekey = basekeyName.ToUpper() switch
-			{
-				"HKEY_CURRENT_USER" or "HKCU" => Registry.CurrentUser,
-				"HKEY_LOCAL_MACHINE" or "HKLM" => Registry.LocalMachine,
-				"HKEY_CLASSES_ROOT" or "HKCR" => Registry.ClassesRoot,
-				"HKEY_USERS" or "HKU" => Registry.Users,
-				"HKEY_CURRENT_CONFIG" or "HKCC" => Registry.CurrentConfig,
-				"HKEY_PERFORMANCE_DATA" => Registry.PerformanceData,
-				"HKEY_DYN_DATA" => RegistryKey.OpenBaseKey(RegistryHive.DynData, RegistryView.Default),
-				_ => throw new ArgumentException("InvalidKeyName: " + basekeyName),
-			};
+			var basekey = GetBaseKey(basekeyName);
 
 			if (i == -1 || i == path.Length)
 			{
@@ -48,6 +37,33 @@ namespace Win8InstallTool
 				var pathRemain = path.Substring(i + 1, path.Length - i - 1);
 				return basekey.OpenSubKey(pathRemain, wirte);
 			}
+		}
+
+		static RegistryKey GetBaseKey(string name) => name.ToUpper() switch
+		{
+			"HKEY_CURRENT_USER" or "HKCU" => Registry.CurrentUser,
+			"HKEY_LOCAL_MACHINE" or "HKLM" => Registry.LocalMachine,
+			"HKEY_CLASSES_ROOT" or "HKCR" => Registry.ClassesRoot,
+			"HKEY_USERS" or "HKU" => Registry.Users,
+			"HKEY_CURRENT_CONFIG" or "HKCC" => Registry.CurrentConfig,
+			"HKEY_PERFORMANCE_DATA" => Registry.PerformanceData,
+			"HKEY_DYN_DATA" => RegistryKey.OpenBaseKey(RegistryHive.DynData, RegistryView.Default),
+			_ => throw new ArgumentException("InvalidKeyName: " + name),
+		};
+
+		public static bool KeyExists(string path)
+		{
+			var i = path.IndexOf('\\');
+			if (i == -1)
+			{
+				GetBaseKey(path);
+			}
+			var basekeyName = path.Substring(0, i);
+			var remain = path.Substring(i + 1, path.Length - i - 1);
+
+			var basekey = GetBaseKey(basekeyName);
+			using var target = basekey.OpenSubKey(remain);
+			return target != null;
 		}
 
 		/// <summary>
