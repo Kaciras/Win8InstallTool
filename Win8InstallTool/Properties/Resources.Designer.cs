@@ -132,24 +132,24 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Windows Registry Editor Version 5.00
+        ///   Looks up a localized string similar to # 关闭系统崩溃时的内存转储功能，一般人用不上，还会在日志里报错。
+        ///# 该项值与面板中的项的对应如下：
+        ///#	0 - 无
+        ///#	1 - 完全内存转储
+        ///#	2 - 核心内存转储
+        ///#	3 - 小内存转储(256KB)
+        ///#	7 - 自动
+        ///# https://docs.microsoft.com/zh-cn/windows/client-management/system-failure-recovery-options
         ///
-        ///[HKEY_CLASSES_ROOT\*\shell\OpenWithNotepad]
-        ///@=&quot;记事本打开&quot;
+        ///禁止系统失败后写入调试信息
+        ///不做系统相关开发的话这些调试信息鸟用没有，如果禁用了虚拟内存还会在事件日志里报错
+        ///[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl]
+        ///&quot;CrashDumpEnabled&quot;=dword:00000000
         ///
-        ///[HKEY_CLASSES_ROOT\*\shell\OpenWithNotepad\command]
-        ///@=&quot;notepad.exe %1&quot;
-        ///
-        ///.
-        /// </summary>
-        internal static string OpenWithNotepad {
-            get {
-                return ResourceManager.GetString("OpenWithNotepad", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
+        ///禁用性能计数器
+        ///统计系统底层性能的东西，一般人用不到，还老是在日志里报错 “无法打开服务器服务性能对象……”
+        ///[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfNet\Performance]
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RegistryRules {
             get {
