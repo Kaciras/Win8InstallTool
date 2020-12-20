@@ -169,31 +169,17 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ServiceRules.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\TaskSchdulerRules.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\StartupRules.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\ContextMenuRules.txt" />
+	<None Include="Resources\GroupPolicyRules.txt" />
+	<None Include="Resources\RegistryRules.txt" />
+	<None Include="Resources\SendToRules.txt" />
+    <None Include="Resources\ServiceRules.txt" />
+	<None Include="Resources\StartupRules.txt" />
+	<None Include="Resources\TaskSchdulerRules.txt" />
+	<None Include="Resources\WMILoggerRules.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\SendToRules.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GroupPolicyRules.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\WMILoggerRules.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\RegistryRules.txt" />
+	  <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>

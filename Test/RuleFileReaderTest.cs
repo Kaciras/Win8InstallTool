@@ -70,7 +70,7 @@ namespace Win8InstallTool.Test
 		public void Iter()
 		{
 			var text = "\n\n\n\nFirst\n\n";
-			var enumerable  = RuleFileReader.Iter(text);
+			var enumerable = RuleFileReader.Iter(text);
 
 			var enumerator = enumerable.GetEnumerator();
 			Assert.IsTrue(enumerator.MoveNext());

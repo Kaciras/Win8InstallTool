@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
 
 namespace Win8InstallTool
 {
@@ -44,7 +38,7 @@ namespace Win8InstallTool
 					SkipBlankLines();
 					return ConsumeTopLevelToken();
 			}
-			
+
 			return true;
 		}
 
@@ -79,7 +73,7 @@ namespace Win8InstallTool
 			TokenType = RegFileTokenType.Comment;
 			var j = i + 1;
 			i = content.IndexOf('\r', j);
-			Value = content.Substring(j, i-j);
+			Value = content.Substring(j, i - j);
 		}
 
 		void ConsumeVersion()

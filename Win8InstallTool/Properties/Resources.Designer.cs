@@ -132,24 +132,30 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to # 关闭系统崩溃时的内存转储功能，一般人用不上，还会在日志里报错。
-        ///# 该项值与面板中的项的对应如下：
-        ///#	0 - 无
-        ///#	1 - 完全内存转储
-        ///#	2 - 核心内存转储
-        ///#	3 - 小内存转储(256KB)
-        ///#	7 - 自动
-        ///# https://docs.microsoft.com/zh-cn/windows/client-management/system-failure-recovery-options
+        ///   Looks up a localized string similar to 禁用性能计数器
+        ///统计系统底层性能的东西，一般人用不到，还老是在日志里报错 “无法打开服务器服务性能对象……”
+        ///DisablePerfCounter
+        ///
+        ///关闭 SChannel 事件日志
+        ///屏蔽系统日志里的 &apos;从远程终点接收到一个严重警告&apos; 错误
+        ///DisableSchannelLog
+        ///
+        ///禁用已经过时的SSL系列协议
+        ///SSL协议已经被TLS所淘汰，在Windows10系统中默认被禁用，这些功能不应该再被使用。
+        ///DisableSSL
+        ///
+        ///禁用TLS1.0和RC4协议
+        ///这俩协议存在安全漏洞且已经被更新的标准所替代，建议禁用，但要注意仍有一些古老的软件使用它们。
+        ///DisableTLS1_0
+        ///
+        ///增强IE浏览器安全性
+        ///具体操作包括：禁用过时的SSL协议，启用增强的保护功能，禁用友好错误信息。
+        ///IESecurity
         ///
         ///禁止系统失败后写入调试信息
         ///不做系统相关开发的话这些调试信息鸟用没有，如果禁用了虚拟内存还会在事件日志里报错
-        ///[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl]
-        ///&quot;CrashDumpEnabled&quot;=dword:00000000
-        ///
-        ///禁用性能计数器
-        ///统计系统底层性能的东西，一般人用不到，还老是在日志里报错 “无法打开服务器服务性能对象……”
-        ///[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfNet\Performance]
-        /// [rest of string was truncated]&quot;;.
+        ///DisableCrashDump
+        ///.
         /// </summary>
         internal static string RegistryRules {
             get {
