@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static System.Environment;
 
@@ -20,9 +21,15 @@ namespace Win8InstallTool.Test
 		[DataRow("not/exists/folder")]
 		[DataRow("Resources/Calculator")]
 		[DataTestMethod]
-		public void GetShortcutTargetException(string file)
+		public void GetShortcutTargetFileNotExists(string file)
 		{
 			Assert.ThrowsException<FileNotFoundException>(() => Utils.GetShortcutTarget(file));
+		}
+
+		[TestMethod]
+		public void GetShortcutTargetWhenFileIsNotALink()
+		{
+			Assert.ThrowsException<InvalidOperationException>(() => Utils.GetShortcutTarget("Resources/config.ini"));
 		}
 
 		[Ignore("总是出现莫名其妙的错误 2 or 1008")]

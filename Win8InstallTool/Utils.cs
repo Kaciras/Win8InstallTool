@@ -53,6 +53,7 @@ namespace Win8InstallTool
 		/// <seealso cref="https://stackoverflow.com/a/9414495/7065321"/>
 		/// <param name="filename">快捷方式文件</param>
 		/// <returns>目标文件的路径</returns>
+		/// <exception cref="InvalidOperationException">文件不是快捷方式</exception>
 		/// <exception cref="UnauthorizedAccessException">无权限，或者是特殊的链接，比如开始菜单里的桌面</exception>
 		/// <exception cref="FileNotFoundException">如果所给的快捷方式不存在</exception>
 		public static string GetShortcutTarget(string filename)
@@ -66,6 +67,12 @@ namespace Win8InstallTool
 
 			var folderItem = folder.ParseName(filenameOnly)
 				?? throw new FileNotFoundException("File not exists", filename);
+
+			// 如果不是链接 GetLink 会抛 	NotImplementedException
+			if (!folderItem.IsLink)
+			{
+				throw new InvalidOperationException("File is not a link");
+			}
 
 			return ((ShellLinkObject)folderItem.GetLink).Path;
 		}
