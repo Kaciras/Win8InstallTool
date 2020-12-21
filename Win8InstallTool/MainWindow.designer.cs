@@ -37,6 +37,8 @@
 			this.progressBar = new System.Windows.Forms.ProgressBar();
 			this.treeView = new System.Windows.Forms.TreeView();
 			this.roleLabel = new System.Windows.Forms.Label();
+			this.collapseButton = new System.Windows.Forms.Button();
+			this.aboutButton = new System.Windows.Forms.Button();
 			groupBox1 = new System.Windows.Forms.GroupBox();
 			groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -49,7 +51,7 @@
 			groupBox1.Location = new System.Drawing.Point(500, 47);
 			groupBox1.Margin = new System.Windows.Forms.Padding(5);
 			groupBox1.Name = "groupBox1";
-			groupBox1.Size = new System.Drawing.Size(170, 242);
+			groupBox1.Size = new System.Drawing.Size(170, 208);
 			groupBox1.TabIndex = 6;
 			groupBox1.TabStop = false;
 			groupBox1.Text = "描述";
@@ -64,7 +66,7 @@
 			this.textBox.Location = new System.Drawing.Point(6, 20);
 			this.textBox.Name = "textBox";
 			this.textBox.ReadOnly = true;
-			this.textBox.Size = new System.Drawing.Size(158, 216);
+			this.textBox.Size = new System.Drawing.Size(158, 182);
 			this.textBox.TabIndex = 0;
 			this.textBox.Text = "";
 			// 
@@ -151,19 +153,42 @@
 			this.roleLabel.BackColor = System.Drawing.SystemColors.Control;
 			this.roleLabel.Font = new System.Drawing.Font("Microsoft YaHei Light", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.roleLabel.ForeColor = System.Drawing.Color.Green;
-			this.roleLabel.Location = new System.Drawing.Point(508, 14);
+			this.roleLabel.Location = new System.Drawing.Point(500, 14);
 			this.roleLabel.Margin = new System.Windows.Forms.Padding(5);
 			this.roleLabel.Name = "roleLabel";
-			this.roleLabel.Size = new System.Drawing.Size(156, 23);
+			this.roleLabel.Size = new System.Drawing.Size(170, 23);
 			this.roleLabel.TabIndex = 9;
 			this.roleLabel.Text = "标准权限";
 			this.roleLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// collapseButton
+			// 
+			this.collapseButton.Enabled = false;
+			this.collapseButton.Location = new System.Drawing.Point(500, 263);
+			this.collapseButton.Name = "collapseButton";
+			this.collapseButton.Size = new System.Drawing.Size(80, 28);
+			this.collapseButton.TabIndex = 10;
+			this.collapseButton.Text = "全部折叠";
+			this.collapseButton.UseVisualStyleBackColor = true;
+			this.collapseButton.Click += new System.EventHandler(this.collapseButton_Click);
+			// 
+			// aboutButton
+			// 
+			this.aboutButton.Location = new System.Drawing.Point(590, 263);
+			this.aboutButton.Name = "aboutButton";
+			this.aboutButton.Size = new System.Drawing.Size(80, 28);
+			this.aboutButton.TabIndex = 11;
+			this.aboutButton.Text = "关于";
+			this.aboutButton.UseVisualStyleBackColor = true;
+			this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
 			// 
 			// MainWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(684, 411);
+			this.Controls.Add(this.aboutButton);
+			this.Controls.Add(this.collapseButton);
 			this.Controls.Add(this.roleLabel);
 			this.Controls.Add(this.treeView);
 			this.Controls.Add(this.progressBar);
@@ -189,6 +214,8 @@
         private System.Windows.Forms.TreeView treeView;
 		private System.Windows.Forms.Label roleLabel;
 		private System.Windows.Forms.RichTextBox textBox;
+		private System.Windows.Forms.Button collapseButton;
+		private System.Windows.Forms.Button aboutButton;
 	}
 }
 

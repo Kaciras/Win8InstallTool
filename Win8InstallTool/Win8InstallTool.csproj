@@ -37,9 +37,7 @@
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
@@ -64,11 +62,19 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutWindow.Designer.cs">
+      <DependentUpon>AboutWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="GroupPolicy.cs" />
     <Compile Include="GroupPolicyObject.cs" />
     <Compile Include="RegFileTokenizer.cs" />
@@ -101,6 +107,9 @@
     <Compile Include="SimpleIniFile.cs" />
     <Compile Include="TaskSchedulerManager.cs" />
     <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="AboutWindow.resx">
+      <DependentUpon>AboutWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -170,19 +179,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ContextMenuRules.txt" />
-	<None Include="Resources\GroupPolicyRules.txt" />
-	<None Include="Resources\RegistryRules.txt" />
-	<None Include="Resources\SendToRules.txt" />
+    <None Include="Resources\GroupPolicyRules.txt" />
+    <None Include="Resources\RegistryRules.txt" />
+    <None Include="Resources\SendToRules.txt" />
     <None Include="Resources\ServiceRules.txt" />
-	<None Include="Resources\StartupRules.txt" />
-	<None Include="Resources\TaskSchdulerRules.txt" />
-	<None Include="Resources\WMILoggerRules.txt" />
-  </ItemGroup>
-  <ItemGroup>
-	  <WCFMetadata Include="Connected Services\" />
+    <None Include="Resources\StartupRules.txt" />
+    <None Include="Resources\TaskSchdulerRules.txt" />
+    <None Include="Resources\WMILoggerRules.txt" />
   </ItemGroup>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

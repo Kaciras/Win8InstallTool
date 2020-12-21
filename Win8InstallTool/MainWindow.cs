@@ -118,6 +118,16 @@ namespace Win8InstallTool
 			}
 		}
 
+		private void collapseButton_Click(object sender, EventArgs e)
+		{
+			treeView.CollapseAll();
+		}
+
+		private void aboutButton_Click(object sender, EventArgs e)
+		{
+			new AboutWindow().ShowDialog(this);
+		}
+
 		void BtnSelectAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => true);
 
 		void BtnClearAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => false);
@@ -139,6 +149,7 @@ namespace Win8InstallTool
 
 		async void ScanButton_Click(object sender, EventArgs e)
 		{
+			collapseButton.Enabled = false;
 			scanButton.Enabled = false;
 			btnClearAll.Enabled = false;
 			btnOptimize.Enabled = false;
@@ -149,6 +160,7 @@ namespace Win8InstallTool
 
 			await Task.Run(FindOptimizable);
 
+			collapseButton.Enabled = true;
 			scanButton.Enabled = true;
 			btnClearAll.Enabled = true;
 			btnOptimize.Enabled = true;
@@ -179,6 +191,7 @@ namespace Win8InstallTool
 				Invoke(new Action(() => treeView.Nodes.Add(setNode)));
 			}
 
+			treeView.ExpandAll();
 			treeView.EndUpdate();
 		}
 	}
