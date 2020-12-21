@@ -19,7 +19,7 @@ namespace Win8InstallTool.Rules
 
 	public class RuleList : OptimizableSet
 	{
-		private readonly Func<IEnumerable<Rule>> factory;
+		readonly Func<IEnumerable<Rule>> factory;
 
 		public string Name { get; }
 

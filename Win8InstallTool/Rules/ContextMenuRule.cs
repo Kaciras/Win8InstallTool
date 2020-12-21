@@ -13,12 +13,12 @@ namespace Win8InstallTool.Rules
 		/// <br/>
 		/// 如果要删除多级，请将每一级都写上，并且下级要放在上级的前面。
 		/// </summary>
-		private static readonly string[] EmptyRemovable = {
+		static readonly string[] EmptyRemovable = {
 			"shell", @"shellex\ContextMenuHandlers", "shellex",
 		};
 
-		private readonly string item;
-		private readonly IEnumerable<string> folders;
+		readonly string item;
+		readonly IEnumerable<string> folders;
 
 		public string Name { get; }
 

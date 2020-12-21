@@ -9,11 +9,15 @@ using Microsoft.Win32;
 namespace Win8InstallTool.Rules
 {
 	/// <summary>
-	/// 
+	/// 注册表规则，能够判断是否需要导入内置的注册表文件（.reg），并在优化时将其导入。
+	/// <br/>
+	/// 注册表文件需要放在 RegFiles 目录下，并设置为 Embedded Resource.
+	/// <br/>
+	/// 导入注册表文件一条命令即可，但没有现成的方法可以比较其跟注册表是否一致，故自己实现了这功能。
 	/// </summary>
 	public class RegFileRule : Rule
 	{
-		private readonly string filename;
+		readonly string filename;
 
 		public string Name { get; }
 
@@ -32,6 +36,9 @@ namespace Win8InstallTool.Rules
 			return Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
 		}
 
+		/// <summary>
+		/// 对比 reg 文件和注册表，判断是否存在不同，如果不同表示需要优化。
+		/// </summary>
 		public bool Check()
 		{
 			using var regFile = new StreamReader(OpenStream());
@@ -47,19 +54,20 @@ namespace Win8InstallTool.Rules
 			{
 				switch (tokenilizer.TokenType)
 				{
+					case RegFileTokenType.DeleteKey:
+						expected = !RegistryHelper.KeyExists(tokenilizer.Value);
+						break;
 					case RegFileTokenType.CreateKey:
 						key = tokenilizer.Value;
 						expected = RegistryHelper.KeyExists(key);
-						break;
-					case RegFileTokenType.DeleteKey:
-						expected = !RegistryHelper.KeyExists(tokenilizer.Value);
 						break;
 					case RegFileTokenType.ValueName:
 						kind = RegistryValueKind.String;
 						valueName = tokenilizer.Value;
 						break;
 					case RegFileTokenType.Value:
-						expected = ParseValue(tokenilizer.Value, kind).Equals(Registry.GetValue(key, valueName, null));
+						var valueInDB = Registry.GetValue(key, valueName, null);
+						expected = ParseValue(tokenilizer.Value, kind).Equals(valueInDB);
 						break;
 					case RegFileTokenType.Kind:
 						kind = ParseKind(tokenilizer.Value);

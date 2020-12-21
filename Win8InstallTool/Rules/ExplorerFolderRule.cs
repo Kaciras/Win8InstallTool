@@ -7,9 +7,9 @@ namespace Win8InstallTool.Rules
 	public sealed class ExplorerFolderRule : Rule
 	{
 		// HKEY_LOCAL_MACHINE
-		private const string KEY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace";
+		const string KEY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace";
 
-		private readonly string[] clsids = {
+		readonly string[] clsids = {
 			"{1CF1260C-4DD0-4ebb-811F-33C572699FDE}",
 			"{374DE290-123F-4565-9164-39C4925E467B}",
 			"{3ADD1653-EB32-4cb0-BBD7-DFA0ABB5ACCA}",

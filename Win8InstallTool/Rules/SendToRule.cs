@@ -9,7 +9,7 @@ namespace Win8InstallTool.Rules
 
 		public string Description { get; }
 
-		private readonly string path;
+		readonly string path;
 
 		public SendToRule(string name, string description)
 		{

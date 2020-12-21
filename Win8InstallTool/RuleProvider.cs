@@ -15,7 +15,7 @@ namespace Win8InstallTool
 	{
 		public ICollection<OptimizableSet> RuleSets { get; } = new List<OptimizableSet>();
 
-		private readonly bool includeSystem;
+		readonly bool includeSystem;
 
 		public RuleProvider(bool includeSystem)
 		{

@@ -24,7 +24,7 @@
 
 		public string Description => "解决事件日志里的 CAPI2 513 “加密服务处理系统写入程序对象中的 OnIdentity() 调用时失败” 错误";
 
-		private string descriptor;
+		string descriptor;
 
 		public bool Check()
 		{

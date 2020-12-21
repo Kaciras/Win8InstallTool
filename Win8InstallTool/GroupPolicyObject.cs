@@ -25,12 +25,12 @@ namespace Win8InstallTool
 		/// <summary>
 		/// The snap-in that processes .pol files
 		/// </summary>
-		private static readonly Guid RegistryExtension = Guid.Parse("{35378eac-683f-11d2-a89a-00c04fbbcfa2}");
+		static readonly Guid RegistryExtension = Guid.Parse("{35378eac-683f-11d2-a89a-00c04fbbcfa2}");
 
 		/// <summary>
 		/// This application
 		/// </summary>
-		private static readonly Guid LocalGuid = new Guid(Assembly.GetExecutingAssembly().GetCustomAttribute<GuidAttribute>().Value);
+		static readonly Guid LocalGuid = new Guid(Assembly.GetExecutingAssembly().GetCustomAttribute<GuidAttribute>().Value);
 
 		protected IGroupPolicyObject Instance = null;
 
@@ -90,8 +90,8 @@ namespace Win8InstallTool
 
 	public class GroupPolicyObjectSettings
 	{
-		private const uint RegistryFlag = 0x00000001;
-		private const uint ReadonlyFlag = 0x00000002;
+		const uint RegistryFlag = 0x00000001;
+		const uint ReadonlyFlag = 0x00000002;
 
 		public readonly bool LoadRegistryInformation;
 		public readonly bool Readonly;

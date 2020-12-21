@@ -8,13 +8,13 @@ namespace Win8InstallTool.Rules
 
 		public string Description { get; }
 
-		private readonly string key;
+		readonly string key;
 
-		private readonly bool? cycle;
-		private readonly int? maxFileSize;
+		readonly bool? cycle;
+		readonly int? maxFileSize;
 
-		private int? fileModeTarget;
-		private int? fileSizeTarget;
+		int? fileModeTarget;
+		int? fileSizeTarget;
 
 		public WMILoggerRule(string name, string description, string key, bool? cycle, int? maxFileSize)
 		{

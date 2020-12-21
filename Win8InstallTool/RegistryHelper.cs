@@ -132,8 +132,8 @@ namespace Win8InstallTool
 
 		internal readonly struct TemporaryElevateSession : IDisposable
 		{
-			private readonly RegistryKey key;
-			private readonly RegistrySecurity accessControl;
+			readonly RegistryKey key;
+			readonly RegistrySecurity accessControl;
 
 			public TemporaryElevateSession(RegistryKey key, RegistrySecurity accessControl)
 			{

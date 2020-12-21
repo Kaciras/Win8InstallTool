@@ -4,9 +4,9 @@ namespace Win8InstallTool.Rules
 {
 	public sealed class GroupPolicyRule : Rule
 	{
-		private readonly string key;
-		private readonly string item;
-		private readonly string value;
+		readonly string key;
+		readonly string item;
+		readonly string value;
 
 		public string Name { get; }
 

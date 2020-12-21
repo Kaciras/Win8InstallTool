@@ -8,6 +8,9 @@ namespace Win8InstallTool
 {
 	static class Program
 	{
+		/// <summary>
+		/// 程序是否具有管理员权限
+		/// </summary>
 		internal static bool IsElevated { get; private set; }
 
 		[STAThread]
@@ -42,7 +45,6 @@ namespace Win8InstallTool
 				&& os.Platform == PlatformID.Win32NT
 				&& version.Major == 6 && version.Minor == 3;
 		}
-
 
 		static void StartProgram()
 		{

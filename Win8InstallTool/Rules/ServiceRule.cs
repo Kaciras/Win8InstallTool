@@ -4,7 +4,7 @@ namespace Win8InstallTool.Rules
 {
 	public class ServiceRule : Rule
 	{
-		private const string SERVICE_DIR = @"SYSTEM\CurrentControlSet\Services\";
+		const string SERVICE_DIR = @"SYSTEM\CurrentControlSet\Services\";
 
 		/// <summary>
 		/// 服务在注册表里的键，不同于显示名。

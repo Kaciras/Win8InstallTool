@@ -8,7 +8,7 @@ namespace Win8InstallTool.Rules
 	/// </summary>
 	public sealed class StartupMenuRule : Rule
 	{
-		private readonly string path;
+		readonly string path;
 
 		public string Name { get; }
 

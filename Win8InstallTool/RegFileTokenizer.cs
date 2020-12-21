@@ -4,13 +4,17 @@ using System.Text;
 namespace Win8InstallTool
 {
 	/// <summary>
-	/// 
+	/// 解析注册表导出文件（.reg）的类。
+	/// <br/>
+	/// 我觉得应该有开源库读取 .reg 文件的，但是找了一圈也没找到，只能自己撸了。
+	/// <br/>
 	/// <seealso cref="https://support.microsoft.com/en-us/help/310516/how-to-add-modify-or-delete-registry-subkeys-and-values-by-using-a-reg"/>
 	/// </summary>
 	public class RegFileTokenizer
 	{
-		private readonly string content;
-		private int i;
+		readonly string content;
+
+		int i;
 
 		public RegFileTokenType TokenType { get; private set; }
 
@@ -21,6 +25,9 @@ namespace Win8InstallTool
 			this.content = content;
 		}
 
+		/// <summary>
+		/// 读取下一个 Token，如果已经读完则返回false，否则返回true
+		/// </summary>
 		public bool Read()
 		{
 			switch (TokenType)
@@ -36,13 +43,13 @@ namespace Win8InstallTool
 					break;
 				default:
 					SkipBlankLines();
-					return ConsumeTopLevelToken();
+					return ConsumeTopLevel();
 			}
 
 			return true;
 		}
 
-		bool ConsumeTopLevelToken()
+		bool ConsumeTopLevel()
 		{
 			if (i >= content.Length)
 			{
@@ -163,7 +170,6 @@ namespace Win8InstallTool
 
 		void ConsumeValue()
 		{
-
 			var buffer = new StringBuilder();
 			var hasMoreLine = true;
 
