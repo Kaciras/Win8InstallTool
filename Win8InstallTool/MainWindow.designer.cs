@@ -93,7 +93,7 @@
 			this.btnOptimize.TabIndex = 3;
 			this.btnOptimize.Text = "优化";
 			this.btnOptimize.UseVisualStyleBackColor = true;
-			this.btnOptimize.Click += new System.EventHandler(this.BtnOptimize_Click);
+			this.btnOptimize.Click += new System.EventHandler(this.OptimizeButton_Click);
 			// 
 			// btnSelectAll
 			// 
@@ -106,7 +106,7 @@
 			this.btnSelectAll.TabIndex = 4;
 			this.btnSelectAll.Text = "全选";
 			this.btnSelectAll.UseVisualStyleBackColor = true;
-			this.btnSelectAll.Click += new System.EventHandler(this.BtnSelectAll_Click);
+			this.btnSelectAll.Click += new System.EventHandler(this.SelectAllButton_Click);
 			// 
 			// btnClearAll
 			// 
@@ -119,7 +119,7 @@
 			this.btnClearAll.TabIndex = 5;
 			this.btnClearAll.Text = "全不选";
 			this.btnClearAll.UseVisualStyleBackColor = true;
-			this.btnClearAll.Click += new System.EventHandler(this.BtnClearAll_Click);
+			this.btnClearAll.Click += new System.EventHandler(this.ClearAllButton_Click);
 			// 
 			// progressBar
 			// 
@@ -163,6 +163,7 @@
 			// 
 			// collapseButton
 			// 
+			this.collapseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.collapseButton.Enabled = false;
 			this.collapseButton.Location = new System.Drawing.Point(500, 263);
 			this.collapseButton.Name = "collapseButton";
@@ -170,17 +171,18 @@
 			this.collapseButton.TabIndex = 10;
 			this.collapseButton.Text = "全部折叠";
 			this.collapseButton.UseVisualStyleBackColor = true;
-			this.collapseButton.Click += new System.EventHandler(this.collapseButton_Click);
+			this.collapseButton.Click += new System.EventHandler(this.CollapseButton_Click);
 			// 
 			// aboutButton
 			// 
+			this.aboutButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.aboutButton.Location = new System.Drawing.Point(590, 263);
 			this.aboutButton.Name = "aboutButton";
 			this.aboutButton.Size = new System.Drawing.Size(80, 28);
 			this.aboutButton.TabIndex = 11;
 			this.aboutButton.Text = "关于";
 			this.aboutButton.UseVisualStyleBackColor = true;
-			this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
+			this.aboutButton.Click += new System.EventHandler(this.AboutButton_Click);
 			// 
 			// MainWindow
 			// 
@@ -200,6 +202,7 @@
 			this.MinimumSize = new System.Drawing.Size(600, 450);
 			this.Name = "MainWindow";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			this.Text = "Kaciras 的 Win8 优化工具";
 			groupBox1.ResumeLayout(false);
 			this.ResumeLayout(false);
 

@@ -19,9 +19,6 @@ namespace Win8InstallTool
 			InitializeComponent();
 			CheckForIllegalCrossThreadCalls = false;
 
-			var appVersion = Assembly.GetExecutingAssembly().GetName().Version;
-			Text = $"Kaciras 的 Win8 优化工具 v{appVersion.ToString(3)}";
-
 			if (Program.IsElevated)
 			{
 				roleLabel.ForeColor = Color.DeepPink;
@@ -64,73 +61,30 @@ namespace Win8InstallTool
 
 		void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
-			if (e.Node.Parent != null)
+			if (e.Node.Parent == null)
+			{
+				textBox.Text = string.Empty;
+			}
+			else
 			{
 				var item = (Optimizable)e.Node.Tag;
 				textBox.Text = item.Description;
 			}
 		}
 
-		async void BtnOptimize_Click(object sender, EventArgs e)
-		{
-			var checkedNodes = treeView.Nodes
-				.Cast<TreeNode>()
-				.SelectMany(t => t.Nodes.Cast<TreeNode>())
-				.Where(item => item.Checked)
-				.ToList();
-
-			progressBar.Maximum = checkedNodes.Count;
-			progressBar.Value = 0;
-
-			treeView.Enabled = false;
-			try
-			{
-				await Task.Run(() => RunOptimize(checkedNodes));
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "优化时出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				Debugger.Break();
-			}
-			treeView.Enabled = true;
-		}
-
-		void RunOptimize(IEnumerable<TreeNode> nodes)
-		{
-			foreach (var node in nodes)
-			{
-				((Optimizable)node.Tag).Optimize();
-				progressBar.Value++;
-
-				var parent = node.Parent;
-				node.Remove();
-
-				if (parent.Nodes.Count == 0)
-				{
-					parent.Remove();
-				}
-				else
-				{
-					parent.Checked = parent.Nodes
-						.Cast<TreeNode>()
-						.All(n => n.Checked);
-				}
-			}
-		}
-
-		private void collapseButton_Click(object sender, EventArgs e)
+		void CollapseButton_Click(object sender, EventArgs e)
 		{
 			treeView.CollapseAll();
 		}
 
-		private void aboutButton_Click(object sender, EventArgs e)
+		void AboutButton_Click(object sender, EventArgs e)
 		{
 			new AboutWindow().ShowDialog(this);
 		}
 
-		void BtnSelectAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => true);
+		void SelectAllButton_Click(object sender, EventArgs e) => ChangeAllChecked(_ => true);
 
-		void BtnClearAll_Click(object sender, EventArgs e) => ChangeAllChecked(_ => false);
+		void ClearAllButton_Click(object sender, EventArgs e) => ChangeAllChecked(_ => false);
 
 		void ChangeAllChecked(Func<bool, bool> func)
 		{
@@ -193,6 +147,53 @@ namespace Win8InstallTool
 
 			treeView.ExpandAll();
 			treeView.EndUpdate();
+		}
+
+		async void OptimizeButton_Click(object sender, EventArgs e)
+		{
+			var checkedNodes = treeView.Nodes
+				.Cast<TreeNode>()
+				.SelectMany(t => t.Nodes.Cast<TreeNode>())
+				.Where(item => item.Checked)
+				.ToList();
+
+			progressBar.Maximum = checkedNodes.Count;
+			progressBar.Value = 0;
+
+			treeView.Enabled = false;
+			try
+			{
+				await Task.Run(() => RunOptimize(checkedNodes));
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "优化时出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				Debugger.Break();
+			}
+			treeView.Enabled = true;
+		}
+
+		void RunOptimize(IEnumerable<TreeNode> nodes)
+		{
+			foreach (var node in nodes)
+			{
+				((Optimizable)node.Tag).Optimize();
+				progressBar.Value++;
+
+				var parent = node.Parent;
+				node.Remove();
+
+				if (parent.Nodes.Count == 0)
+				{
+					parent.Remove();
+				}
+				else
+				{
+					parent.Checked = parent.Nodes
+						.Cast<TreeNode>()
+						.All(n => n.Checked);
+				}
+			}
 		}
 	}
 }
