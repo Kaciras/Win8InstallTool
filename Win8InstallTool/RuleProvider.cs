@@ -5,7 +5,6 @@ using System.Linq;
 using Win8InstallTool.Properties;
 using Win8InstallTool.Rules;
 
-// 本来想加个清理无效快捷方式的，Utils.GetShortcutTarget 都写好了，但用不上所以算了。
 namespace Win8InstallTool
 {
 	/// <summary>
@@ -25,7 +24,7 @@ namespace Win8InstallTool
 		internal void Initialize()
 		{
 			LoadRuleFile("开始菜单（用户）", Resources.StartupRules, r => new StartupMenuRule(false, r.Read()));
-			LoadRuleFile("右键菜单 - 发送到", Resources.SendToRules, ReadSendTo);
+			RuleSets.Add(new SendToRuleSet());
 
 			if (includeSystem)
 			{
@@ -63,11 +62,6 @@ namespace Win8InstallTool
 		static Rule ReadService(RuleFileReader reader)
 		{
 			return new ServiceRule(reader.Read(), reader.Read());
-		}
-
-		static Rule ReadSendTo(RuleFileReader reader)
-		{
-			return new SendToRule(reader.Read(), reader.Read());
 		}
 
 		static Rule ReadContextMenu(RuleFileReader reader)
