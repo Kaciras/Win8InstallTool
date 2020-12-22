@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Win8InstallTool.Properties;
@@ -29,7 +30,7 @@ namespace Win8InstallTool.Rules
 
 			var clearInvalidLinks = Directory.GetFiles(folder)
 				.Where(path => Path.GetExtension(path) == ".lnk")
-				.Where(path => File.Exists(Utils.GetShortcutTarget(path)))
+				.Where(path => !File.Exists(Utils.GetShortcutTarget(path)))
 				.Select(DeleteInvalidLink);
 
 			return Enumerable.Concat(clearList, clearInvalidLinks);
@@ -57,7 +58,19 @@ namespace Win8InstallTool.Rules
 		{
 			var desktopIni = new SimpleIniFile(Path.Combine(folder, "desktop.ini"));
 			var localized = desktopIni.Read("LocalizedFileNames", name, name);
-			return localized[0] == '@' ? Utils.ExtractStringFromDLL(localized) : name;
+			if (localized[0] == '@')
+			{
+				try
+				{
+					return Utils.ExtractStringFromDLL(localized);
+				}
+				catch (SystemException)
+				{
+					// 资源文件可能不存在
+					localized = name;
+				}
+			}
+			return Path.GetFileNameWithoutExtension(localized);
 		}
 	}
 }
