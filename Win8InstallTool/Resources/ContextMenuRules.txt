@@ -1,6 +1,6 @@
 shellex\ContextMenuHandlers\Compatibility
 执行文件 - 兼容性疑难解答
-出了问题不去谷歌，看着破解答有屁用
+出了问题不去谷歌，看这解答有个卵用
 exefile
 
 shellex\ContextMenuHandlers\Library Location

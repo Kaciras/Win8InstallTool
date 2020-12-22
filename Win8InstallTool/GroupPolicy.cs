@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Microsoft.Win32;
 
 namespace Win8InstallTool
@@ -8,7 +7,7 @@ namespace Win8InstallTool
 	{
 		public static void SetPolicySetting(string key, string item, object value, RegistryValueKind kind)
 		{
-			STAExecutor.RunOnSTAThread(() =>
+			STAExecutor.Run(() =>
 			{
 				var gpo = new ComputerGroupPolicyObject();
 				var section = Key(key, out string subkey);
@@ -37,7 +36,7 @@ namespace Win8InstallTool
 
 		public static object GetPolicySetting(string key, string item)
 		{
-			return STAExecutor.RunOnSTAThread(() =>
+			return STAExecutor.Run(() =>
 			{
 				var gpo = new ComputerGroupPolicyObject();
 				var section = Key(key, out string subkey);

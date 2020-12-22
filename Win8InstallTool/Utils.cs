@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Shell32;
 
 namespace Win8InstallTool
@@ -60,7 +58,7 @@ namespace Win8InstallTool
 		/// <exception cref="FileNotFoundException">如果所给的快捷方式不存在</exception>
 		public static string GetShortcutTarget(string filename)
 		{
-			return STAExecutor.RunOnSTAThread(() =>
+			return STAExecutor.Run(() =>
 			{
 				var pathOnly = Path.GetDirectoryName(filename);
 				var filenameOnly = Path.GetFileName(filename);
