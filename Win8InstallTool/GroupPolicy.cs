@@ -8,7 +8,7 @@ namespace Win8InstallTool
 	{
 		public static void SetPolicySetting(string key, string item, object value, RegistryValueKind kind)
 		{
-			RunOnSTAThread(() =>
+			STAExecutor.RunOnSTAThread(() =>
 			{
 				var gpo = new ComputerGroupPolicyObject();
 				var section = Key(key, out string subkey);
@@ -37,7 +37,7 @@ namespace Win8InstallTool
 
 		public static object GetPolicySetting(string key, string item)
 		{
-			return RunOnSTAThread(() =>
+			return STAExecutor.RunOnSTAThread(() =>
 			{
 				var gpo = new ComputerGroupPolicyObject();
 				var section = Key(key, out string subkey);
@@ -60,27 +60,6 @@ namespace Win8InstallTool
 				"HKEY_CURRENT_USER" or "HKCU" => GroupPolicySection.User,
 				_ => throw new Exception($"错误的注册表 Root key: {hive}"),
 			};
-		}
-
-		/// <summary>
-		/// 对组策略 COM 组件的访问必须在 STA 线程里
-		/// </summary>
-		internal static void RunOnSTAThread(ThreadStart action)
-		{
-			var thread = new Thread(action);
-			thread.SetApartmentState(ApartmentState.STA);
-			thread.Start();
-			thread.Join();
-		}
-
-		internal static R RunOnSTAThread<R>(Func<R> function)
-		{
-			R returnValue = default;
-			var thread = new Thread(() => returnValue = function());
-			thread.SetApartmentState(ApartmentState.STA);
-			thread.Start();
-			thread.Join();
-			return returnValue;
 		}
 	}
 }

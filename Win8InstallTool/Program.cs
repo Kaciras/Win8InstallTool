@@ -61,6 +61,8 @@ namespace Win8InstallTool
 				IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
 			}
 
+			STAExecutor.Initialize();
+
 			var provider = new RuleProvider(IsElevated);
 			provider.Initialize();
 

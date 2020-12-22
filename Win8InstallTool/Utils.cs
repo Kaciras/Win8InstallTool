@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Shell32;
 
 namespace Win8InstallTool
@@ -58,23 +60,26 @@ namespace Win8InstallTool
 		/// <exception cref="FileNotFoundException">如果所给的快捷方式不存在</exception>
 		public static string GetShortcutTarget(string filename)
 		{
-			var pathOnly = Path.GetDirectoryName(filename);
-			var filenameOnly = Path.GetFileName(filename);
-			var shell = new Shell();
-
-			var folder = shell.NameSpace(Path.GetFullPath(pathOnly))
-				?? throw new FileNotFoundException("File not exists", filename);
-
-			var folderItem = folder.ParseName(filenameOnly)
-				?? throw new FileNotFoundException("File not exists", filename);
-
-			// 如果不是链接 GetLink 会抛 	NotImplementedException
-			if (!folderItem.IsLink)
+			return STAExecutor.RunOnSTAThread(() =>
 			{
-				throw new InvalidOperationException("File is not a link");
-			}
+				var pathOnly = Path.GetDirectoryName(filename);
+				var filenameOnly = Path.GetFileName(filename);
+				var shell = new Shell();
 
-			return ((ShellLinkObject)folderItem.GetLink).Path;
+				var folder = shell.NameSpace(Path.GetFullPath(pathOnly))
+					?? throw new FileNotFoundException("File not exists", filename);
+
+				var folderItem = folder.ParseName(filenameOnly)
+					?? throw new FileNotFoundException("File not exists", filename);
+
+				// 如果不是链接 GetLink 会抛 	NotImplementedException
+				if (!folderItem.IsLink)
+				{
+					throw new InvalidOperationException("File is not a link");
+				}
+
+				return ((ShellLinkObject)folderItem.GetLink).Path;
+			});
 		}
 
 		/// <summary>
