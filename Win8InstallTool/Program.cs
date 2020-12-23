@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
+using System.Threading;
 using System.Windows.Forms;
 
 [assembly: InternalsVisibleTo("Test")]
@@ -61,12 +62,20 @@ namespace Win8InstallTool
 				IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
 			}
 
-			STAExecutor.Initialize();
-
 			var provider = new RuleProvider(IsElevated);
 			provider.Initialize();
 
+			Application.Idle += CaptureSyncContext;
 			Application.Run(new MainWindow(provider));
+		}
+
+		/// <summary>
+		/// 初始化 STAExecutor，直接复用 WinForm 的同步上下文。
+		/// </summary>
+		private static void CaptureSyncContext(object sender, EventArgs e)
+		{
+			Application.Idle -= CaptureSyncContext;
+			STAExecutor.SetSyncContext(SynchronizationContext.Current);
 		}
 	}
 }
