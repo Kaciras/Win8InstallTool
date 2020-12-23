@@ -57,20 +57,27 @@ namespace Win8InstallTool.Rules
 		string LocalizedName(string name)
 		{
 			var desktopIni = new SimpleIniFile(Path.Combine(folder, "desktop.ini"));
-			var localized = desktopIni.Read("LocalizedFileNames", name, name);
-			if (localized[0] == '@')
+			var localized = desktopIni.Read("LocalizedFileNames", name, string.Empty);
+
+			if (localized == string.Empty)
 			{
-				try
-				{
-					return Utils.ExtractStringFromDLL(localized);
-				}
-				catch (SystemException)
-				{
-					// 资源文件可能不存在
-					localized = name;
-				}
+				return Path.GetFileNameWithoutExtension(name);
 			}
-			return Path.GetFileNameWithoutExtension(localized);
+
+			if (localized[0] != '@')
+			{
+				return localized;
+			}
+
+			try
+			{
+				return Utils.ExtractStringFromDLL(localized);
+			}
+			catch (SystemException)
+			{
+				// 资源文件可能不存在，回退到文件名
+				return Path.GetFileNameWithoutExtension(name);
+			}
 		}
 	}
 }
