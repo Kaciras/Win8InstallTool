@@ -8,10 +8,18 @@ namespace Win8InstallTool.Test
 	[TestClass]
 	public sealed class RegistryHelperTest
 	{
+		[TestCleanup]
+		public void Cleanup()
+		{
+			Registry.CurrentUser.DeleteSubKeyTree("_Test_Import", false);
+			Registry.CurrentUser.DeleteSubKeyTree("_Test_AutoConvert", false);
+		}
+
 		[TestMethod]
 		public void GetCLSIDValueException()
 		{
-			Assert.ThrowsException<DirectoryNotFoundException>(() => RegistryHelper.GetCLSIDValue("{66666666-0000-0000-6666-000000000000}"));
+			var clsid = "{66666666-0000-0000-6666-000000000000}";
+			Assert.ThrowsException<DirectoryNotFoundException>(() => RegistryHelper.GetCLSIDValue(clsid));
 		}
 
 		[TestMethod]
@@ -33,36 +41,22 @@ namespace Win8InstallTool.Test
 		{
 			RegistryHelper.Import(@"Resources\ImportTest.reg");
 
-			try
-			{
-				var value = Registry.GetValue(@"HKEY_CURRENT_USER\Environment\Test_Win8Tool", "StringValue", null);
-				Assert.AreEqual("foobar", value);
-			}
-			finally
-			{
-				Registry.CurrentUser.DeleteSubKeyTree(@"Environment\Test_Win8Tool", false);
-			}
+			var value = Registry.GetValue(@"HKEY_CURRENT_USER\_Test_Import\Key", "StringValue", null);
+			Assert.AreEqual("foobar", value);
 		}
 
 		[TestMethod]
 		public void Export()
 		{
-			using (var key = Registry.CurrentUser.CreateSubKey(@"Environment\Test_Win8Tool"))
+			using (var key = Registry.CurrentUser.CreateSubKey(@"_Test_Import\Key"))
 			{
 				key.SetValue("StringValue", "foobar");
 			}
-			try
-			{
-				RegistryHelper.Export("ExportTest.reg", @"HKEY_CURRENT_USER\Environment\Test_Win8Tool");
+			RegistryHelper.Export("ExportTest.reg", @"HKEY_CURRENT_USER\_Test_Import\Key");
 
-				var actual = File.ReadAllBytes("ExportTest.reg");
-				var expect = File.ReadAllBytes(@"Resources\ImportTest.reg");
-				CollectionAssert.AreEqual(expect, actual);
-			}
-			finally
-			{
-				Registry.CurrentUser.DeleteSubKeyTree(@"Environment\Test_Win8Tool", false);
-			}
+			var actual = File.ReadAllBytes("ExportTest.reg");
+			var expect = File.ReadAllBytes(@"Resources\ImportTest.reg");
+			CollectionAssert.AreEqual(expect, actual);
 		}
 
 		/// <summary>
@@ -71,9 +65,10 @@ namespace Win8InstallTool.Test
 		[TestMethod]
 		public void AutoConvertOnSetValue()
 		{
+			var key = @"HKEY_CURRENT_USER\_Test_AutoConvert";
 			var text = "50,2d,02,09,60,d1,d6,01";
 			var kind = RegistryValueKind.QWord;
-			Assert.ThrowsException<ArgumentException>(() => Registry.SetValue(@"HKEY_CURRENT_USER\_Test", "a", text, kind));
+			Assert.ThrowsException<ArgumentException>(() => Registry.SetValue(key, "a", text, kind));
 		}
 	}
 }
