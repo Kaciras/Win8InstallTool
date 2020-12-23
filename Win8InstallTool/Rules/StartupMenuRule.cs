@@ -12,11 +12,12 @@ namespace Win8InstallTool.Rules
 
 		public string Name { get; }
 
-		public string Description => "都是些从来不用的垃圾";
+		public string Description { get; }
 
-		public StartupMenuRule(bool isSystem, string name)
+		public StartupMenuRule(bool isSystem, string name, string description)
 		{
 			Name = name;
+			Description = description;
 			var folder = isSystem ? SpecialFolder.CommonStartMenu : SpecialFolder.StartMenu;
 			path = Path.Combine(GetFolderPath(folder), "Programs", name);
 		}
