@@ -17,23 +17,17 @@ namespace Win8InstallTool.Rules
 	/// </summary>
 	public class RegFileRule : Rule
 	{
-		readonly string filename;
-
 		public string Name { get; }
 
 		public string Description { get; }
 
-		public RegFileRule(string name, string description, string filename)
+		readonly string content;
+
+		public RegFileRule(string name, string description, string content)
 		{
-			this.filename = filename;
+			this.content = content;
 			Name = name;
 			Description = description;
-		}
-
-		Stream OpenStream()
-		{
-			var name = $"Win8InstallTool.RegFiles.{filename}.reg";
-			return Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
 		}
 
 		/// <summary>
@@ -41,9 +35,7 @@ namespace Win8InstallTool.Rules
 		/// </summary>
 		public bool Check()
 		{
-			using var regFile = new StreamReader(OpenStream());
-
-			var tokenilizer = new RegFileTokenizer(regFile.ReadToEnd());
+			var tokenilizer = new RegFileTokenizer(content);
 			var expected = true;
 
 			var key = string.Empty;
@@ -66,8 +58,7 @@ namespace Win8InstallTool.Rules
 						valueName = tokenilizer.Value;
 						break;
 					case RegFileTokenType.Value:
-						var valueInDB = Registry.GetValue(key, valueName, null);
-						expected = ParseValue(tokenilizer.Value, kind).Equals(valueInDB);
+						expected = CheckValueInDB(key, valueName, tokenilizer.Value, kind);
 						break;
 					case RegFileTokenType.Kind:
 						kind = ParseKind(tokenilizer.Value);
@@ -81,18 +72,47 @@ namespace Win8InstallTool.Rules
 			return !expected;
 		}
 
-		object ParseValue(string text, RegistryValueKind kind)
+		bool CheckValueInDB(string key, string name, string valueStr, RegistryValueKind kind)
 		{
-			byte[] ToBytes() => text.Split(',').Select(byte.Parse).ToArray();
+			using var keyObj = RegistryHelper.OpenKey(key);
+			var valueInDB = keyObj.GetValue(name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+			var expected = ParseValue(valueStr, kind);
+
+			bool ConvertAndCheck<T>()
+			{
+				if (!(valueInDB is T[]) || valueInDB == null)
+				{
+					return false;
+				}
+				return ((T[])expected).SequenceEqual((T[])valueInDB);
+			}
 
 			return kind switch
 			{
-				RegistryValueKind.ExpandString or RegistryValueKind.MultiString => Encoding.Unicode.GetString(ToBytes()),
+				RegistryValueKind.Unknown or RegistryValueKind.None => throw new Exception("无效的值类型"),
+				RegistryValueKind.Binary => ConvertAndCheck<byte>(),
+				RegistryValueKind.MultiString => ConvertAndCheck<string>(),
+				_ => expected.Equals(valueInDB),
+			};
+		}
+
+		object ParseValue(string text, RegistryValueKind kind)
+		{
+			byte[] ToBytes() => text.Split(',')
+				.Select(x => byte.Parse(x, NumberStyles.HexNumber))
+				.ToArray();
+
+			string ToString() => Encoding.Unicode.GetString(ToBytes()).Trim('\0');
+
+			return kind switch
+			{
+				RegistryValueKind.ExpandString => ToString(),
+				RegistryValueKind.MultiString => ToString().Split('\0'),
 				RegistryValueKind.Binary => ToBytes(),
 				RegistryValueKind.DWord => int.Parse(text, NumberStyles.HexNumber),
-				RegistryValueKind.QWord => long.Parse(text.Replace(",", ""), NumberStyles.HexNumber),
+				RegistryValueKind.QWord => BitConverter.ToInt64(ToBytes(), 0),
 				RegistryValueKind.String => text,
-				_ => throw new Exception("无效的值类型: " + Enum.GetName(typeof(RegistryValueKind), kind)),
+				_ => throw new Exception("无效的值类型"),
 			};
 		}
 
@@ -109,10 +129,7 @@ namespace Win8InstallTool.Rules
 		public void Optimize()
 		{
 			using var file = Utils.CreateTempFile();
-			using (var output = File.OpenWrite(file.Path))
-			{
-				OpenStream().CopyTo(output);
-			}
+			File.WriteAllText(file.Path, content);
 			RegistryHelper.Import(file.Path);
 		}
 	}

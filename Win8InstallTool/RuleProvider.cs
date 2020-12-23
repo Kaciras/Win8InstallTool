@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Win8InstallTool.Properties;
 using Win8InstallTool.Rules;
 
@@ -31,7 +32,7 @@ namespace Win8InstallTool
 				var rules = new Rule[]
 				{
 					new LLDPSecurityRule(),
-					new RegFileRule("把用记事本打开添加到右键菜单", "很常用的功能，稍微会点电脑的都懂", "OpenWithNotepad"),
+					new RegFileRule("把用记事本打开添加到右键菜单", "很常用的功能，稍微会点电脑的都懂", GetEmbeddedRegFile("OpenWithNotepad")),
 				};
 				RuleSets.Add(new RuleList("其它优化项", () => rules));
 
@@ -56,7 +57,15 @@ namespace Win8InstallTool
 
 		static Rule ReadRegistry(RuleFileReader reader)
 		{
-			return new RegFileRule(reader.Read(), reader.Read(), reader.Read());
+			return new RegFileRule(reader.Read(), reader.Read(), GetEmbeddedRegFile(reader.Read()));
+		}
+
+		static string GetEmbeddedRegFile(string name)
+		{
+			name = $"Win8InstallTool.RegFiles.{name}.reg";
+			var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
+			using var reader = new StreamReader(stream);
+			return reader.ReadToEnd();
 		}
 
 		static Rule ReadService(RuleFileReader reader)
