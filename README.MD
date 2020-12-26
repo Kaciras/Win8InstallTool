@@ -1,5 +1,7 @@
 ﻿# Win8InstallTool
 
+![Screenshot](https://github.com/Kaciras/Win8InstallTool/raw/master/screenshot.png)
+
 自用的系优化程序，在重装后自动做一些配置，免得一个个调麻烦。
 
 **本程序只能在 Windows8.1 x64 系统下运行**
