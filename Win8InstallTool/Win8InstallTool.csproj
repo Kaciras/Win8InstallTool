@@ -64,7 +64,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -98,6 +97,7 @@
     <Compile Include="Rules\ExplorerFolderRule.cs" />
     <Compile Include="Rules\GroupPolicyRule.cs" />
     <Compile Include="Rules\RegFileRule.cs" />
+    <Compile Include="Rules\RuleList.cs" />
     <Compile Include="Rules\SendToRuleSet.cs" />
     <Compile Include="Rules\TaskSchedulerOptimizeSet.cs" />
     <Compile Include="Rules\WMILoggerRule.cs" />

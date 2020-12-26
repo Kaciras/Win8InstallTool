@@ -2,6 +2,9 @@
 
 namespace Win8InstallTool.Rules
 {
+	/// <summary>
+	/// 这个虽然也是设置注册表，但跟 RegFileRule 不同的是需要做一些计算，所以单独写个规则。
+	/// </summary>
 	public class WMILoggerRule : Rule
 	{
 		public string Name { get; }

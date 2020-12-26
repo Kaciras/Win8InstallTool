@@ -17,7 +17,7 @@ namespace Win8InstallTool.Rules
 		public string Description { get; }
 
 		/// <summary>
-		/// 服务的显示名，该名称可读性较强。
+		/// 服务的显示名。
 		/// </summary>
 		public string Name { get; private set; }
 

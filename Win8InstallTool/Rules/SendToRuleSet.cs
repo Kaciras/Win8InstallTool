@@ -24,16 +24,16 @@ namespace Win8InstallTool.Rules
 
 		public IEnumerable<Optimizable> Scan()
 		{
-			var clearList = RuleFileReader.Iter(Resources.SendToRules)
+			var cleanInList = RuleFileReader.Iter(Resources.SendToRules)
 				.Select(DeleteByRuleList)
 				.Where(item => item != null);
 
-			var clearInvalidLinks = Directory.GetFiles(folder)
+			var cleanInvalidLinks = Directory.GetFiles(folder)
 				.Where(path => Path.GetExtension(path) == ".lnk")
 				.Where(path => !File.Exists(Utils.GetShortcutTarget(path)))
 				.Select(DeleteInvalidLink);
 
-			return Enumerable.Concat(clearList, clearInvalidLinks);
+			return Enumerable.Concat(cleanInList, cleanInvalidLinks);
 		}
 
 		Optimizable DeleteByRuleList(RuleFileReader reader)

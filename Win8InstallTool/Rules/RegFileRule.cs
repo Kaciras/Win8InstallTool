@@ -31,7 +31,7 @@ namespace Win8InstallTool.Rules
 		}
 
 		/// <summary>
-		/// 对比 reg 文件和注册表，判断是否存在不同，如果不同表示需要优化。
+		/// 对比 Reg 文件和注册表，判断是否存在不同，如果不同就说明需要优化。
 		/// </summary>
 		public bool Check()
 		{
@@ -72,12 +72,20 @@ namespace Win8InstallTool.Rules
 			return !expected;
 		}
 
+		/// <summary>
+		/// 检查 Reg 文件里的一个值是否已经存在于注册表中。
+		/// </summary>
+		/// <param name="key">键路径</param>
+		/// <param name="name">值名</param>
+		/// <param name="valueStr">Reg文件里字符串形式的值</param>
+		/// <param name="kind">值类型</param>
 		bool CheckValueInDB(string key, string name, string valueStr, RegistryValueKind kind)
 		{
 			using var keyObj = RegistryHelper.OpenKey(key);
 			var valueInDB = keyObj.GetValue(name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
 			var expected = ParseValue(valueStr, kind);
 
+			// Binary 和 MultiString 返回的是数组，需要用 SequenceEqual 对比。
 			bool ConvertAndCheck<T>()
 			{
 				if (!(valueInDB is T[]) || valueInDB == null)
@@ -96,6 +104,12 @@ namespace Win8InstallTool.Rules
 			};
 		}
 
+		/// <summary>
+		/// 将 Reg 文件里的值文本转换为指定的类型，结果的类型与 Registry.GetValue 返回的一致。
+		/// </summary>
+		/// <param name="text">值文本</param>
+		/// <param name="kind">类型</param>
+		/// <returns>转换后的值</returns>
 		object ParseValue(string text, RegistryValueKind kind)
 		{
 			byte[] ToBytes() => text.Split(',')

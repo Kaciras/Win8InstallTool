@@ -158,8 +158,8 @@ namespace Win8InstallTool
 
 			progressBar.Maximum = checkedNodes.Count;
 			progressBar.Value = 0;
-
 			treeView.Enabled = false;
+
 			try
 			{
 				await Task.Run(() => RunOptimize(checkedNodes));
@@ -169,7 +169,9 @@ namespace Win8InstallTool
 				MessageBox.Show(ex.Message, "优化时出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Debugger.Break();
 			}
+
 			treeView.Enabled = true;
+			textBox.Text = string.Empty;
 		}
 
 		void RunOptimize(IEnumerable<TreeNode> nodes)
