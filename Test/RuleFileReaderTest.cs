@@ -16,10 +16,17 @@ namespace Win8InstallTool.Test
 		}
 
 		[TestMethod]
-		public void ThrowOnInvalidLineEnd()
+		public void ThrowOnReadInvalidLineEnd()
 		{
 			var reader = new RuleFileReader("\r\n");
 			Assert.ThrowsException<ArgumentException>(() => reader.Read());
+		}
+
+		[TestMethod]
+		public void ThrowOnMoveNextInvalidLineEnd()
+		{
+			var reader = new RuleFileReader("\r\n");
+			Assert.ThrowsException<ArgumentException>(() => reader.MoveNext());
 		}
 
 		[TestMethod]

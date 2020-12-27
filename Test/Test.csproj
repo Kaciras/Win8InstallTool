@@ -55,6 +55,7 @@
     <Compile Include="GroupPolicyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegFileRuleTest.cs" />
+    <Compile Include="RegFileTokenizerTest.cs" />
     <Compile Include="RegistryHelperTest.cs" />
     <Compile Include="RuleFileReaderTest.cs" />
     <Compile Include="SimpleIniFileTest.cs" />
