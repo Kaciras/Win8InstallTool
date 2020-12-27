@@ -24,6 +24,7 @@ namespace Win8InstallTool
 
 		internal void Initialize()
 		{
+			LoadRuleFile("系统设置（用户）", Resources.UserRegistryRules, ReadRegistry);
 			LoadRuleFile("开始菜单（用户）", Resources.StartupRules, r => new StartupMenuRule(false, r.Read(), r.Read()));
 			RuleSets.Add(new SendToRuleSet());
 
@@ -41,9 +42,9 @@ namespace Win8InstallTool
 				LoadRuleFile("性能数据收集器", Resources.WMILoggerRules, ReadWmiLogger);
 				LoadRuleFile("组策略", Resources.GroupPolicyRules, ReadGroupPolicy);
 				LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenu);
-				LoadRuleFile("系统服务", Resources.ServiceRules, ReadService);
-				LoadRuleFile("开始菜单（系统）", Resources.StartupRules, r => new StartupMenuRule(true, r.Read(), r.Read()));
-				LoadRuleFile("其它系统设置", Resources.RegistryRules, ReadRegistry);
+				LoadRuleFile("服务", Resources.ServiceRules, ReadService);
+				LoadRuleFile("开始菜单", Resources.StartupRules, r => new StartupMenuRule(true, r.Read(), r.Read()));
+				LoadRuleFile("系统设置", Resources.RegistryRules, ReadRegistry);
 			}
 		}
 

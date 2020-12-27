@@ -63,7 +63,7 @@ namespace Win8InstallTool.Properties {
         /// <summary>
         ///   Looks up a localized string similar to shellex\ContextMenuHandlers\Compatibility
         ///执行文件 - 兼容性疑难解答
-        ///出了问题不去谷歌，看着破解答有屁用
+        ///出了问题不去谷歌，看这解答有个卵用
         ///exefile
         ///
         ///shellex\ContextMenuHandlers\Library Location
@@ -234,11 +234,14 @@ namespace Win8InstallTool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to WinRAR
-        ///Microsoft Office 2016 工具
-        ///Windows Kits
+        ///   Looks up a localized string similar to Microsoft Office 2016 工具
+        ///我从来不用的东西
+        ///
         ///Music, Photos and Videos
-        ///Visual Studio 2019
+        ///我从来不用的东西
+        ///
+        ///WinRAR
+        ///相关功能都在右键菜单里，没必要再去开始菜单占个位置
         ///.
         /// </summary>
         internal static string StartupRules {
@@ -277,6 +280,38 @@ namespace Win8InstallTool.Properties {
         internal static string TaskSchdulerRules {
             get {
                 return ResourceManager.GetString("TaskSchdulerRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 禁用性能计数器
+        ///统计系统底层性能的东西，一般人用不到，还老是在日志里报错 “无法打开服务器服务性能对象……”
+        ///DisablePerfCounter
+        ///
+        ///关闭 SChannel 事件日志
+        ///屏蔽系统日志里的 &apos;从远程终点接收到一个严重警告&apos; 错误
+        ///DisableSchannelLog
+        ///
+        ///禁用已经过时的SSL系列协议
+        ///SSL协议已经被TLS所淘汰，在Windows10系统中默认被禁用，这些功能不应该再被使用。
+        ///DisableSSL
+        ///
+        ///禁用TLS1.0和RC4协议
+        ///这俩协议存在安全漏洞且已经被更新的标准所替代，建议禁用，但要注意仍有一些古老的软件使用它们。
+        ///DisableTLS1_0
+        ///
+        ///增强IE浏览器安全性
+        ///具体操作包括：禁用过时的SSL协议，启用增强的保护功能，禁用友好错误信息。
+        ///IESecurity
+        ///
+        ///禁止系统失败后写入调试信息
+        ///不做系统相关开发的话这些调试信息鸟用没有，如果禁用了虚拟内存还会在事件日志里报错
+        ///DisableCrashDump
+        ///.
+        /// </summary>
+        internal static string UserRegistryRules {
+            get {
+                return ResourceManager.GetString("UserRegistryRules", resourceCulture);
             }
         }
         

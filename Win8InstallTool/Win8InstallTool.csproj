@@ -180,6 +180,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="RegFiles\ExplorerOptions.reg" />
     <None Include="Resources\ContextMenuRules.txt" />
     <None Include="Resources\GroupPolicyRules.txt" />
     <None Include="Resources\RegistryRules.txt" />
@@ -188,6 +189,9 @@
     <None Include="Resources\StartupRules.txt" />
     <None Include="Resources\TaskSchdulerRules.txt" />
     <None Include="Resources\WMILoggerRules.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\UserRegistryRules.txt" />
   </ItemGroup>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
