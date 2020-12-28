@@ -39,18 +39,18 @@ namespace Win8InstallTool
 			// closeButton
 			// 
 			this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.closeButton.Location = new System.Drawing.Point(230, 112);
+			this.closeButton.Location = new System.Drawing.Point(230, 109);
 			this.closeButton.Name = "closeButton";
 			this.closeButton.Size = new System.Drawing.Size(75, 26);
 			this.closeButton.TabIndex = 0;
 			this.closeButton.Text = "关闭";
 			this.closeButton.UseVisualStyleBackColor = true;
-			this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
+			this.closeButton.Click += new System.EventHandler(this.CloseButton_Click);
 			// 
 			// linkLabel
 			// 
 			this.linkLabel.AutoSize = true;
-			this.linkLabel.Location = new System.Drawing.Point(13, 89);
+			this.linkLabel.Location = new System.Drawing.Point(12, 89);
 			this.linkLabel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
 			this.linkLabel.Name = "linkLabel";
 			this.linkLabel.Size = new System.Drawing.Size(257, 12);
@@ -93,7 +93,7 @@ namespace Win8InstallTool
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(317, 150);
+			this.ClientSize = new System.Drawing.Size(317, 147);
 			this.Controls.Add(this.versionLabel);
 			this.Controls.Add(this.nameLabel);
 			this.Controls.Add(this.label1);

@@ -10,11 +10,11 @@ namespace Win8InstallTool
 		{
 			InitializeComponent();
 
-			var appVersion = Assembly.GetExecutingAssembly().GetName().Version;
-			versionLabel.Text = $"版本 {appVersion.ToString(3)}，更新于 2020-12-21";
+			var version = Assembly.GetExecutingAssembly().GetName().Version;
+			versionLabel.Text = $"版本 {version.ToString(3)}，更新于 2020-12-21";
 		}
 
-		private void closeButton_Click(object sender, EventArgs e)
+		private void CloseButton_Click(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.OK;
 		}
