@@ -71,7 +71,8 @@ namespace Win8InstallTool
 
 		static Rule ReadService(RuleFileReader reader)
 		{
-			return new ServiceRule(reader.Read(), reader.Read());
+			return new ServiceRule(reader.Read(), reader.Read(),
+				(ServiceState)Enum.Parse(typeof(ServiceState), reader.Read()));
 		}
 
 		static Rule ReadContextMenu(RuleFileReader reader)

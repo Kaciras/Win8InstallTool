@@ -24,12 +24,13 @@ namespace Win8InstallTool.Rules
 		/// <summary>
 		/// 此服务应当被优化为什么状态，默认禁用。
 		/// </summary>
-		public ServiceState TargetState { get; set; } = ServiceState.Disabled;
+		public ServiceState TargetState { get; }
 
-		public ServiceRule(string key, string description)
+		public ServiceRule(string key, string description, ServiceState state)
 		{
 			Key = key;
 			Description = description;
+			TargetState = state;
 		}
 
 		public bool Check()
