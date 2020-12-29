@@ -20,6 +20,8 @@ namespace Win8InstallTool
 
 		/// <summary>
 		/// 执行命令并等待完成，检查退出码，已经设置来重定向了输入和禁止显示窗口。
+		/// <br/>
+		/// 如果命令以非零值退出，则会抛出异常，异常信息使用 stderr 或 stdout，请保证命令的输出不要太长。
 		/// </summary>
 		/// <param name="file">文件名</param>
 		/// <param name="args">参数</param>
@@ -43,8 +45,12 @@ namespace Win8InstallTool
 				return process;
 			}
 
-			var stderr = process.StandardError.ReadToEnd();
-			throw new SystemException($"命令执行失败 - {process.ExitCode}：{stderr}");
+			var message = process.StandardError.ReadToEnd();
+			if (string.IsNullOrEmpty(message))
+			{
+				message = process.StandardOutput.ReadToEnd();
+			}
+			throw new SystemException($"命令执行失败 - {process.ExitCode}：{message}");
 		}
 
 		/// <summary>

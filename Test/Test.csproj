@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="GlobalSetup.cs" />
     <Compile Include="GroupPolicyTest.cs" />
+    <Compile Include="OptimizeActionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rules\RegFileRuleTest.cs" />
     <Compile Include="RegFileTokenizerTest.cs" />
