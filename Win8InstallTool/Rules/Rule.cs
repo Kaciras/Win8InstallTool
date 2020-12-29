@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Win8InstallTool.Rules
+﻿namespace Win8InstallTool.Rules
 {
 	/// <summary>
 	/// 表示一条固定的优化规则，调用 Check() 来检测是否可优化。

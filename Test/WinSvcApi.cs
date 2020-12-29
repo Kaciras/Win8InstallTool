@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Threading.Tasks;
 
 namespace Win8InstallTool.Test
 {
@@ -23,8 +19,6 @@ namespace Win8InstallTool.Test
 		public string BinPath { get; }
 
 		public string DisplayName { get; set; }
-
-		public string Description { get; set; }
 
 		public WinSvcApi(string name, string binPath)
 		{
