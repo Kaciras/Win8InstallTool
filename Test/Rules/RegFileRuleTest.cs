@@ -1,10 +1,9 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Win32;
-using Win8InstallTool.Rules;
 using static System.Environment;
 
-namespace Win8InstallTool.Test
+namespace Win8InstallTool.Rules
 {
 	[TestClass]
 	public sealed class RegFileRuleTest

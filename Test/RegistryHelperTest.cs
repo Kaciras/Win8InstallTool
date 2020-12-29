@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Win32;
 
-namespace Win8InstallTool.Test
+namespace Win8InstallTool
 {
 	[TestClass]
 	public sealed class RegistryHelperTest

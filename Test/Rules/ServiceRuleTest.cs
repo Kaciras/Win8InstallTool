@@ -1,8 +1,7 @@
 ﻿using System.ServiceProcess;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Win8InstallTool.Rules;
 
-namespace Win8InstallTool.Test
+namespace Win8InstallTool.Rules
 {
 	[TestClass]
 	public sealed class ServiceRuleTest

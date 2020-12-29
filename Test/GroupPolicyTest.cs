@@ -2,7 +2,7 @@
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Win8InstallTool.Test
+namespace Win8InstallTool
 {
 	[TestClass]
 	public class GroupPolicyTest

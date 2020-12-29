@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static System.Environment;
 
-namespace Win8InstallTool.Test
+namespace Win8InstallTool
 {
 	[TestClass]
 	public class UtilsTest

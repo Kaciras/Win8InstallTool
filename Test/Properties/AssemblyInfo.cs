@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Test")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Unittests for Win8InstallTool")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Test")]

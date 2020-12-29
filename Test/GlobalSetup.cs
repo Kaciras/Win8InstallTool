@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Win8InstallTool.Test
+namespace Win8InstallTool
 {
 	/// <summary>
 	/// 为了方便把 STAExecutor 做成了静态类，所以需要在全局初始化一下。

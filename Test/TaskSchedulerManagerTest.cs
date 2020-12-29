@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaskScheduler;
 
-namespace Win8InstallTool.Test
+namespace Win8InstallTool
 {
 	[TestClass]
 	public sealed class TaskSchedulerManagerTest
