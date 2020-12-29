@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +59,8 @@
     <Compile Include="RegFileTokenizerTest.cs" />
     <Compile Include="RegistryHelperTest.cs" />
     <Compile Include="RuleFileReaderTest.cs" />
+    <Compile Include="ServiceRuleTest.cs" />
+    <Compile Include="WinSvcApi.cs" />
     <Compile Include="SimpleIniFileTest.cs" />
     <Compile Include="TaskSchedulerManagerTest.cs" />
     <Compile Include="UtilsTest.cs" />
@@ -67,6 +70,7 @@
     <None Include="Resources\Calculator.lnk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\desktop.ini" />
     <None Include="Resources\Excel 2016.lnk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
