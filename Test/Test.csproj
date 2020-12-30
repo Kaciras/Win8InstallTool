@@ -61,6 +61,8 @@
     <Compile Include="RegistryHelperTest.cs" />
     <Compile Include="RuleFileReaderTest.cs" />
     <Compile Include="Rules\ServiceRuleTest.cs" />
+    <Compile Include="STAExecutorTest.cs" />
+    <Compile Include="TestHelper.cs" />
     <Compile Include="WinSvcApi.cs" />
     <Compile Include="SimpleIniFileTest.cs" />
     <Compile Include="TaskSchedulerManagerTest.cs" />

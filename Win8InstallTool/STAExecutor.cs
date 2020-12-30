@@ -4,9 +4,9 @@ using System.Threading;
 namespace Win8InstallTool
 {
 	/// <summary>
-	/// 一些 COM 组件要求在 STA 线程访问，但 .NET 的线程池不是 STA，故需要一个切换线程的工具。
+	/// 一些 COM 组件要求在 STA 线程访问，但 .NET 的线程池不是 STA，故做了一个切换线程的工具。
 	/// <br/>
-	/// 参考：<seealso cref="https://stackoverflow.com/a/21684059"/>
+	/// 代码参考了：<seealso cref="https://stackoverflow.com/a/21684059"/>
 	/// </summary>
 	public static class STAExecutor
 	{
@@ -17,6 +17,13 @@ namespace Win8InstallTool
 		/// </summary>
 		public static void SetSyncContext(SynchronizationContext context)
 		{
+			var apartment = ApartmentState.Unknown;
+			context.Send(_ => apartment = Thread.CurrentThread.GetApartmentState(), null);
+			if (apartment != ApartmentState.STA)
+			{
+				throw new ArgumentException("同步上下文必须使用 STA 线程", nameof(context));
+			}
+
 			STAExecutor.context = context;
 		}
 

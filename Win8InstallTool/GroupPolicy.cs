@@ -7,6 +7,7 @@ namespace Win8InstallTool
 	{
 		public static void SetPolicySetting(string key, string item, object value, RegistryValueKind kind)
 		{
+			// C# 不像 Python 那样有方便的 AOP，没法用注解来切STA线程，还得缩进一层挺难看的。
 			STAExecutor.Run(() =>
 			{
 				var gpo = new ComputerGroupPolicyObject();
