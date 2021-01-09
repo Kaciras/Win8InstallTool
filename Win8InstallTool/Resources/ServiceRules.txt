@@ -34,10 +34,6 @@ IKEEXT
 某些协议的VPN需要这个服务，不用的话可以关掉
 Disabled
 
-DPS
-出问题不谷歌，要你来诊断?这个关了后另外两个也不会启动。注意禁用此服务后事件日志里会经常出现DCOM没有注册的错误。
-Disabled
-
 WPDBusEnum
 反正我是没用过什么可移动大容量存储设备
 Disabled
