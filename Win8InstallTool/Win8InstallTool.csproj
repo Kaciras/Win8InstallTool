@@ -181,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="RegFiles\ExplorerOptions.reg" />
+    <EmbeddedResource Include="RegFiles\KeyboardA11y.reg" />
     <None Include="Resources\ContextMenuRules.txt" />
     <None Include="Resources\GroupPolicyRules.txt" />
     <None Include="Resources\RegistryRules.txt" />
