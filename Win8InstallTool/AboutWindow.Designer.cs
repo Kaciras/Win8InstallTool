@@ -64,9 +64,9 @@ namespace Win8InstallTool
 			this.label1.Location = new System.Drawing.Point(12, 67);
 			this.label1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(179, 12);
+			this.label1.Size = new System.Drawing.Size(251, 12);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "本程序使用 GPL-3.0 协议开源：";
+			this.label1.Text = "本程序完全免费，并使用 GPL-3.0 协议开源：";
 			// 
 			// nameLabel
 			// 
