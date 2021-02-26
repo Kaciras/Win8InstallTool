@@ -9,7 +9,9 @@ namespace Win8InstallTool
 	public static class RegistryHelper
 	{
 		/// <summary>
-		/// 从 .NET 标准库里抄的快捷方法，增加了根键的缩写，为什么微软不直接提供？
+		/// 从 .NET 标准库里抄的快捷方法，增加了根键的缩写支持，为什么微软不直接提供？
+		/// <br/>
+		/// <see href="https://referencesource.microsoft.com/#mscorlib/microsoft/win32/registry.cs,94"/>
 		/// </summary>
 		public static RegistryKey OpenKey(string path, bool wirte = false)
 		{

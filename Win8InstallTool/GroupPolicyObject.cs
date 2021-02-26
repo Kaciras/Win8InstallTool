@@ -6,9 +6,6 @@ using System.Threading;
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 
-// 连续尝试两天修改组策略失败，Microsoft.GroupPolicy 不会用，最终还是选择了这种方式。
-// 组策略并非简单地修改注册表就行，它还需要 Group Policy Client 服务做一些额外的工作。
-// 代码抄自 https://stackoverflow.com/a/22673417
 namespace Win8InstallTool
 {
 	public enum GroupPolicySection

@@ -104,7 +104,7 @@ namespace Win8InstallTool.Rules
 		}
 
 		/// <summary>
-		/// 将 Reg 文件里的值文本转换为指定的类型，结果的类型与 Registry.GetValue 返回的一致。
+		/// 将 Reg 文件里的值文本转换为指定的类型，与 Registry.GetValue 返回的一致。
 		/// </summary>
 		/// <param name="text">值文本</param>
 		/// <param name="kind">类型</param>
@@ -125,7 +125,7 @@ namespace Win8InstallTool.Rules
 				RegistryValueKind.DWord => int.Parse(text, NumberStyles.HexNumber),
 				RegistryValueKind.QWord => BitConverter.ToInt64(ToBytes(), 0),
 				RegistryValueKind.String => text,
-				_ => throw new Exception("无效的值类型"),
+				_ => throw new Exception("无效的类型：" + kind),
 			};
 		}
 
@@ -136,7 +136,7 @@ namespace Win8InstallTool.Rules
 			"hex(2)" => RegistryValueKind.ExpandString,
 			"hex(7)" => RegistryValueKind.MultiString,
 			"hex(b)" => RegistryValueKind.QWord,
-			_ => throw new FormatException("Unknown kind: " + value),
+			_ => throw new FormatException("未知的值类型: " + value),
 		};
 
 		public void Optimize()

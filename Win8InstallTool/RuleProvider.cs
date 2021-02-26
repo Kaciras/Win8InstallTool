@@ -33,7 +33,7 @@ namespace Win8InstallTool
 				var rules = new Rule[]
 				{
 					new LLDPSecurityRule(),
-					new RegFileRule("把用记事本打开添加到右键菜单", "很常用的功能，稍微会点电脑的都懂", GetEmbeddedRegFile("OpenWithNotepad")),
+					new RegFileRule("把用记事本打开添加到右键菜单", "很常用的功能，不解释", GetEmbeddedRegFile("OpenWithNotepad")),
 				};
 				RuleSets.Add(new RuleList("其它优化项", () => rules));
 

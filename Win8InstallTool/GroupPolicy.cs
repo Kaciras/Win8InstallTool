@@ -3,6 +3,12 @@ using Microsoft.Win32;
 
 namespace Win8InstallTool
 {
+	/// <summary>
+	/// 连续尝试两天修改组策略失败，Microsoft.GroupPolicy 不会用，最终还是选择了这种方式。
+	/// 组策略并非简单地修改注册表就行，它还需要 Group Policy Client 服务做一些额外的工作。
+	/// <br/>
+	/// 代码抄自：<see href="https://stackoverflow.com/a/22673417"/>
+	/// </summary>
 	public static class GroupPolicy
 	{
 		public static void SetPolicySetting(string key, string item, object value, RegistryValueKind kind)
