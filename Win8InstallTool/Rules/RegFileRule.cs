@@ -139,10 +139,11 @@ namespace Win8InstallTool.Rules
 			_ => throw new FormatException("未知的值类型: " + value),
 		};
 
+		// 注意 Reg 文件必须是 UTF-16 LE 编码。
 		public void Optimize()
 		{
 			using var file = Utils.CreateTempFile();
-			File.WriteAllText(file.Path, content);
+			File.WriteAllText(file.Path, content, Encoding.Unicode);
 			RegistryHelper.Import(file.Path);
 		}
 	}
