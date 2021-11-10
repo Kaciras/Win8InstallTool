@@ -12,221 +12,221 @@ namespace Win8InstallTool;
 /// </summary>
 public class RegFileTokenizer
 {
-    readonly string content;
+	readonly string content;
 
-    int i;
+	int i;
 
-    public RegFileTokenType TokenType { get; private set; }
+	public RegFileTokenType TokenType { get; private set; }
 
-    public string Value { get; private set; }
+	public string Value { get; private set; }
 
-    public RegFileTokenizer(string content)
-    {
-        this.content = content;
-    }
+	public RegFileTokenizer(string content)
+	{
+		this.content = content;
+	}
 
-    /// <summary>
-    /// 读取下一个 Token，如果已经读完则返回false，否则返回true
-    /// </summary>
-    public bool Read()
-    {
-        switch (TokenType)
-        {
-            case RegFileTokenType.None:
-                ConsumeVersion();
-                break;
-            case RegFileTokenType.ValueName:
-                ConsumeKindOrValue();
-                break;
-            case RegFileTokenType.Kind:
-                ConsumeValue();
-                break;
-            default:
-                SkipBlankLines();
-                return ConsumeTopLevel();
-        }
+	/// <summary>
+	/// 读取下一个 Token，如果已经读完则返回false，否则返回true
+	/// </summary>
+	public bool Read()
+	{
+		switch (TokenType)
+		{
+			case RegFileTokenType.None:
+				ConsumeVersion();
+				break;
+			case RegFileTokenType.ValueName:
+				ConsumeKindOrValue();
+				break;
+			case RegFileTokenType.Kind:
+				ConsumeValue();
+				break;
+			default:
+				SkipBlankLines();
+				return ConsumeTopLevel();
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    bool ConsumeTopLevel()
-    {
-        if (i >= content.Length)
-        {
-            return false;
-        }
-        switch (content[i])
-        {
-            case '@':
-                ConsumeDefaultName();
-                break;
-            case '"':
-                ConsumeValueName();
-                break;
-            case '[':
-                ConsumeKey();
-                break;
-            case ';':
-                ConsumeComment();
-                break;
-            default:
-                throw new FormatException("Invalid Token: " + content[i]);
-        }
-        return true;
-    }
+	bool ConsumeTopLevel()
+	{
+		if (i >= content.Length)
+		{
+			return false;
+		}
+		switch (content[i])
+		{
+			case '@':
+				ConsumeDefaultName();
+				break;
+			case '"':
+				ConsumeValueName();
+				break;
+			case '[':
+				ConsumeKey();
+				break;
+			case ';':
+				ConsumeComment();
+				break;
+			default:
+				throw new FormatException("Invalid Token: " + content[i]);
+		}
+		return true;
+	}
 
-    void ConsumeComment()
-    {
-        TokenType = RegFileTokenType.Comment;
-        var j = i + 1;
-        i = content.IndexOf('\r', j);
-        Value = content.Substring(j, i - j);
-    }
+	void ConsumeComment()
+	{
+		TokenType = RegFileTokenType.Comment;
+		var j = i + 1;
+		i = content.IndexOf('\r', j);
+		Value = content.Substring(j, i - j);
+	}
 
-    void ConsumeVersion()
-    {
-        const string VER_LINE = "Windows Registry Editor Version 5.00";
+	void ConsumeVersion()
+	{
+		const string VER_LINE = "Windows Registry Editor Version 5.00";
 
-        var j = i;
-        i = content.IndexOf('\r', j);
-        if (i == -1)
-        {
-            throw new FormatException("数据不完整");
-        }
+		var j = i;
+		i = content.IndexOf('\r', j);
+		if (i == -1)
+		{
+			throw new FormatException("数据不完整");
+		}
 
-        TokenType = RegFileTokenType.Version;
-        Value = content.Substring(j, i - j);
+		TokenType = RegFileTokenType.Version;
+		Value = content.Substring(j, i - j);
 
-        if (Value != VER_LINE)
-        {
-            throw new FormatException("Invalid version: " + Value);
-        }
-    }
+		if (Value != VER_LINE)
+		{
+			throw new FormatException("Invalid version: " + Value);
+		}
+	}
 
-    void ConsumeKey()
-    {
-        if (content[++i] == '-')
-        {
-            TokenType = RegFileTokenType.DeleteKey;
-            i += 1;
-        }
-        else
-        {
-            TokenType = RegFileTokenType.CreateKey;
-        }
+	void ConsumeKey()
+	{
+		if (content[++i] == '-')
+		{
+			TokenType = RegFileTokenType.DeleteKey;
+			i += 1;
+		}
+		else
+		{
+			TokenType = RegFileTokenType.CreateKey;
+		}
 
-        Value = ReadTo(']');
-    }
+		Value = ReadTo(']');
+	}
 
-    void ConsumeDefaultName()
-    {
-        i += 1;
-        TokenType = RegFileTokenType.ValueName;
-        Value = string.Empty;
-    }
+	void ConsumeDefaultName()
+	{
+		i += 1;
+		TokenType = RegFileTokenType.ValueName;
+		Value = string.Empty;
+	}
 
-    void ConsumeValueName()
-    {
-        i += 1;
-        TokenType = RegFileTokenType.ValueName;
-        Value = ReadTo('"');
-    }
+	void ConsumeValueName()
+	{
+		i += 1;
+		TokenType = RegFileTokenType.ValueName;
+		Value = ReadTo('"');
+	}
 
-    void ConsumeKindOrValue()
-    {
-        if (content[i++] != '=')
-        {
-            throw new FormatException("值名后面必须紧跟等号");
-        }
+	void ConsumeKindOrValue()
+	{
+		if (content[i++] != '=')
+		{
+			throw new FormatException("值名后面必须紧跟等号");
+		}
 
-        switch (content[i])
-        {
-            case '"':
-                TokenType = RegFileTokenType.Value;
-                i += 1;
-                Value = ReadTo('"');
-                break;
-            case '-':
-                i += 1;
-                TokenType = RegFileTokenType.DeleteValue;
-                break;
-            default:
-                Value = ReadTo(':');
-                TokenType = RegFileTokenType.Kind;
-                break;
-        }
-    }
+		switch (content[i])
+		{
+			case '"':
+				TokenType = RegFileTokenType.Value;
+				i += 1;
+				Value = ReadTo('"');
+				break;
+			case '-':
+				i += 1;
+				TokenType = RegFileTokenType.DeleteValue;
+				break;
+			default:
+				Value = ReadTo(':');
+				TokenType = RegFileTokenType.Kind;
+				break;
+		}
+	}
 
-    string ReadTo(char ch)
-    {
-        var j = i;
-        i = content.IndexOf(ch, j) + 1;
-        if (i == 0)
-        {
-            throw new FormatException("数据不完整");
-        }
-        return content.Substring(j, i - j - 1);
-    }
+	string ReadTo(char ch)
+	{
+		var j = i;
+		i = content.IndexOf(ch, j) + 1;
+		if (i == 0)
+		{
+			throw new FormatException("数据不完整");
+		}
+		return content.Substring(j, i - j - 1);
+	}
 
-    void ConsumeValue()
-    {
-        var buffer = new StringBuilder();
-        var hasMoreLine = true;
+	void ConsumeValue()
+	{
+		var buffer = new StringBuilder();
+		var hasMoreLine = true;
 
-        while (hasMoreLine)
-        {
-            SkipWhiteSpaces();
+		while (hasMoreLine)
+		{
+			SkipWhiteSpaces();
 
-            var j = i;
-            var k = content.IndexOf('\r', j);
-            i = k + 2;
+			var j = i;
+			var k = content.IndexOf('\r', j);
+			i = k + 2;
 
-            if (content[k - 1] == '\\')
-            {
-                k -= 1;
-                hasMoreLine = true;
-            }
-            else
-            {
-                hasMoreLine = false;
-            }
+			if (content[k - 1] == '\\')
+			{
+				k -= 1;
+				hasMoreLine = true;
+			}
+			else
+			{
+				hasMoreLine = false;
+			}
 
-            buffer.Append(content, j, k - j);
-        }
+			buffer.Append(content, j, k - j);
+		}
 
-        TokenType = RegFileTokenType.Value;
-        Value = buffer.ToString();
-    }
+		TokenType = RegFileTokenType.Value;
+		Value = buffer.ToString();
+	}
 
-    void SkipWhiteSpaces()
-    {
-        for (; i < content.Length; i++)
-        {
-            switch (content[i])
-            {
-                case ' ':
-                case '\t':
-                    break;
-                default:
-                    return;
-            }
-        }
-    }
+	void SkipWhiteSpaces()
+	{
+		for (; i < content.Length; i++)
+		{
+			switch (content[i])
+			{
+				case ' ':
+				case '\t':
+					break;
+				default:
+					return;
+			}
+		}
+	}
 
-    void SkipBlankLines()
-    {
-        for (; i < content.Length; i++)
-        {
-            switch (content[i])
-            {
-                case '\r':
-                case '\n':
-                case ' ':
-                case '\t':
-                    break;
-                default:
-                    return;
-            }
-        }
-    }
+	void SkipBlankLines()
+	{
+		for (; i < content.Length; i++)
+		{
+			switch (content[i])
+			{
+				case '\r':
+				case '\n':
+				case ' ':
+				case '\t':
+					break;
+				default:
+					return;
+			}
+		}
+	}
 }

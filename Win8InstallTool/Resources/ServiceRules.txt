@@ -1,9 +1,18 @@
 BFE
-Windows安全平台的核心服务，防火墙和杀毒软件都需要，如果不用它们倒是可以关了
+Windows 安全平台的核心服务，防火墙和杀毒软件都需要，如果不用它们倒是可以关了
+Disabled
+
+# DiagTrack
+DPS
+屁用没有的诊断功能，出了问题不 Google 谁看这玩意。
 Disabled
 
 hidserv
 不用特殊输入设备的不需要，该服务还容易被攻击者利用
+Disabled
+
+HomeGroupProvider
+家庭组的服务，这功能我没见人用过，也可能因为我还不是家长吧
 Disabled
 
 ShellHWDetection
@@ -15,7 +24,7 @@ LanmanServer
 Disabled
 
 LanmanWorkstation
-用SMB协议做文件共享的服务，办公室可能需要，不用的话可以关掉
+用 SMB 协议做文件共享的服务，办公室可能需要，不用的话可以关掉
 Disabled
 
 lmhosts
@@ -43,15 +52,19 @@ TrkWks
 Disabled
 
 PolicyAgent
-关掉后防火墙不能使用IPSec策略，个人机一般用不着
+关掉后防火墙不能使用 IPSec 策略，个人机一般用不着
 Disabled
 
 SSDPSRV
-Upnp设备个人机不常用
+Upnp 设备个人机不常用
 Disabled
 
 iphlpsvc
 我从没用过它说的这些高级功能
+Disabled
+
+NcaSvc
+不知道是什么玩意，依赖 IP Helper，禁了也没发现有什么问题。
 Disabled
 
 WinHttpAutoProxySvc
@@ -64,4 +77,10 @@ Disabled
 
 stisvc
 不知道有啥用，禁止了照样能开摄像头
+Disabled
+
+# 以下是非 Windows 服务
+
+igfxCUIService1.0.0.0
+Intel 显卡的控制面板服务，如果不需要再改设置就可以关了
 Disabled

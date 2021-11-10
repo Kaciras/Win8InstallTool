@@ -9,7 +9,7 @@ namespace Win8InstallTool;
 /// </summary>
 public interface OptimizableSet
 {
-    string Name { get; }
+	string Name { get; }
 
-    IEnumerable<Optimizable> Scan();
+	IEnumerable<Optimizable> Scan();
 }

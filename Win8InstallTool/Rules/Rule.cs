@@ -7,9 +7,9 @@
 /// </summary>
 public interface Rule : Optimizable
 {
-    /// <summary>
-    /// 检测该规则是否可优化，该方法一定会在 Optimize() 之前调用，可以在该方法里改变内部状态。
-    /// </summary>
-    /// <returns>如果需要优化则为 true</returns>
-    bool Check();
+	/// <summary>
+	/// 检测该规则是否可优化，该方法一定会在 Optimize() 之前调用，可以在该方法里改变内部状态。
+	/// </summary>
+	/// <returns>如果需要优化则为 true</returns>
+	bool Check();
 }

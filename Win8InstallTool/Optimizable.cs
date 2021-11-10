@@ -2,9 +2,9 @@
 
 public interface Optimizable
 {
-    string Name { get; }
+	string Name { get; }
 
-    string Description { get; }
+	string Description { get; }
 
-    void Optimize();
+	void Optimize();
 }

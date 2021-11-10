@@ -7,18 +7,18 @@ namespace Win8InstallTool;
 /// </summary>
 public sealed class OptimizeAction : Optimizable
 {
-    readonly Action optimizeAction;
+	readonly Action optimizeAction;
 
-    public string Name { get; }
+	public string Name { get; }
 
-    public string Description { get; }
+	public string Description { get; }
 
-    public OptimizeAction(string name, string description, Action optimizeAction)
-    {
-        this.optimizeAction = optimizeAction;
-        Name = name;
-        Description = description;
-    }
+	public OptimizeAction(string name, string description, Action optimizeAction)
+	{
+		this.optimizeAction = optimizeAction;
+		Name = name;
+		Description = description;
+	}
 
-    public void Optimize() => optimizeAction();
+	public void Optimize() => optimizeAction();
 }

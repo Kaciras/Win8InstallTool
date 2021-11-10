@@ -1,5 +1,5 @@
-﻿using System.Windows.Forms;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Windows.Forms;
 
 namespace Win8InstallTool;
 
@@ -11,9 +11,9 @@ namespace Win8InstallTool;
 [TestClass]
 public sealed class GlobalSetup
 {
-    [AssemblyInitialize]
-    public static void Setup(TestContext _)
-    {
-        STAExecutor.SetSyncContext(new WindowsFormsSynchronizationContext());
-    }
+	[AssemblyInitialize]
+	public static void Setup(TestContext _)
+	{
+		STAExecutor.SetSyncContext(new WindowsFormsSynchronizationContext());
+	}
 }
