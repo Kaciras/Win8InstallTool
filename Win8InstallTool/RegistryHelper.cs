@@ -17,7 +17,7 @@ public static class RegistryHelper
 	{
 		if (path == null)
 		{
-			throw new ArgumentNullException("keyName");
+			throw new ArgumentNullException(nameof(path));
 		}
 
 		var basekeyName = path;

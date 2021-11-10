@@ -14,8 +14,8 @@ public sealed class ContextMenuRule : Rule
 	/// 如果要删除多级，请将每一级都写上，并且下级要放在上级的前面。
 	/// </summary>
 	static readonly string[] EmptyRemovable = {
-			"shell", @"shellex\ContextMenuHandlers", "shellex",
-		};
+		"shell", @"shellex\ContextMenuHandlers", "shellex",
+	};
 
 	readonly string item;
 	readonly IEnumerable<string> folders;

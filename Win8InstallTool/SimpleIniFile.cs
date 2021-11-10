@@ -8,7 +8,7 @@ namespace Win8InstallTool;
 /// 使用 Windows 自带的底层 API 读取 INI 配置文件。
 /// </summary>
 /// <seealso cref="https://stackoverflow.com/a/14906422/7065321"/>
-sealed class SimpleIniFile
+struct SimpleIniFile
 {
 	readonly string EXE = Assembly.GetExecutingAssembly().GetName().Name;
 

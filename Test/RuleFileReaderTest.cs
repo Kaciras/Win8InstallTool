@@ -15,18 +15,18 @@ public class RuleFileReaderTest
 		Assert.AreEqual(string.Empty, reader.Read());
 	}
 
+	[ExpectedException(typeof(ArgumentException))]
 	[TestMethod]
 	public void ThrowOnReadInvalidLineEnd()
 	{
-		var reader = new RuleFileReader("\r\n");
-		Assert.ThrowsException<ArgumentException>(() => reader.Read());
+		new RuleFileReader("\r\n\r\n").Read();
 	}
 
+	[ExpectedException(typeof(ArgumentException))]
 	[TestMethod]
 	public void ThrowOnMoveNextInvalidLineEnd()
 	{
-		var reader = new RuleFileReader("\r\n");
-		Assert.ThrowsException<ArgumentException>(() => reader.MoveNext());
+		new RuleFileReader("\r\n\r\n").MoveNext();
 	}
 
 	[TestMethod]

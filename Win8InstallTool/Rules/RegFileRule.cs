@@ -87,7 +87,7 @@ public class RegFileRule : Rule
 		// Binary 和 MultiString 返回的是数组，需要用 SequenceEqual 对比。
 		bool ConvertAndCheck<T>()
 		{
-			if (!(valueInDB is T[]) || valueInDB == null)
+			if (valueInDB is not T[] || valueInDB == null)
 			{
 				return false;
 			}

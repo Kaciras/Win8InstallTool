@@ -10,7 +10,7 @@ namespace Win8InstallTool;
 /// <br/>
 /// <seealso cref="https://support.microsoft.com/en-us/help/310516/how-to-add-modify-or-delete-registry-subkeys-and-values-by-using-a-reg"/>
 /// </summary>
-public class RegFileTokenizer
+public ref struct RegFileTokenizer
 {
 	readonly string content;
 
@@ -23,6 +23,10 @@ public class RegFileTokenizer
 	public RegFileTokenizer(string content)
 	{
 		this.content = content;
+
+		Value = null;
+		i = 0;
+		TokenType = RegFileTokenType.None;
 	}
 
 	/// <summary>
