@@ -28,14 +28,16 @@ namespace Win8InstallTool
 			LoadRuleFile("开始菜单（用户）", Resources.StartupRules, r => new StartupMenuRule(false, r.Read(), r.Read()));
 			RuleSets.Add(new SendToRuleSet());
 
+			var others = new List<Rule>
+			{
+				new AppEventSoundRule(".None"),
+			};
+
 			if (includeSystem)
 			{
-				var rules = new Rule[]
-				{
-					new LLDPSecurityRule(),
-					new RegFileRule("把用记事本打开添加到右键菜单", "很常用的功能，不解释", GetEmbeddedRegFile("OpenWithNotepad")),
-				};
-				RuleSets.Add(new RuleList("其它优化项", () => rules));
+				others.Add(new ExplorerFolderRule());
+				others.Add(new LLDPSecurityRule());
+				others.Add(new RegFileRule("把用记事本打开添加到右键菜单", "很常用的功能，不解释", GetEmbeddedRegFile("OpenWithNotepad")));
 
 				RuleSets.Add(new TaskSchedulerOptimizeSet());
 
@@ -46,6 +48,8 @@ namespace Win8InstallTool
 				LoadRuleFile("开始菜单", Resources.StartupRules, r => new StartupMenuRule(true, r.Read(), r.Read()));
 				LoadRuleFile("系统设置", Resources.RegistryRules, ReadRegistry);
 			}
+
+			RuleSets.Add(new RuleList("其它优化项", () => others));
 		}
 
 		void LoadRuleFile(string name, string content, Func<RuleFileReader, Rule> func)
