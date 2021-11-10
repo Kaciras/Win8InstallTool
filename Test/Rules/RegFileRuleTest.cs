@@ -3,50 +3,49 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Win32;
 using static System.Environment;
 
-namespace Win8InstallTool.Rules
+namespace Win8InstallTool.Rules;
+
+[TestClass]
+public sealed class RegFileRuleTest
 {
-	[TestClass]
-	public sealed class RegFileRuleTest
-	{
-		[ClassInitialize]
-		public static void ImportTestData(TestContext _)
-		{
-			RegistryHelper.Import(@"Resources\Kinds.reg");
-		}
+    [ClassInitialize]
+    public static void ImportTestData(TestContext _)
+    {
+        RegistryHelper.Import(@"Resources\Kinds.reg");
+    }
 
-		[ClassCleanup]
-		public static void Cleanup()
-		{
-			Registry.CurrentUser.DeleteSubKeyTree("_Test_Kinds");
-		}
+    [ClassCleanup]
+    public static void Cleanup()
+    {
+        Registry.CurrentUser.DeleteSubKeyTree("_Test_Kinds");
+    }
 
-		[TestMethod]
-		public void Check()
-		{
-			var content = File.ReadAllText(@"Resources\Kinds.reg");
-			var rule = new RegFileRule("test", "test", content);
-			Assert.IsFalse(rule.Check());
-		}
+    [TestMethod]
+    public void Check()
+    {
+        var content = File.ReadAllText(@"Resources\Kinds.reg");
+        var rule = new RegFileRule("test", "test", content);
+        Assert.IsFalse(rule.Check());
+    }
 
-		/// <summary>
-		/// 该测试不对应代码，仅用于验证 Registry.GetValue 返回值的类型。
-		/// </summary>
-		[TestMethod]
-		public void MyTestMethod()
-		{
-			using var key = Registry.CurrentUser.OpenSubKey("_Test_Kinds");
+    /// <summary>
+    /// 该测试不对应代码，仅用于验证 Registry.GetValue 返回值的类型。
+    /// </summary>
+    [TestMethod]
+    public void MyTestMethod()
+    {
+        using var key = Registry.CurrentUser.OpenSubKey("_Test_Kinds");
 
-			Assert.AreEqual("文字文字", key.GetValue(""));
+        Assert.AreEqual("文字文字", key.GetValue(""));
 
-			Assert.AreEqual(0x123, key.GetValue("Dword"));
+        Assert.AreEqual(0x123, key.GetValue("Dword"));
 
-			Assert.AreEqual(0x666888L, key.GetValue("Qword"));
+        Assert.AreEqual(0x666888L, key.GetValue("Qword"));
 
-			CollectionAssert.AreEqual(new string[] { "Str0", "Str1" }, (string[])key.GetValue("Multi"));
+        CollectionAssert.AreEqual(new string[] { "Str0", "Str1" }, (string[])key.GetValue("Multi"));
 
-			Assert.AreEqual(GetFolderPath(SpecialFolder.UserProfile), key.GetValue("Expand"));
+        Assert.AreEqual(GetFolderPath(SpecialFolder.UserProfile), key.GetValue("Expand"));
 
-			CollectionAssert.AreEqual(new byte[] { 0xFA, 0x51, 0x6F, 0x89 }, (byte[])key.GetValue("Binary"));
-		}
-	}
+        CollectionAssert.AreEqual(new byte[] { 0xFA, 0x51, 0x6F, 0x89 }, (byte[])key.GetValue("Binary"));
+    }
 }
