@@ -25,37 +25,38 @@ public sealed class RuleProvider
 	internal void Initialize()
 	{
 		LoadRuleFile("系统设置（用户）", Resources.UserRegistryRules, ReadRegistry);
-		LoadRuleFile("开始菜单（用户）", Resources.StartupRules, r => new StartupMenuRule(false, r.Read(), r.Read()));
+		LoadRuleFile("开始菜单（用户）", Resources.StartupRules, ReadStartupMenu);
 		RuleSets.Add(new SendToRuleSet());
 
-		var others = new List<Rule>
-			{
-				new AppEventSoundRule(".None"),
-			};
+		var others = new List<Rule> { new AppEventSoundRule(".None") };
 
 		if (includeSystem)
 		{
 			others.Add(new ExplorerFolderRule());
 			others.Add(new LLDPSecurityRule());
-			others.Add(new RegFileRule("把用记事本打开添加到右键菜单", "很常用的功能，不解释", GetEmbeddedRegFile("OpenWithNotepad")));
+			others.Add(new RegFileRule(
+				"把用记事本打开添加到右键菜单",
+				"很常用的功能，不解释", 
+				GetEmbeddedRegFile("OpenWithNotepad")
+			));
 
-			RuleSets.Add(new TaskSchedulerOptimizeSet());
+			RuleSets.Add(new TaskSchedulerSet());
 
 			LoadRuleFile("性能数据收集器", Resources.WMILoggerRules, ReadWmiLogger);
 			LoadRuleFile("组策略", Resources.GroupPolicyRules, ReadGroupPolicy);
 			LoadRuleFile("右键菜单清理", Resources.ContextMenuRules, ReadContextMenu);
 			LoadRuleFile("服务", Resources.ServiceRules, ReadService);
-			LoadRuleFile("开始菜单", Resources.StartupRules, r => new StartupMenuRule(true, r.Read(), r.Read()));
+			LoadRuleFile("开始菜单", Resources.StartupRules, ReadStartupMenu);
 			LoadRuleFile("系统设置", Resources.RegistryRules, ReadRegistry);
 		}
 
-		RuleSets.Add(new RuleList("其它优化项", () => others));
+		RuleSets.Add(new RuleList("其它优化项", others));
 	}
 
 	void LoadRuleFile(string name, string content, Func<RuleFileReader, Rule> func)
 	{
-		IEnumerable<Rule> factory() => RuleFileReader.Iter(content).Select(func).ToList();
-		RuleSets.Add(new RuleList(name, factory));
+		var rules = RuleFileReader.Iter(content).Select(func).ToList();
+		RuleSets.Add(new RuleList(name, rules));
 	}
 
 	// 下面是各种规则的加载逻辑，为了省点字把 Rule 后缀去掉了（ReadTaskRule -> ReadTask）
@@ -71,6 +72,11 @@ public sealed class RuleProvider
 		var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
 		using var reader = new StreamReader(stream);
 		return reader.ReadToEnd();
+	}
+
+	static Rule ReadStartupMenu(RuleFileReader reader)
+	{
+		return new StartupMenuRule(true, reader.Read(), reader.Read());
 	}
 
 	static Rule ReadService(RuleFileReader reader)

@@ -6,7 +6,7 @@ using Win8InstallTool.Properties;
 
 namespace Win8InstallTool.Rules;
 
-public class TaskSchedulerOptimizeSet : OptimizableSet
+public class TaskSchedulerSet : OptimizableSet
 {
 	public string Name => "任务计划程序";
 
@@ -36,7 +36,7 @@ public class TaskSchedulerOptimizeSet : OptimizableSet
 		catch (IOException e)
 		when (e is DirectoryNotFoundException || e is FileNotFoundException)
 		{
-			// Ignore, maybe path is a task.
+			// Ignore, maybe the path is a task.
 		}
 
 		try

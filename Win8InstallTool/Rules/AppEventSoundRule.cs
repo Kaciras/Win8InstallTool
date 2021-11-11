@@ -14,7 +14,7 @@ internal sealed class AppEventSoundRule : Rule
 	readonly string target;
 
 	/// <summary>
-	/// 创建规则的实例，将声音方案调整为制定的项，方案名是注册表里的键名。
+	/// 创建规则的实例，将声音方案调整为制定的项，方案名是注册表里的键名比如".Default"、".None"。
 	/// </summary>
 	/// <param name="target">方案名</param>
 	public AppEventSoundRule(string target)

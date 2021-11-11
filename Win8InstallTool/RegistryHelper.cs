@@ -61,9 +61,7 @@ public static class RegistryHelper
 		var basekeyName = path.Substring(0, i);
 		var remain = path.Substring(i + 1, path.Length - i - 1);
 
-		var basekey = GetBaseKey(basekeyName);
-		using var target = basekey.OpenSubKey(remain);
-		return target != null;
+		return GetBaseKey(basekeyName).ContainsSubKey(remain);
 	}
 
 	/// <summary>
@@ -76,13 +74,17 @@ public static class RegistryHelper
 	// 必须用 regedit.exe，如果用 regedt32 可能出错，上面的一样
 	public static void Import(string file) => Utils.Execute("regedit", $"/s {file}");
 
-	// CLSDI 格式 {8-4-4-4-12}
+	/// <summary>
+	/// 从注册表中读取指定 CLSID 项的默认值。
+	/// </summary>
+	/// <param name="clsid">CLSID值，格式{8-4-4-4-12}</param>
+	/// <exception cref="DirectoryNotFoundException">如果CLSID记录不存在</exception>
 	public static string GetCLSIDValue(string clsid)
 	{
-		using var key = OpenKey(@"HKEY_CLASSES_ROOT\CLSID\" + clsid);
+		using var key = OpenKey(@"HKCR\CLSID\" + clsid);
 		if (key == null)
 		{
-			throw new DirectoryNotFoundException("CLSID记录不存在");
+			throw new DirectoryNotFoundException("CLSID 记录不存在");
 		}
 		return (string)key.GetValue(string.Empty);
 	}
@@ -105,7 +107,7 @@ public static class RegistryHelper
 
 	public static bool ContainsSubKey(this RegistryKey key, string name)
 	{
-		using var subKey = key.OpenSubKey(name);
+		using var subKey = key.OpenSubKey(name); 
 		return subKey != null;
 	}
 }

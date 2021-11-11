@@ -10,18 +10,18 @@ namespace Win8InstallTool.Rules;
 /// </summary>
 public class RuleList : OptimizableSet
 {
-	readonly Func<IEnumerable<Rule>> factory;
+	readonly IEnumerable<Rule> rules;
 
 	public string Name { get; }
 
-	public RuleList(string name, Func<IEnumerable<Rule>> factory)
+	public RuleList(string name, IEnumerable<Rule> rules)
 	{
 		Name = name;
-		this.factory = factory;
+		this.rules = rules;
 	}
 
 	public IEnumerable<Optimizable> Scan()
 	{
-		return factory().Where(rule => rule.Check());
+		return rules.Where(rule => rule.Check());
 	}
 }

@@ -19,7 +19,7 @@ public sealed class RuleFileReader
 {
 	readonly string content;
 
-	int i;
+	int i = 0;
 
 	public RuleFileReader(string content)
 	{
@@ -29,7 +29,7 @@ public sealed class RuleFileReader
 	/// <summary>
 	/// 反正都读取的是预定义的资源，限制死换行符可以避免一些的麻烦。
 	/// </summary>
-	void ThrowCR() => throw new ArgumentException("规则文件只能用LF换行");
+	void ThrowCR() => throw new ArgumentException("规则文件只能用 LF 换行");
 
 	/// <summary>
 	/// 跳过空白和注释行，准备读取新的条目。
