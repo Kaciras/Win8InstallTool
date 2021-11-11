@@ -101,7 +101,7 @@
     <Compile Include="Rules\RegFileRule.cs" />
     <Compile Include="Rules\RuleList.cs" />
     <Compile Include="Rules\SendToRuleSet.cs" />
-    <Compile Include="Rules\TaskSchedulerOptimizeSet.cs" />
+    <Compile Include="Rules\TaskSchedulerSet.cs" />
     <Compile Include="Rules\WMILoggerRule.cs" />
     <Compile Include="Rules\Rule.cs" />
     <Compile Include="Rules\ServiceRule.cs" />
@@ -184,6 +184,7 @@
   <ItemGroup>
     <EmbeddedResource Include="RegFiles\ExplorerOptions.reg" />
     <EmbeddedResource Include="RegFiles\KeyboardA11y.reg" />
+    <EmbeddedResource Include="RegFiles\DisableAutoPlay.reg" />
     <None Include="Resources\ContextMenuRules.txt" />
     <None Include="Resources\GroupPolicyRules.txt" />
     <None Include="Resources\RegistryRules.txt" />
