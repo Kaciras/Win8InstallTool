@@ -22,7 +22,8 @@ internal sealed class AppEventSoundRule : Rule
 		this.target = target;
 
 		using var schemes = RegistryHelper.OpenKey(@$"{ROOT}\Names\{target}");
-		Name = "设置系统音效为：" + schemes.GetValue("");
+		var name = schemes.GetValue("");
+		Name = "设置系统音效为：" + Utils.ExtractStringFromDLL((string)name);
 	}
 
 	public bool Check()
