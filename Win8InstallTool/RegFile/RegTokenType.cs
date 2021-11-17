@@ -1,6 +1,6 @@
-﻿namespace Win8InstallTool;
+﻿namespace Win8InstallTool.RegFile;
 
-public enum RegFileTokenType : byte
+public enum RegTokenType : byte
 {
 	None,           // 未读取到有效数据
 	Comment,        // 注释

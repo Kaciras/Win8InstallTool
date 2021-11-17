@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Text;
 
-namespace Win8InstallTool;
+namespace Win8InstallTool.RegFile;
 
 /// <summary>
-/// 解析注册表导出文件（.reg）的类。
+/// 解析注册表导出文件（.reg）的类，属于最前端的分词器。
 /// <br/>
-/// 我觉得应该有开源库读取 .reg 文件的，但是找了一圈也没找到，只能自己撸了。
+/// 我觉得应该有开源库读取 reg 文件的，但是找了一圈也没找到，只能自己撸了。
 /// <br/>
 /// <seealso cref="https://support.microsoft.com/en-us/help/310516/how-to-add-modify-or-delete-registry-subkeys-and-values-by-using-a-reg"/>
 /// </summary>
@@ -16,7 +16,7 @@ public ref struct RegFileTokenizer
 
 	int i;
 
-	public RegFileTokenType TokenType { get; private set; }
+	public RegTokenType TokenType { get; private set; }
 
 	public string Value { get; private set; }
 
@@ -26,7 +26,7 @@ public ref struct RegFileTokenizer
 
 		Value = null;
 		i = 0;
-		TokenType = RegFileTokenType.None;
+		TokenType = RegTokenType.None;
 	}
 
 	/// <summary>
@@ -36,13 +36,13 @@ public ref struct RegFileTokenizer
 	{
 		switch (TokenType)
 		{
-			case RegFileTokenType.None:
+			case RegTokenType.None:
 				ConsumeVersion();
 				break;
-			case RegFileTokenType.ValueName:
+			case RegTokenType.ValueName:
 				ConsumeKindOrValue();
 				break;
-			case RegFileTokenType.Kind:
+			case RegTokenType.Kind:
 				ConsumeValue();
 				break;
 			default:
@@ -81,7 +81,7 @@ public ref struct RegFileTokenizer
 
 	void ConsumeComment()
 	{
-		TokenType = RegFileTokenType.Comment;
+		TokenType = RegTokenType.Comment;
 		var j = i + 1;
 		i = content.IndexOf('\r', j);
 		Value = content.Substring(j, i - j);
@@ -98,7 +98,7 @@ public ref struct RegFileTokenizer
 			throw new FormatException("数据不完整");
 		}
 
-		TokenType = RegFileTokenType.Version;
+		TokenType = RegTokenType.Version;
 		Value = content.Substring(j, i - j);
 
 		if (Value != VER_LINE)
@@ -111,12 +111,12 @@ public ref struct RegFileTokenizer
 	{
 		if (content[++i] == '-')
 		{
-			TokenType = RegFileTokenType.DeleteKey;
+			TokenType = RegTokenType.DeleteKey;
 			i += 1;
 		}
 		else
 		{
-			TokenType = RegFileTokenType.CreateKey;
+			TokenType = RegTokenType.CreateKey;
 		}
 
 		Value = ReadTo(']');
@@ -125,14 +125,14 @@ public ref struct RegFileTokenizer
 	void ConsumeDefaultName()
 	{
 		i += 1;
-		TokenType = RegFileTokenType.ValueName;
+		TokenType = RegTokenType.ValueName;
 		Value = string.Empty;
 	}
 
 	void ConsumeValueName()
 	{
 		i += 1;
-		TokenType = RegFileTokenType.ValueName;
+		TokenType = RegTokenType.ValueName;
 		Value = ReadTo('"');
 	}
 
@@ -146,17 +146,17 @@ public ref struct RegFileTokenizer
 		switch (content[i])
 		{
 			case '"':
-				TokenType = RegFileTokenType.Value;
+				TokenType = RegTokenType.Value;
 				i += 1;
 				Value = ReadTo('"');
 				break;
 			case '-':
 				i += 1;
-				TokenType = RegFileTokenType.DeleteValue;
+				TokenType = RegTokenType.DeleteValue;
 				break;
 			default:
 				Value = ReadTo(':');
-				TokenType = RegFileTokenType.Kind;
+				TokenType = RegTokenType.Kind;
 				break;
 		}
 	}
@@ -198,7 +198,7 @@ public ref struct RegFileTokenizer
 			buffer.Append(content, j, k - j);
 		}
 
-		TokenType = RegFileTokenType.Value;
+		TokenType = RegTokenType.Value;
 		Value = buffer.ToString();
 	}
 

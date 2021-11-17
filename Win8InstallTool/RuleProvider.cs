@@ -68,7 +68,7 @@ public sealed class RuleProvider
 
 	static string GetEmbeddedRegFile(string name)
 	{
-		name = $"Win8InstallTool.RegFiles.{name}.reg";
+		name = $"Win8InstallTool.Resources.Registry.{name}.reg";
 		var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
 		using var reader = new StreamReader(stream);
 		return reader.ReadToEnd();

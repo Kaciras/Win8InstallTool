@@ -77,8 +77,8 @@
     </Compile>
     <Compile Include="GroupPolicy.cs" />
     <Compile Include="GroupPolicyObject.cs" />
-    <Compile Include="RegFileTokenizer.cs" />
-    <Compile Include="RegFileTokenType.cs" />
+    <Compile Include="RegFile\RegFileTokenizer.cs" />
+    <Compile Include="RegFile\RegTokenType.cs" />
     <Compile Include="RuleProvider.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -137,13 +137,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="RegFiles\DisableCrashDump.reg" />
-    <EmbeddedResource Include="RegFiles\DisablePerfCounter.reg" />
-    <EmbeddedResource Include="RegFiles\DisableSchannelLog.reg" />
-    <EmbeddedResource Include="RegFiles\IESecurity.reg" />
-    <EmbeddedResource Include="RegFiles\DisableTLS1_0.reg" />
-    <EmbeddedResource Include="RegFiles\DisableSSL.reg" />
-    <EmbeddedResource Include="RegFiles\OpenWithNotepad.reg" />
+    <EmbeddedResource Include="Resources\Registry\DisableCrashDump.reg" />
+    <EmbeddedResource Include="Resources\Registry\DisablePerfCounter.reg" />
+    <EmbeddedResource Include="Resources\Registry\DisableSchannelLog.reg" />
+    <EmbeddedResource Include="Resources\Registry\IESecurity.reg" />
+    <EmbeddedResource Include="Resources\Registry\DisableTLS1_0.reg" />
+    <EmbeddedResource Include="Resources\Registry\DisableSSL.reg" />
+    <EmbeddedResource Include="Resources\Registry\OpenWithNotepad.reg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -182,9 +182,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="RegFiles\ExplorerOptions.reg" />
-    <EmbeddedResource Include="RegFiles\KeyboardA11y.reg" />
-    <EmbeddedResource Include="RegFiles\DisableAutoPlay.reg" />
+    <EmbeddedResource Include="Resources\Registry\ExplorerOptions.reg" />
+    <EmbeddedResource Include="Resources\Registry\KeyboardA11y.reg" />
+    <EmbeddedResource Include="Resources\Registry\DisableAutoPlay.reg" />
     <None Include="Resources\ContextMenuRules.txt" />
     <None Include="Resources\GroupPolicyRules.txt" />
     <None Include="Resources\RegistryRules.txt" />
@@ -197,6 +197,7 @@
   <ItemGroup>
     <None Include="Resources\UserRegistryRules.txt" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>

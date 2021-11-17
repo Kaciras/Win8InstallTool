@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Win8InstallTool.RegFile;
 
 namespace Win8InstallTool.Rules;
 
@@ -45,24 +46,24 @@ public class RegFileRule : Rule
 		{
 			switch (tokenilizer.TokenType)
 			{
-				case RegFileTokenType.DeleteKey:
+				case RegTokenType.DeleteKey:
 					expected = !RegistryHelper.KeyExists(tokenilizer.Value);
 					break;
-				case RegFileTokenType.CreateKey:
+				case RegTokenType.CreateKey:
 					key = tokenilizer.Value;
 					expected = RegistryHelper.KeyExists(key);
 					break;
-				case RegFileTokenType.ValueName:
+				case RegTokenType.ValueName:
 					kind = RegistryValueKind.String;
 					valueName = tokenilizer.Value;
 					break;
-				case RegFileTokenType.Value:
+				case RegTokenType.Value:
 					expected = CheckValueInDB(key, valueName, tokenilizer.Value, kind);
 					break;
-				case RegFileTokenType.Kind:
+				case RegTokenType.Kind:
 					kind = ParseKind(tokenilizer.Value);
 					break;
-				case RegFileTokenType.DeleteValue:
+				case RegTokenType.DeleteValue:
 					expected = Registry.GetValue(key, valueName, null) == null;
 					break;
 			}
