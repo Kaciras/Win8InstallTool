@@ -36,8 +36,6 @@ public sealed partial class MainWindow : Form
 	/// <br/>
 	/// TODO: 点太快会导致冲突。
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	void TreeView_AfterCheck(object sender, TreeViewEventArgs e)
 	{
 		// 跳过非交互事件，避免自身触发导致死循环
@@ -46,12 +44,16 @@ public sealed partial class MainWindow : Form
 			treeView.BeginUpdate();
 			var current = e.Node;
 
-			current.Nodes.Cast<TreeNode>().ForEach(n => n.Checked = current.Checked);
+			foreach (var node in current.Nodes)
+			{
+				((TreeNode)node).Checked = current.Checked;
+			}
 
 			var parent = current.Parent;
 			if (parent != null)
 			{
-				parent.Checked = parent.Nodes.Cast<TreeNode>().All(n => n.Checked);
+				var nodes = parent.Nodes.Cast<TreeNode>();
+				parent.Checked = nodes.All(n => n.Checked);
 			}
 
 			treeView.EndUpdate();
@@ -82,11 +84,11 @@ public sealed partial class MainWindow : Form
 		new AboutWindow().ShowDialog(this);
 	}
 
-	void SelectAllButton_Click(object sender, EventArgs e) => ChangeAllChecked(_ => true);
+	void SelectAllButton_Click(object sender, EventArgs e) => ChangeAllChecked(true);
 
-	void ClearAllButton_Click(object sender, EventArgs e) => ChangeAllChecked(_ => false);
+	void ClearAllButton_Click(object sender, EventArgs e) => ChangeAllChecked(false);
 
-	void ChangeAllChecked(Func<bool, bool> func)
+	void ChangeAllChecked(bool value)
 	{
 		var queue = new Queue<TreeNode>();
 		treeView.Nodes.Cast<TreeNode>().ForEach(queue.Enqueue);
@@ -96,7 +98,7 @@ public sealed partial class MainWindow : Form
 		{
 			var node = queue.Dequeue();
 			node.Nodes.Cast<TreeNode>().ForEach(queue.Enqueue);
-			node.Checked = func(node.Checked);
+			node.Checked = value;
 		}
 		treeView.EndUpdate();
 		UpdateButtonsEnabled();
@@ -150,7 +152,7 @@ public sealed partial class MainWindow : Form
 			{
 				var node = new TreeNode(item.Name);
 				node.Tag = item;
-				Invoke(new Action(() => setNode.Nodes.Add(node)));
+				Invoke(() => setNode.Nodes.Add(node));
 			}
 			progressBar.Value++;
 
@@ -158,7 +160,7 @@ public sealed partial class MainWindow : Form
 			{
 				continue;
 			}
-			Invoke(new Action(() => treeView.Nodes.Add(setNode)));
+			Invoke(() => treeView.Nodes.Add(setNode));
 		}
 
 		treeView.ExpandAll();
