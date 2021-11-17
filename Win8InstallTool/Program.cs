@@ -22,7 +22,12 @@ static class Program
 
 		if (CheckOSSupport())
 		{
-			StartProgram();
+			IsElevated = Utils.CheckIsAdministrator();
+			var provider = new RuleProvider(IsElevated);
+			provider.Initialize();
+
+			Application.Idle += CaptureSyncContext;
+			Application.Run(new MainWindow(provider));
 		}
 		else
 		{
@@ -45,28 +50,6 @@ static class Program
 		return Environment.Is64BitOperatingSystem
 			&& os.Platform == PlatformID.Win32NT
 			&& version.Major == 6 && version.Minor == 3;
-	}
-
-	static void StartProgram()
-	{
-		/*
-         * 获取当前用户，并检测是否具有管理员权限。
-         * https://stackoverflow.com/a/5953294/7065321
-         */
-		string currentUser;
-
-		using (var identity = WindowsIdentity.GetCurrent())
-		{
-			var principal = new WindowsPrincipal(identity);
-			currentUser = identity.Name;
-			IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
-		}
-
-		var provider = new RuleProvider(IsElevated);
-		provider.Initialize();
-
-		Application.Idle += CaptureSyncContext;
-		Application.Run(new MainWindow(provider));
 	}
 
 	/// <summary>

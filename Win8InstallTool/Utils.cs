@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text;
 
 namespace Win8InstallTool;
@@ -16,6 +17,17 @@ internal static class Utils
 	public static void ForEach<T>(this IEnumerable<T> ienum, Action<T> action)
 	{
 		foreach (var item in ienum) action(item);
+	}
+
+	/// <summary>
+	/// 获取当前运行程序的用户，并检测其是否具有管理员权限。
+	/// </summary>
+	/// <seealso cref="https://stackoverflow.com/a/5953294/7065321"/>
+	public static bool CheckIsAdministrator()
+	{
+		using var identity = WindowsIdentity.GetCurrent();
+		var principal = new WindowsPrincipal(identity);
+		return principal.IsInRole(WindowsBuiltInRole.Administrator);
 	}
 
 	/// <summary>
