@@ -49,7 +49,17 @@ public class UtilsTest
 		Assert.ThrowsException<InvalidOperationException>(() => Utils.GetShortcutTarget("Resources/config.ini"));
 	}
 
-	[Ignore("总是出现莫名其妙的错误 2 or 1008")]
+	[DataRow("INVALID_VALUE")]
+	[DataRow("shell32.dll,INVALID")]
+	[DataRow("")]
+	[ExpectedException(typeof(FormatException))]
+	[DataTestMethod]
+	public void ExtractStringWithInvalidText(string value)
+	{
+		Utils.ExtractStringFromDLL(value);
+	}
+
+	[Ignore("总是出现莫名其妙的错误 6")]
 	[TestMethod]
 	public void ExtractStringFromDLL()
 	{

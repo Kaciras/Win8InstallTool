@@ -116,48 +116,50 @@ internal static class Utils
 	/// </summary>
 	/// <param name="string">字符串引用</param>
 	/// <returns>字符串资源</returns>
+	/// <exception cref="FormatException">如果参数不是合法的资源引用</exception>
 	public static string ExtractStringFromDLL(string @string)
 	{
-		if (@string[0] == '@')
-		{
-			@string = @string.Substring(1);
-		}
 		var splited = @string.Split(',');
-		var num = Math.Abs(int.Parse(splited[1]));
-		return ExtractStringFromDLL(splited[0], num);
+		if (splited.Length != 2)
+		{
+			throw new FormatException("参数格式错误");
+		}
+		var file = splited[0].TrimStart('@');
+		var index = Math.Abs(int.Parse(splited[1]));
+		return ExtractStringFromDLL(file, index);
 	}
 
 	/// <summary>
-	/// 从 Windows 动态链接库文件里读取字符串资源。
+	/// 从 Windows 动态链接库文件里读取内置的字符串资源。
 	/// </summary>
 	/// <param name="file">DLL文件</param>
-	/// <param name="number">资源索引，不能是负数</param>
+	/// <param name="id">资源索引，不能是负数</param>
 	/// <returns>字符串资源</returns>
-	public static string ExtractStringFromDLL(string file, int number)
+	public static string ExtractStringFromDLL(string file, int id)
 	{
 		file = Environment.ExpandEnvironmentVariables(file);
+
+		// 使用 LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE + LOAD_LIBRARY_AS_IMAGE_RESOURCE 两个标志，
+		// 避免加载多余的依赖，防止出现 12 错误码。
+		// https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw
 		var lib = LoadLibraryEx(file, IntPtr.Zero, 0x00000020 | 0x00000002);
 
 		var code = Marshal.GetLastWin32Error();
-		if (code != 0)
+		if (code == 0)
 		{
-			throw new SystemException($"无法加载{file}，错误代码:{code}");
+			var buffer = new StringBuilder(2048);
+			LoadString(lib, id, buffer, buffer.Capacity);
+			FreeLibrary(lib);
+			return buffer.ToString();
 		}
 
-		var buffer = new StringBuilder(2048);
-		LoadString(lib, number, buffer, buffer.Capacity);
-		FreeLibrary(lib);
-		return buffer.ToString();
+		throw new SystemException($"无法加载 {file}，错误代码:{code}");
 	}
 
-	// 使用 LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE + LOAD_LIBRARY_AS_IMAGE_RESOURCE 两个标志，
-	// 避免加载多余的依赖，防止出现 12 错误码。
-	// https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw
-
-	[DllImport("kernel32.dll", SetLastError = true)]
+	[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
 	static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hFile, int flags);
 
-	[DllImport("user32.dll")]
+	[DllImport("user32.dll, CharSet = CharSet.Auto")]
 	static extern int LoadString(IntPtr hInstance, int ID, StringBuilder lpBuffer, int nBufferMax);
 
 	[DllImport("kernel32.dll")]
