@@ -72,7 +72,7 @@ public ref struct RegFileTokenizer
 				ConsumeDefaultName();
 				break;
 			case '"':
-				ConsumeValueName();
+				ConsumeName();
 				break;
 			case '[':
 				ConsumeKey();
@@ -137,7 +137,7 @@ public ref struct RegFileTokenizer
 		Value = string.Empty;
 	}
 
-	void ConsumeValueName()
+	void ConsumeName()
 	{
 		i += 1;
 		TokenType = RegTokenType.Name;
@@ -205,11 +205,6 @@ public ref struct RegFileTokenizer
 			}
 		}
 
-		if (i == j)
-		{
-			throw new FormatException("数据不完整");
-		}
-
 	SearchEnd:
 
 		TokenType = RegTokenType.Value;
@@ -254,21 +249,6 @@ public ref struct RegFileTokenizer
 			throw new FormatException("数据不完整");
 		}
 		return content.Substring(j, i - j - 1);
-	}
-
-	void SkipWhiteSpaces()
-	{
-		for (; i < content.Length; i++)
-		{
-			switch (content[i])
-			{
-				case ' ':
-				case '\t':
-					break;
-				default:
-					return;
-			}
-		}
 	}
 
 	void SkipBlankLines()

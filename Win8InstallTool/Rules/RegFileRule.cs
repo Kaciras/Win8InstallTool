@@ -35,37 +35,24 @@ public class RegFileRule : Rule
 	/// </summary>
 	public bool Check()
 	{
-		var tokenilizer = new RegFileTokenizer(content);
+		var reader = new RegFileReader(content);
 		var expected = true;
 
-		var key = string.Empty;
-		var valueName = string.Empty;
-		var kind = RegistryValueKind.None;
-
-		while (expected && tokenilizer.Read())
+		while (expected && reader.Read())
 		{
-			switch (tokenilizer.TokenType)
+			if (reader.IsKey)
 			{
-				case RegTokenType.DeleteKey:
-					expected = !RegistryHelper.KeyExists(tokenilizer.Value);
-					break;
-				case RegTokenType.CreateKey:
-					key = tokenilizer.Value;
-					expected = RegistryHelper.KeyExists(key);
-					break;
-				case RegTokenType.ValueName:
-					kind = RegistryValueKind.String;
-					valueName = tokenilizer.Value;
-					break;
-				case RegTokenType.Value:
-					expected = CheckValueInDB(key, valueName, tokenilizer.Value, kind);
-					break;
-				case RegTokenType.Kind:
-					kind = ParseKind(tokenilizer.Value);
-					break;
-				case RegTokenType.DeleteValue:
-					expected = Registry.GetValue(key, valueName, null) == null;
-					break;
+				var exists = RegistryHelper.KeyExists(reader.Key);
+				expected = reader.IsDelete ^ exists;
+			}
+			else if (reader.IsDelete)
+			{
+				expected = Registry.GetValue(reader.Key, reader.Name, null) == null;
+			}
+			else
+			{
+				expected = CheckValueInDB(reader.Key,
+					reader.Name, reader.Value, reader.Kind);
 			}
 		}
 
@@ -79,11 +66,10 @@ public class RegFileRule : Rule
 	/// <param name="name">值名</param>
 	/// <param name="valueStr">Reg文件里字符串形式的值</param>
 	/// <param name="kind">值类型</param>
-	bool CheckValueInDB(string key, string name, string valueStr, RegistryValueKind kind)
+	bool CheckValueInDB(string key, string name, object expected, RegistryValueKind kind)
 	{
 		using var keyObj = RegistryHelper.OpenKey(key);
 		var valueInDB = keyObj.GetValue(name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
-		var expected = ParseValue(valueStr, kind);
 
 		// Binary 和 MultiString 返回的是数组，需要用 SequenceEqual 对比。
 		bool ConvertAndCheck<T>()
@@ -103,42 +89,6 @@ public class RegFileRule : Rule
 			_ => expected.Equals(valueInDB),
 		};
 	}
-
-	/// <summary>
-	/// 将 Reg 文件里的值文本转换为指定的类型，与 Registry.GetValue 返回的一致。
-	/// </summary>
-	/// <param name="text">值文本</param>
-	/// <param name="kind">类型</param>
-	/// <returns>转换后的值</returns>
-	object ParseValue(string text, RegistryValueKind kind)
-	{
-		byte[] ToBytes() => text.Split(',')
-			.Select(x => byte.Parse(x, NumberStyles.HexNumber))
-			.ToArray();
-
-		string ToString() => Encoding.Unicode.GetString(ToBytes()).Trim('\0');
-
-		return kind switch
-		{
-			RegistryValueKind.ExpandString => ToString(),
-			RegistryValueKind.MultiString => ToString().Split('\0'),
-			RegistryValueKind.Binary => ToBytes(),
-			RegistryValueKind.DWord => int.Parse(text, NumberStyles.HexNumber),
-			RegistryValueKind.QWord => BitConverter.ToInt64(ToBytes(), 0),
-			RegistryValueKind.String => text,
-			_ => throw new Exception("无效的类型：" + kind),
-		};
-	}
-
-	RegistryValueKind ParseKind(string value) => value switch
-	{
-		"dword" => RegistryValueKind.DWord,
-		"hex" => RegistryValueKind.Binary,
-		"hex(2)" => RegistryValueKind.ExpandString,
-		"hex(7)" => RegistryValueKind.MultiString,
-		"hex(b)" => RegistryValueKind.QWord,
-		_ => throw new FormatException("未知的值类型: " + value),
-	};
 
 	// 注意 Reg 文件必须是 UTF-16 LE 编码，弄错了会出现中文乱码。
 	public void Optimize()

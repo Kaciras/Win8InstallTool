@@ -94,7 +94,11 @@ public sealed class RegFileTokenizerTest
 		Assert.AreEqual("注释在值内占一行", tokenizer.Value);
 
 		Assert.IsTrue(tokenizer.Read());
+		Assert.AreEqual(RegTokenType.ValuePart, tokenizer.TokenType);
+		Assert.AreEqual("00,00,53,00,74,00,72,00,31,00,00,00,00,", tokenizer.Value);
+
+		Assert.IsTrue(tokenizer.Read());
 		Assert.AreEqual(RegTokenType.Value, tokenizer.TokenType);
-		Assert.AreEqual("00,00,53,00", tokenizer.Value);
+		Assert.AreEqual("00,", tokenizer.Value);
 	}
 }
