@@ -189,7 +189,7 @@
     <None Include="Resources\ContextMenuRules.txt" />
     <None Include="Resources\GroupPolicyRules.txt" />
     <None Include="Resources\RegistryRules.txt" />
-    <EmbeddedResource Include="Resources\Registry\VisualPreferences.reg" />
+    <EmbeddedResource Include="Resources\Registry\VisualEffects.reg" />
     <None Include="Resources\SendToRules.txt" />
     <None Include="Resources\ServiceRules.txt" />
     <None Include="Resources\StartupRules.txt" />

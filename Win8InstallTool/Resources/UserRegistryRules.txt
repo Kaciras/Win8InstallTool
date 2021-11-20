@@ -16,4 +16,4 @@ IESecurity
 
 优化视觉效果
 除了“显示缩略图而不是显示图标”和“拖动时显示窗口内容”外全部关闭，避免各种效果浪费时间和性能。
-VisualPreferences
+VisualEffects

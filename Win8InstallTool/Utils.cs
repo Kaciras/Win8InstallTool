@@ -159,7 +159,7 @@ internal static class Utils
 	[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
 	static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hFile, int flags);
 
-	[DllImport("user32.dll, CharSet = CharSet.Auto")]
+	[DllImport("user32.dll", CharSet = CharSet.Auto)]
 	static extern int LoadString(IntPtr hInstance, int ID, StringBuilder lpBuffer, int nBufferMax);
 
 	[DllImport("kernel32.dll")]
