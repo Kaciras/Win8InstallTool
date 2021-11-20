@@ -1,4 +1,6 @@
-﻿namespace Win8InstallTool.Rules;
+﻿using System;
+
+namespace Win8InstallTool.Rules;
 
 /// <summary>
 /// 优化 控制面板/硬件和声音/更改系统声音/声音方案 的规则，如果当前方案与目标不同则修改为目标方案。
@@ -9,7 +11,7 @@ internal sealed class AppEventSoundRule : Rule
 
 	public string Name { get; }
 
-	public string Description => "将 Windows 系统声音设为指定的方案";
+	public string Description { get; }
 
 	readonly string target;
 
@@ -22,8 +24,18 @@ internal sealed class AppEventSoundRule : Rule
 		this.target = target;
 
 		using var schemes = RegistryHelper.OpenKey(@$"{ROOT}\Names\{target}");
-		var name = schemes.GetValue("");
-		Name = "设置系统音效为：" + Utils.ExtractStringFromDLL((string)name);
+		var name = (string)schemes.GetValue("");
+		try
+		{
+			name = Utils.ExtractStringFromDLL(name);
+		}
+		catch (FormatException)
+		{
+			// 坑爹！有的用户直接就是名字，内置管理员则是一个资源引用。
+		}
+
+		Name = "设置系统音效为：" + name;
+		Description = "将 Windows 系统声音方案设置为：" + name;
 	}
 
 	public bool Check()
