@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Win8InstallTool;
 
-public static class RegistryHelper
+public static class RegHelper
 {
 	/// <summary>
 	/// 从 .NET 标准库里抄的快捷方法，增加了根键的缩写支持，为什么微软不直接提供？
@@ -81,12 +81,9 @@ public static class RegistryHelper
 	/// <exception cref="DirectoryNotFoundException">如果CLSID记录不存在</exception>
 	public static string GetCLSIDValue(string clsid)
 	{
-		using var key = OpenKey(@"HKCR\CLSID\" + clsid);
-		if (key == null)
-		{
-			throw new DirectoryNotFoundException("CLSID 记录不存在");
-		}
-		return (string)key.GetValue(string.Empty);
+		using var key = Registry.ClassesRoot.OpenSubKey(@"CLSID\" + clsid);
+		return (string)key?.GetValue(string.Empty)
+			?? throw new DirectoryNotFoundException("CLSID 记录不存在");
 	}
 
 	/// <summary>

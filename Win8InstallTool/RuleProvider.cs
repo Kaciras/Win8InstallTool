@@ -99,7 +99,7 @@ public sealed class RuleProvider
 			var folder = reader.Read();
 			var root = Path.Combine("HKEY_CLASSES_ROOT", folder);
 
-			folders = RegistryHelper.Search(root, item)
+			folders = RegHelper.Search(root, item)
 				.Select(name => Path.Combine(folder, name))
 				.ToList();
 		}

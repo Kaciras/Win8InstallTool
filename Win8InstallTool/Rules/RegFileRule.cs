@@ -42,7 +42,7 @@ public class RegFileRule : Rule
 		{
 			if (reader.IsKey)
 			{
-				var exists = RegistryHelper.KeyExists(reader.Key);
+				var exists = RegHelper.KeyExists(reader.Key);
 				expected = reader.IsDelete ^ exists;
 			}
 			else if (reader.IsDelete)
@@ -68,7 +68,7 @@ public class RegFileRule : Rule
 	/// <param name="kind">值类型</param>
 	bool CheckValueInDB(string key, string name, object expected, RegistryValueKind kind)
 	{
-		using var keyObj = RegistryHelper.OpenKey(key);
+		using var keyObj = RegHelper.OpenKey(key);
 		var valueInDB = keyObj.GetValue(name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
 
 		// Binary 和 MultiString 返回的是数组，需要用 SequenceEqual 对比。
@@ -95,6 +95,6 @@ public class RegFileRule : Rule
 	{
 		using var file = Utils.CreateTempFile();
 		File.WriteAllText(file.Path, content, Encoding.Unicode);
-		RegistryHelper.Import(file.Path);
+		RegHelper.Import(file.Path);
 	}
 }

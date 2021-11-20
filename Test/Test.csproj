@@ -60,7 +60,7 @@
     <Compile Include="RegFile\RegFileReaderTest.cs" />
     <Compile Include="Rules\RegFileRuleTest.cs" />
     <Compile Include="RegFile\RegFileTokenizerTest.cs" />
-    <Compile Include="RegistryHelperTest.cs" />
+    <Compile Include="RegHelperTest.cs" />
     <Compile Include="RuleFileReaderTest.cs" />
     <Compile Include="Rules\ServiceRuleTest.cs" />
     <Compile Include="STAExecutorTest.cs" />

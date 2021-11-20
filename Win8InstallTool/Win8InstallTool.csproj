@@ -90,7 +90,7 @@
     <Compile Include="Optimizable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegistryHelper.cs" />
+    <Compile Include="RegHelper.cs" />
     <Compile Include="RuleFileReader.cs" />
     <Compile Include="OptimizableSet.cs" />
     <Compile Include="OptimizeAction.cs" />

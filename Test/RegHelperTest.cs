@@ -6,7 +6,7 @@ using System.IO;
 namespace Win8InstallTool;
 
 [TestClass]
-public sealed class RegistryHelperTest
+public sealed class RegHelperTest
 {
 	[TestCleanup]
 	public void Cleanup()
@@ -15,17 +15,17 @@ public sealed class RegistryHelperTest
 		Registry.CurrentUser.DeleteSubKeyTree("_Test_AutoConvert", false);
 	}
 
+	[ExpectedException(typeof(DirectoryNotFoundException))]
 	[TestMethod]
 	public void GetCLSIDValueException()
 	{
-		var clsid = "{66666666-0000-0000-6666-000000000000}";
-		Assert.ThrowsException<DirectoryNotFoundException>(() => RegistryHelper.GetCLSIDValue(clsid));
+		RegHelper.GetCLSIDValue("{66666666-0000-0000-6666-000000000000}");
 	}
 
 	[TestMethod]
 	public void GetCLSIDValue()
 	{
-		var value = RegistryHelper.GetCLSIDValue("{C7657C4A-9F68-40fa-A4DF-96BC08EB3551}");
+		var value = RegHelper.GetCLSIDValue("{C7657C4A-9F68-40fa-A4DF-96BC08EB3551}");
 		Assert.AreEqual("Photo Thumbnail Provider", value);
 	}
 
@@ -39,7 +39,7 @@ public sealed class RegistryHelperTest
 	[TestMethod]
 	public void Import()
 	{
-		RegistryHelper.Import(@"Resources\ImportTest.reg");
+		RegHelper.Import(@"Resources\ImportTest.reg");
 
 		var value = Registry.GetValue(@"HKEY_CURRENT_USER\_Test_Import\Key", "StringValue", null);
 		Assert.AreEqual("中文内容", value);
@@ -52,7 +52,7 @@ public sealed class RegistryHelperTest
 		{
 			key.SetValue("StringValue", "中文内容");
 		}
-		RegistryHelper.Export("ExportTest.reg", @"HKEY_CURRENT_USER\_Test_Import\Key");
+		RegHelper.Export("ExportTest.reg", @"HKEY_CURRENT_USER\_Test_Import\Key");
 
 		var actual = File.ReadAllBytes("ExportTest.reg");
 		var expect = File.ReadAllBytes(@"Resources\ImportTest.reg");
@@ -62,12 +62,13 @@ public sealed class RegistryHelperTest
 	/// <summary>
 	/// 验证 Registry.SetValue() 无法直接接受 .reg 文件里的值格式，必须要先转换。
 	/// </summary>
+	[ExpectedException(typeof(ArgumentException))]
 	[TestMethod]
 	public void AutoConvertOnSetValue()
 	{
 		var key = @"HKEY_CURRENT_USER\_Test_AutoConvert";
 		var text = "50,2d,02,09,60,d1,d6,01";
 		var kind = RegistryValueKind.QWord;
-		Assert.ThrowsException<ArgumentException>(() => Registry.SetValue(key, "a", text, kind));
+		Registry.SetValue(key, "name", text, kind);
 	}
 }

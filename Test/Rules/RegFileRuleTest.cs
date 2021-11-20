@@ -11,7 +11,7 @@ public sealed class RegFileRuleTest
 	[TestInitialize]
 	public void ImportTestData()
 	{
-		RegistryHelper.Import(@"Resources\Kinds.reg");
+		RegHelper.Import(@"Resources\Kinds.reg");
 	}
 
 	[TestCleanup]

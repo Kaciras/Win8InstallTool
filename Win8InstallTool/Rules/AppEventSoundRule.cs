@@ -23,7 +23,7 @@ internal sealed class AppEventSoundRule : Rule
 	{
 		this.target = target;
 
-		using var schemes = RegistryHelper.OpenKey(@$"{ROOT}\Names\{target}");
+		using var schemes = RegHelper.OpenKey(@$"{ROOT}\Names\{target}");
 		var name = (string)schemes.GetValue("");
 		try
 		{
@@ -40,13 +40,13 @@ internal sealed class AppEventSoundRule : Rule
 
 	public bool Check()
 	{
-		using var schemes = RegistryHelper.OpenKey(ROOT);
+		using var schemes = RegHelper.OpenKey(ROOT);
 		return !schemes.GetValue("").Equals(target);
 	}
 
 	public void Optimize()
 	{
-		using var schemes = RegistryHelper.OpenKey(ROOT, true);
+		using var schemes = RegHelper.OpenKey(ROOT, true);
 
 		schemes.SetValue("", target);
 
