@@ -7,8 +7,9 @@ public enum RegTokenType : byte
 	Version,        // 文件版本
 	CreateKey,      // 创建注册表键
 	DeleteKey,      // 删除注册表键
-	ValueName,      // 注册表值的名字
-	Value,          // 注册表值
-	Kind,           // 注册表值的类型
+	Name,			// 注册表值的名字
+	ValuePart,		// 不完整的值，下一行还有
+	Value,          // 读完一个注册表值
+	Kind,           // 值的类型
 	DeleteValue,    // 删除注册表值
 }

@@ -4,10 +4,10 @@ using System.Text;
 namespace Win8InstallTool.RegFile;
 
 /// <summary>
-/// 解析注册表导出文件（.reg）的类，属于最前端的分词器。
+/// 解析注册表导出文件（.reg）的类，属于最前端的分词器。我觉得应该有开源库读取 reg 文件的，
+/// 但是找了一圈也没找到，只能自己撸了。
 /// <br/>
-/// 我觉得应该有开源库读取 reg 文件的，但是找了一圈也没找到，只能自己撸了。
-/// <br/>
+/// 注意本分词器要求文件末尾必须有换行。
 /// <seealso cref="https://support.microsoft.com/en-us/help/310516/how-to-add-modify-or-delete-registry-subkeys-and-values-by-using-a-reg"/>
 /// </summary>
 public ref struct RegFileTokenizer
@@ -15,6 +15,7 @@ public ref struct RegFileTokenizer
 	readonly string content;
 
 	int i;
+	bool hasMoreLines;
 
 	public RegTokenType TokenType { get; private set; }
 
@@ -26,6 +27,7 @@ public ref struct RegFileTokenizer
 
 		Value = null;
 		i = 0;
+		hasMoreLines = false;
 		TokenType = RegTokenType.None;
 	}
 
@@ -34,13 +36,18 @@ public ref struct RegFileTokenizer
 	/// </summary>
 	public bool Read()
 	{
+		if (hasMoreLines)
+		{
+			ConsumeNextPart();
+			return true;
+		}
 		switch (TokenType)
 		{
 			case RegTokenType.None:
 				ConsumeVersion();
 				break;
-			case RegTokenType.ValueName:
-				ConsumeKindOrValue();
+			case RegTokenType.Name:
+				ConsumeKindOrString();
 				break;
 			case RegTokenType.Kind:
 				ConsumeValue();
@@ -87,6 +94,7 @@ public ref struct RegFileTokenizer
 		Value = content.Substring(j, i - j);
 	}
 
+	// 旧版的 REGEDIT4 就不支持了，Win 7 以上都是 5.0 的了。
 	void ConsumeVersion()
 	{
 		const string VER_LINE = "Windows Registry Editor Version 5.00";
@@ -125,18 +133,19 @@ public ref struct RegFileTokenizer
 	void ConsumeDefaultName()
 	{
 		i += 1;
-		TokenType = RegTokenType.ValueName;
+		TokenType = RegTokenType.Name;
 		Value = string.Empty;
 	}
 
 	void ConsumeValueName()
 	{
 		i += 1;
-		TokenType = RegTokenType.ValueName;
+		TokenType = RegTokenType.Name;
 		Value = ReadTo('"');
 	}
 
-	void ConsumeKindOrValue()
+	// 字符串值也放在这了，因为已经读了一个引号，免得回看。
+	void ConsumeKindOrString()
 	{
 		if (content[i++] != '=')
 		{
@@ -148,7 +157,7 @@ public ref struct RegFileTokenizer
 			case '"':
 				TokenType = RegTokenType.Value;
 				i += 1;
-				Value = ReadTo('"');
+				Value = ReadQuoted();
 				break;
 			case '-':
 				i += 1;
@@ -161,6 +170,81 @@ public ref struct RegFileTokenizer
 		}
 	}
 
+	void ConsumeNextPart()
+	{
+		SkipBlankLines();
+
+		if (content[i] == ';')
+		{
+			ConsumeComment();
+		}
+		else
+		{
+			ConsumeValue();
+		}
+	}
+
+	// 类型后面必须立即跟着值，不能是注释然后把值写到下一行。
+	void ConsumeValue()
+	{
+		var j = i;
+
+		for (; i < content.Length; i++)
+		{
+			switch (content[i])
+			{
+				case '\\':
+					TokenType = RegTokenType.ValuePart;
+					hasMoreLines = true;
+					Value = content.Substring(j, i - j);
+					i += 1;
+					return;
+				case ';':
+				case '\r':
+					goto SearchEnd;
+			}
+		}
+
+		if (i == j)
+		{
+			throw new FormatException("数据不完整");
+		}
+
+	SearchEnd:
+
+		TokenType = RegTokenType.Value;
+		hasMoreLines = false;
+		Value = content.Substring(j, i - j);
+	}
+
+	/// <summary>
+	/// 读取被双引号包围的内容，自动处理转义，内容不能有换行。
+	/// </summary>
+	string ReadQuoted()
+	{
+		var buffer = new StringBuilder();
+		var j = i;
+
+		for (; i < content.Length; i++)
+		{
+			switch (content[i])
+			{
+				case '\\':
+					buffer.Append(content, j, i - j);
+					j = i += 1;
+					break;
+				case '"':
+					buffer.Append(content, j, i - j);
+					i += 1;
+					return buffer.ToString();
+				case '\r':
+					throw new FormatException("字符串不能换行");
+			}
+		}
+
+		throw new FormatException("数据不完整");
+	}
+
 	string ReadTo(char ch)
 	{
 		var j = i;
@@ -170,36 +254,6 @@ public ref struct RegFileTokenizer
 			throw new FormatException("数据不完整");
 		}
 		return content.Substring(j, i - j - 1);
-	}
-
-	void ConsumeValue()
-	{
-		var buffer = new StringBuilder();
-		var hasMoreLine = true;
-
-		while (hasMoreLine)
-		{
-			SkipWhiteSpaces();
-
-			var j = i;
-			var k = content.IndexOf('\r', j);
-			i = k + 2;
-
-			if (content[k - 1] == '\\')
-			{
-				k -= 1;
-				hasMoreLine = true;
-			}
-			else
-			{
-				hasMoreLine = false;
-			}
-
-			buffer.Append(content, j, k - j);
-		}
-
-		TokenType = RegTokenType.Value;
-		Value = buffer.ToString();
 	}
 
 	void SkipWhiteSpaces()
