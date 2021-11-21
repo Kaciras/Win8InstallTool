@@ -99,6 +99,6 @@ public sealed class RegFileTokenizerTest
 
 		Assert.IsTrue(tokenizer.Read());
 		Assert.AreEqual(RegTokenType.Value, tokenizer.TokenType);
-		Assert.AreEqual("00,", tokenizer.Value);
+		Assert.AreEqual("00", tokenizer.Value);
 	}
 }

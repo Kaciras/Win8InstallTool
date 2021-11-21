@@ -8,10 +8,22 @@ namespace Win8InstallTool;
 public sealed class STAExecutorTest
 {
 	// STAExecutor 是全局的，如果该测试失败可能影响到其他测试。
+	[ExpectedException(typeof(ArgumentException))]
 	[TestMethod]
 	public void SetSyncContext()
 	{
-		Assert.ThrowsException<ArgumentException>(() => STAExecutor.SetSyncContext(new ThreadSyncContext()));
+		STAExecutor.SetSyncContext(new ThreadSyncContext());
+	}
+
+	[TestMethod]
+	public void Run()
+	{
+		var state = ApartmentState.Unknown;
+		STAExecutor.Run(() =>
+		{
+			state = Thread.CurrentThread.GetApartmentState();
+		});
+		Assert.AreEqual(ApartmentState.STA, state);
 	}
 
 	class ThreadSyncContext : SynchronizationContext

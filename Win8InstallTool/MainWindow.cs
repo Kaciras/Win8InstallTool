@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Win8InstallTool;
 
-public sealed partial class MainWindow : Form
+sealed partial class MainWindow : Form
 {
 	readonly RuleProvider provider;
 

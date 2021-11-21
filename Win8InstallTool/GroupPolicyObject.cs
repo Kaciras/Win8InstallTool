@@ -27,7 +27,7 @@ public abstract class GroupPolicyObject
 	/// <summary>
 	/// This application
 	/// </summary>
-	static readonly Guid LocalGuid = new Guid(Assembly.GetExecutingAssembly().GetCustomAttribute<GuidAttribute>().Value);
+	static readonly Guid LocalGuid = new(Assembly.GetExecutingAssembly().GetCustomAttribute<GuidAttribute>().Value);
 
 	protected IGroupPolicyObject Instance = null;
 

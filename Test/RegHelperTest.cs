@@ -15,6 +15,14 @@ public sealed class RegHelperTest
 		Registry.CurrentUser.DeleteSubKeyTree("_Test_AutoConvert", false);
 	}
 
+	[DataRow(@"INVALID\Sub")]
+	[DataRow(@"INVALID")]
+	[DataTestMethod]
+	public void OpenKeyNonExists(string path)
+	{
+		Assert.IsNull(RegHelper.OpenKey(path));
+	}
+
 	[ExpectedException(typeof(DirectoryNotFoundException))]
 	[TestMethod]
 	public void GetCLSIDValueException()
@@ -29,8 +37,17 @@ public sealed class RegHelperTest
 		Assert.AreEqual("Photo Thumbnail Provider", value);
 	}
 
+	[DataRow(@"INVALID\Sub", false)]
+	[DataRow(@"INVALID", false)]
+	[DataRow(@"HKCR\CLSID", true)]
+	[DataTestMethod]
+	public void KeyExists(string path, bool expected)
+	{
+		Assert.AreEqual(expected, RegHelper.KeyExists(path));
+	}
+
 	[TestMethod]
-	public void ContainsKey()
+	public void ContainsSubKey()
 	{
 		Assert.IsTrue(Registry.LocalMachine.ContainsSubKey(@"SOFTWARE\Microsoft"));
 		Assert.IsFalse(Registry.LocalMachine.ContainsSubKey(@"SOFTWARE\Xicrosoft"));

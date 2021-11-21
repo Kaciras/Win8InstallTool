@@ -1,34 +1,33 @@
-﻿
-namespace Win8InstallTool
+﻿namespace Win8InstallTool;
+
+partial class AboutWindow
 {
-	partial class AboutWindow
+	/// <summary>
+	/// Required designer variable.
+	/// </summary>
+	private System.ComponentModel.IContainer components = null;
+
+	/// <summary>
+	/// Clean up any resources being used.
+	/// </summary>
+	/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+	protected override void Dispose(bool disposing)
 	{
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.IContainer components = null;
-
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
+		if (disposing && (components != null))
 		{
-			if (disposing && (components != null))
-			{
-				components.Dispose();
-			}
-			base.Dispose(disposing);
+			components.Dispose();
 		}
+		base.Dispose(disposing);
+	}
 
-		#region Windows Form Designer generated code
+	#region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+	/// <summary>
+	/// Required method for Designer support - do not modify
+	/// the contents of this method with the code editor.
+	/// </summary>
+	private void InitializeComponent()
+	{
 			this.closeButton = new System.Windows.Forms.Button();
 			this.linkLabel = new System.Windows.Forms.LinkLabel();
 			this.label1 = new System.Windows.Forms.Label();
@@ -108,14 +107,13 @@ namespace Win8InstallTool
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
-		}
-
-		#endregion
-
-		private System.Windows.Forms.Button closeButton;
-		private System.Windows.Forms.LinkLabel linkLabel;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label nameLabel;
-		private System.Windows.Forms.Label versionLabel;
 	}
+
+	#endregion
+
+	private System.Windows.Forms.Button closeButton;
+	private System.Windows.Forms.LinkLabel linkLabel;
+	private System.Windows.Forms.Label label1;
+	private System.Windows.Forms.Label nameLabel;
+	private System.Windows.Forms.Label versionLabel;
 }

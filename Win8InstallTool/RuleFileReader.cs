@@ -28,8 +28,10 @@ public sealed class RuleFileReader
 
 	/// <summary>
 	/// 反正都读取的是预定义的资源，限制死换行符可以避免一些的麻烦。
+	/// 
+	/// 该函数返回异常而不是抛出，调用方使用 throw 这样不会破坏控制流分析。
 	/// </summary>
-	void ThrowCR() => throw new ArgumentException("规则文件只能用 LF 换行");
+	Exception CR() => new ArgumentException("规则文件只能用 LF 换行");
 
 	/// <summary>
 	/// 跳过空白和注释行，准备读取新的条目。
@@ -44,8 +46,7 @@ public sealed class RuleFileReader
 			switch (content[i])
 			{
 				case '\r':
-					ThrowCR();
-					break;
+					throw CR();
 				case '#':
 					i = content.IndexOf('\n', i);
 					break;
@@ -87,8 +88,7 @@ public sealed class RuleFileReader
 			switch (content[k])
 			{
 				case '\r':
-					ThrowCR();
-					break;
+					throw CR();
 				case '\n':
 					goto SearchEnd;
 			}

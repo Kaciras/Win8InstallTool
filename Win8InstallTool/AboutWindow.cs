@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace Win8InstallTool;
 
-public partial class AboutWindow : Form
+sealed partial class AboutWindow : Form
 {
 	public AboutWindow()
 	{
 		InitializeComponent();
 
-		var version = Assembly.GetExecutingAssembly().GetName().Version;
+		var version = typeof(AboutWindow).Assembly.GetName().Version;
 		versionLabel.Text = $"版本 {version.ToString(3)}，更新于 2021-11-11";
 	}
 

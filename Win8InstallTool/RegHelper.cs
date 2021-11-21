@@ -13,6 +13,7 @@ public static class RegHelper
 	/// <br/>
 	/// <see href="https://referencesource.microsoft.com/#mscorlib/microsoft/win32/registry.cs,94"/>
 	/// </summary>
+	/// <returns>注册表键，如果不存在则为 null</returns>
 	public static RegistryKey OpenKey(string path, bool wirte = false)
 	{
 		if (path == null)
@@ -35,7 +36,7 @@ public static class RegHelper
 		else
 		{
 			var pathRemain = path.Substring(i + 1, path.Length - i - 1);
-			return basekey.OpenSubKey(pathRemain, wirte);
+			return basekey?.OpenSubKey(pathRemain, wirte);
 		}
 	}
 
@@ -48,20 +49,26 @@ public static class RegHelper
 		"HKEY_CURRENT_CONFIG" or "HKCC" => Registry.CurrentConfig,
 		"HKEY_PERFORMANCE_DATA" => Registry.PerformanceData,
 		"HKEY_DYN_DATA" => RegistryKey.OpenBaseKey(RegistryHive.DynData, RegistryView.Default),
-		_ => throw new ArgumentException("InvalidKeyName: " + name),
+		_ => null, // 微软的 API 在不存在时返回 null，这里也保持一致而不是用异常。
 	};
 
+	/// <summary>
+	/// 便捷的函数用于检查一个键是否存在于注册表中。
+	/// </summary>
 	public static bool KeyExists(string path)
 	{
-		var i = path.IndexOf('\\');
-		if (i == -1)
+		var i = path.IndexOf('\\') + 1;
+		if (i == 0)
 		{
-			GetBaseKey(path);
+			return GetBaseKey(path) != null;
 		}
-		var basekeyName = path.Substring(0, i);
-		var remain = path.Substring(i + 1, path.Length - i - 1);
-
-		return GetBaseKey(basekeyName).ContainsSubKey(remain);
+		var basekey = GetBaseKey(path.Substring(0, i - 1));
+		if (basekey == null)
+		{
+			return false;
+		}
+		path = path.Substring(i, path.Length - i);
+		return basekey.ContainsSubKey(path);
 	}
 
 	/// <summary>
