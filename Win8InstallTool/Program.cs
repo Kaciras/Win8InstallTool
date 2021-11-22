@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 
 [assembly: InternalsVisibleTo("Test")]
+[assembly: InternalsVisibleTo("Benchmark")]
 namespace Win8InstallTool;
 
 static class Program
