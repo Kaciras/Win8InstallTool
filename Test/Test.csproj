@@ -105,6 +105,9 @@
     <None Include="Resources\Registry\Kinds.reg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\Registry\Search.reg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Win8InstallTool\Win8InstallTool.csproj">

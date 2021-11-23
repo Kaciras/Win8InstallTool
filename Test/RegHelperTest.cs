@@ -41,7 +41,7 @@ public sealed class RegHelperTest
 
 	[DataRow(@"INVALID\Sub", false)]
 	[DataRow(@"INVALID", false)]
-	[DataRow(@"HKCR\CLSID", true)]
+	[DataRow(@"HKCC\System", true)]
 	[DataTestMethod]
 	public void KeyExists(string path, bool expected)
 	{
@@ -74,6 +74,21 @@ public sealed class RegHelperTest
 		RegHelper.Export("ExportTest.reg", @"HKEY_CURRENT_USER\_Test_Import\Key");
 
 		Assert.AreEqual(Resources.ImportTest, File.ReadAllText("ExportTest.reg"));
+	}
+
+    [TestMethod]
+    public void Search()
+    {
+		RegHelper.Import(@"Resources\Registry\Search.reg");
+        try
+        {
+			var result = RegHelper.Search(@"HKCR\测试项", "key");
+			CollectionAssert.AreEquivalent(new string[]{ "foo", "bar" }, result);
+        }
+        finally
+        {
+			Registry.ClassesRoot.DeleteSubKeyTree(@"测试项");
+		}
 	}
 
 	/// <summary>

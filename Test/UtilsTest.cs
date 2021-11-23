@@ -6,7 +6,7 @@ using static System.Environment;
 namespace Win8InstallTool.Test;
 
 [TestClass]
-public class UtilsTest
+public sealed class UtilsTest
 {
 	// 本来应该用个可控的程序来测试的，但我懒得搞于是就用系统自带的 sc.exe 了。
 	[TestMethod]

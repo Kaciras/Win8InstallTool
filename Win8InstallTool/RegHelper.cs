@@ -16,11 +16,6 @@ public static class RegHelper
 	/// <returns>注册表键，如果不存在则为 null</returns>
 	public static RegistryKey OpenKey(string path, bool wirte = false)
 	{
-		if (path == null)
-		{
-			throw new ArgumentNullException(nameof(path));
-		}
-
 		var basekeyName = path;
 		var i = path.IndexOf('\\');
 		if (i != -1)
@@ -101,7 +96,7 @@ public static class RegHelper
 	/// <param name="root">在此目录中搜索</param>
 	/// <param name="key">要搜索的键路径</param>
 	/// <returns>子项名字列表</returns>
-	public static IList<string> Search(string root, string key)
+	public static List<string> Search(string root, string key)
 	{
 		using var rootKey = OpenKey(root);
 		return rootKey.GetSubKeyNames()

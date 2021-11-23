@@ -12,7 +12,7 @@ namespace Win8InstallTool.Test;
 /// 代码参考了 PowerShell：
 /// https://github.com/PowerShell/PowerShell/blob/master/src/Microsoft.PowerShell.Commands.Management/commands/management/Service.cs
 /// </summary>
-class WinSvcApi
+sealed class WinSvcApi
 {
 	public string Name { get; }
 

@@ -127,6 +127,29 @@ namespace Win8InstallTool.Test.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Windows Registry Editor Version 5.00
         ///
+        ///[HKEY_CLASSES_ROOT\测试项]
+        ///
+        ///[HKEY_CLASSES_ROOT\测试项\bar]
+        ///
+        ///[HKEY_CLASSES_ROOT\测试项\bar\key]
+        ///
+        ///[HKEY_CLASSES_ROOT\测试项\baz]
+        ///
+        ///[HKEY_CLASSES_ROOT\测试项\foo]
+        ///
+        ///[HKEY_CLASSES_ROOT\测试项\foo\key]
+        ///
+        ///.
+        /// </summary>
+        internal static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windows Registry Editor Version 5.00
+        ///
         ///[HKEY_CURRENT_USER\_Test_Kinds]
         ///&quot;Multi&quot;=hex(7):53,00,74,00,\
         ///  72,00,30,00,00\

@@ -4,7 +4,7 @@ using System;
 namespace Win8InstallTool.Test;
 
 [TestClass]
-public class GroupPolicyTest
+public sealed class GroupPolicyTest
 {
 	// 单元测试的线程也是STA，需要手动创建新的
 	[TestMethod]

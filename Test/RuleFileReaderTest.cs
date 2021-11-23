@@ -4,7 +4,7 @@ using System;
 namespace Win8InstallTool.Test;
 
 [TestClass]
-public class RuleFileReaderTest
+public sealed class RuleFileReaderTest
 {
 	[TestMethod]
 	public void EmptyContent()

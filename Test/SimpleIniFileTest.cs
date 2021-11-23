@@ -3,7 +3,7 @@
 namespace Win8InstallTool.Test;
 
 [TestClass]
-public class SimpleIniFileTest
+public sealed class SimpleIniFileTest
 {
 	[TestMethod]
 	public void ReadNonExists()
