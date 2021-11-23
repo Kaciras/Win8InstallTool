@@ -1,9 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Win32;
-using System.IO;
-using static System.Environment;
+using Win8InstallTool.Rules;
+using Win8InstallTool.Test.Properties;
 
-namespace Win8InstallTool.Rules;
+namespace Win8InstallTool.Test.Rules;
 
 [TestClass]
 public sealed class RegFileRuleTest
@@ -11,7 +12,7 @@ public sealed class RegFileRuleTest
 	[TestInitialize]
 	public void ImportTestData()
 	{
-		RegHelper.Import(@"Resources\Kinds.reg");
+		RegHelper.Import(@"Resources\Registry\Kinds.reg");
 	}
 
 	[TestCleanup]
@@ -24,24 +25,21 @@ public sealed class RegFileRuleTest
 	[TestMethod]
 	public void CheckNoNeeded()
 	{
-		var content = File.ReadAllText(@"Resources\Kinds.reg");
-		var rule = new RegFileRule("test", "test", content);
+		var rule = new RegFileRule("test", "test", Resources.Kinds);
 		Assert.IsFalse(rule.Check());
 	}
 
 	[TestMethod]
 	public void Check()
 	{
-		var content = File.ReadAllText(@"Resources\ImportTest.reg");
-		var rule = new RegFileRule("test", "test", content);
+		var rule = new RegFileRule("test", "test", Resources.ImportTest);
 		Assert.IsTrue(rule.Check());
 	}
 
 	[TestMethod]
 	public void Optimize()
 	{
-		var content = File.ReadAllText(@"Resources\ImportTest.reg");
-		var rule = new RegFileRule("test", "test", content);
+		var rule = new RegFileRule("test", "test", Resources.ImportTest);
 
 		rule.Optimize();
 

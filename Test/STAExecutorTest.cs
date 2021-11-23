@@ -2,7 +2,7 @@
 using System;
 using System.Threading;
 
-namespace Win8InstallTool;
+namespace Win8InstallTool.Test;
 
 [TestClass]
 public sealed class STAExecutorTest

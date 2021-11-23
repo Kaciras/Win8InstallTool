@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Win8InstallTool;
+namespace Win8InstallTool.Test;
 
 static class TestHelper
 {

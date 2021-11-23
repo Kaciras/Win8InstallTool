@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace Win8InstallTool;
+namespace Win8InstallTool.Test;
 
 [TestClass]
 public class RuleFileReaderTest

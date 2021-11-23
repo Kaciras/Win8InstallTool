@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Benchmark.Properties {
+namespace Win8InstallTool.Benchmark.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Benchmark.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Benchmark.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Win8InstallTool.Benchmark.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -71,9 +71,10 @@ namespace Benchmark.Properties {
         ///&quot;TaskbarAnimations&quot;=dword:00000000					;任务栏中的动画
         ///&quot;IconsOnly&quot;=dword:00000000							;显示缩略图，而不是显示图标
         ///
-        ///[HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM]
-        ///&quot;EnableAeroPeek&quot;=dword:00000000						;启用 Peak 预览
-        ///&quot;AlwaysHibernateThumbnails&quot;=dword:00000000	 [rest of string was truncated]&quot;;.
+        ///[HKEY_CURRENT_USER\Control Panel\Desktop]
+        ///&quot;DragFullWindows&quot;=&quot;1&quot;								;拖动时显示窗口内容
+        ///&quot;FontSmoothing&quot;=&quot;0&quot;									;平滑屏幕字体边缘
+        ///&quot;UserPreferencesMask&quot;= [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RegFile {
             get {

@@ -1,8 +1,8 @@
-﻿using Benchmark.Properties;
+﻿using Win8InstallTool.Benchmark.Properties;
 using BenchmarkDotNet.Attributes;
 using Win8InstallTool.RegFile;
 
-namespace Benchmark;
+namespace Win8InstallTool.Benchmark;
 
 public class RegFilePerf
 {

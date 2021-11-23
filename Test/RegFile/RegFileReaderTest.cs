@@ -1,9 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Win32;
-using static System.Environment;
+using Win8InstallTool.RegFile;
+using Win8InstallTool.Test.Properties;
 
-namespace Win8InstallTool.RegFile;
+namespace Win8InstallTool.Test.RegFile;
 
 [TestClass]
 public sealed class RegFileReaderTest
@@ -11,8 +12,7 @@ public sealed class RegFileReaderTest
 	[TestMethod]
 	public void ReadKey()
 	{
-		var content = File.ReadAllText("Resources/ImportTest.reg");
-		var reader = new RegFileReader(content);
+		var reader = new RegFileReader(Resources.ImportTest);
 
 		Assert.IsTrue(reader.Read());
 		Assert.IsTrue(reader.IsKey);
@@ -22,13 +22,44 @@ public sealed class RegFileReaderTest
 	[TestMethod]
 	public void Multipart()
 	{
-		var content = File.ReadAllText("Resources/ValueParts.reg");
-		var reader = new RegFileReader(content);
+		var reader = new RegFileReader(Resources.ValueParts);
 
 		Assert.IsTrue(reader.Read());
 		Assert.IsTrue(reader.Read());
 
 		var expected = new string[] { "Str0", "Str1" };
 		CollectionAssert.AreEqual(expected, (string[])reader.Value);
+	}
+
+	[ExpectedException(typeof(FormatException))]
+	[TestMethod]
+    public void TruncatedValue()
+    {
+		var reader = new RegFileReader(Resources.TruncatedValue);
+		Assert.IsTrue(reader.Read());
+		reader.Read();
+	}
+
+	[ExpectedException(typeof(FormatException))]
+    [TestMethod]
+    public void InvalidKind()
+    {
+		var reader = new RegFileReader(Resources.InvalidKind);
+
+		Assert.IsTrue(reader.Read());
+		reader.Read();
+	}
+
+	[TestMethod]
+    public void ReadEmpty()
+    {
+		Assert.IsFalse(new RegFileReader("").Read());
+	}
+
+	[ExpectedException(typeof(FormatException))]
+	[TestMethod]
+    public void NoKey()
+    {
+		new RegFileReader(Resources.NoKey).Read();
 	}
 }

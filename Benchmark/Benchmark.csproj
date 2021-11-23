@@ -8,7 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{042280DD-A531-44BA-8DA7-AFDBEFE524A2}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Benchmark</RootNamespace>
+    <RootNamespace>Win8InstallTool.Benchmark</RootNamespace>
     <AssemblyName>Benchmark</AssemblyName>
     <LangVersion>latest</LangVersion>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>

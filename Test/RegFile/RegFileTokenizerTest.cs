@@ -1,8 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+using Win8InstallTool.RegFile;
+using Win8InstallTool.Test.Properties;
 
-namespace Win8InstallTool.RegFile;
+namespace Win8InstallTool.Test.RegFile;
 
 [TestClass]
 public sealed class RegFileTokenizerTest
@@ -11,7 +13,6 @@ public sealed class RegFileTokenizerTest
 
 	[DataRow("@=dword:00000123\r\n")]
 	[DataRow("; comments\r\n")]
-	[DataRow("")]
 	[ExpectedException(typeof(FormatException))]
 	[DataTestMethod]
 	public void VersionFirst(string content)
@@ -70,8 +71,7 @@ public sealed class RegFileTokenizerTest
 	[TestMethod]
 	public void ValueParts()
 	{
-		var content = File.ReadAllText("Resources/ValueParts.reg");
-		var tokenizer = new RegFileTokenizer(content);
+		var tokenizer = new RegFileTokenizer(Resources.ValueParts);
 		tokenizer.Read(); // Version
 		tokenizer.Read(); // Key
 		tokenizer.Read(); // Name

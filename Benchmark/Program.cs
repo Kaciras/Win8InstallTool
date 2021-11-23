@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
-using Benchmark;
 using System;
+using Win8InstallTool.Benchmark;
 
 BenchmarkRunner.Run<RegFilePerf>();
 Console.ReadKey();

@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using static System.Environment;
 
-namespace Win8InstallTool;
+namespace Win8InstallTool.Test;
 
 [TestClass]
 public class UtilsTest

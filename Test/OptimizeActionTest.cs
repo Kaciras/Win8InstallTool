@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Win8InstallTool;
+namespace Win8InstallTool.Test;
 
 [TestClass]
 public sealed class OptimizeActionTest

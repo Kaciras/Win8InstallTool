@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace Win8InstallTool;
+namespace Win8InstallTool.Test;
 
 [TestClass]
 public class GroupPolicyTest
@@ -10,7 +10,7 @@ public class GroupPolicyTest
 	[TestMethod]
 	public void NonSTAThread()
 	{
-		Action action = () => TestHelper.RunInNewThread(() => new ComputerGroupPolicyObject());
+		static void action() => TestHelper.RunInNewThread(() => new ComputerGroupPolicyObject());
 		Assert.ThrowsException<Exception>(action, "GPO can only be accessed in STA thread");
 	}
 

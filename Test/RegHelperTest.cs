@@ -2,8 +2,10 @@
 using Microsoft.Win32;
 using System;
 using System.IO;
+using System.Text;
+using Win8InstallTool.Test.Properties;
 
-namespace Win8InstallTool;
+namespace Win8InstallTool.Test;
 
 [TestClass]
 public sealed class RegHelperTest
@@ -56,7 +58,7 @@ public sealed class RegHelperTest
 	[TestMethod]
 	public void Import()
 	{
-		RegHelper.Import(@"Resources\ImportTest.reg");
+		RegHelper.Import(@"Resources\Registry\ImportTest.reg");
 
 		var value = Registry.GetValue(@"HKEY_CURRENT_USER\_Test_Import\Key", "StringValue", null);
 		Assert.AreEqual("中文内容", value);
@@ -71,9 +73,7 @@ public sealed class RegHelperTest
 		}
 		RegHelper.Export("ExportTest.reg", @"HKEY_CURRENT_USER\_Test_Import\Key");
 
-		var actual = File.ReadAllBytes("ExportTest.reg");
-		var expect = File.ReadAllBytes(@"Resources\ImportTest.reg");
-		CollectionAssert.AreEqual(expect, actual);
+		Assert.AreEqual(Resources.ImportTest, File.ReadAllText("ExportTest.reg"));
 	}
 
 	/// <summary>

@@ -2,7 +2,7 @@
 using System.IO;
 using TaskScheduler;
 
-namespace Win8InstallTool;
+namespace Win8InstallTool.Test;
 
 [TestClass]
 public sealed class TaskSchedulerManagerTest
