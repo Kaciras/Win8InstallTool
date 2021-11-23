@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Win8InstallTool.RegFile;
 using Win8InstallTool.Test.Properties;

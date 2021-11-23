@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -63,10 +64,9 @@ public ref struct RegFileReader
 	/// </summary>
 	bool ReadFirst()
 	{
-		if (!tokenizer.Read())
-		{
-			return false;
-		}
+		// Tokenizer 在第一行不是正确的版本号时会出异常。
+		tokenizer.Read();
+
 		while (tokenizer.Read())
 		{
 			switch (tokenizer.TokenType)
@@ -119,20 +119,7 @@ public ref struct RegFileReader
 		Name = tokenizer.Value;
 		IsKey = false;
 
-		if (!tokenizer.Read())
-		{
-			throw new FormatException("缺少值");
-		}
-
-		if (tokenizer.TokenType == RegTokenType.Kind)
-		{
-			Kind = ParseKind(tokenizer.Value);
-			tokenizer.Read();
-		} 
-		else
-		{
-			Kind = RegistryValueKind.String;
-		}
+		TryGetKind();
 
 		switch (tokenizer.TokenType)
 		{
@@ -148,6 +135,31 @@ public ref struct RegFileReader
 				break;
 			default:
 				throw new FormatException();
+		}
+	}
+
+	/// <summary>
+	/// 值名后面有两种情况：类型或字符串值，在这里读取并检查。
+	/// </summary>
+	void TryGetKind()
+    {
+		if (!tokenizer.Read())
+		{
+			throw new FormatException("缺少值或类型");
+		}
+
+		if (tokenizer.TokenType == RegTokenType.Kind)
+		{
+			Kind = ParseKind(tokenizer.Value);
+
+			if (!tokenizer.Read())
+			{
+				throw new FormatException("缺少值");
+			}
+		}
+		else
+		{
+			Kind = RegistryValueKind.String;
 		}
 	}
 
@@ -218,7 +230,7 @@ public ref struct RegFileReader
 			RegistryValueKind.DWord => int.Parse(text, NumberStyles.HexNumber),
 			RegistryValueKind.QWord => BitConverter.ToInt64(ToBytes(), 0),
 			RegistryValueKind.String => text,
-			_ => throw new Exception("无效的注册表值类型：" + kind),
+			_ => throw new InvalidProgramException("不会运行到这一句"),
 		};
 	}
 }

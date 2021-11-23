@@ -1,6 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.IO;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Win8InstallTool.RegFile;
 using Win8InstallTool.Test.Properties;
 
@@ -9,7 +8,7 @@ namespace Win8InstallTool.Test.RegFile;
 [TestClass]
 public sealed class RegFileTokenizerTest
 {
-	const string VERSION_LINE = "Windows Registry Editor Version 5.00\r\n";
+	const string VERSION_LINE = "Windows Registry Editor Version 5.00\r\n\r\n";
 
 	[DataRow("@=dword:00000123\r\n")]
 	[DataRow("; comments\r\n")]
@@ -20,7 +19,10 @@ public sealed class RegFileTokenizerTest
 		new RegFileTokenizer(content).Read();
 	}
 
-	[DataRow("foobar")]
+	//[DataRow("[ke\r\ny]")]      // Key name contains a new line
+	//[DataRow("[")]				// Unclosed key
+	//[DataRow("\"na\r\nme\"")]   // Name contains a new line
+	[DataRow("foobar")]			// Name not wrapped with quote
 	[ExpectedException(typeof(FormatException))]
 	[DataTestMethod]
 	public void InvalidTopLevel(string content)
@@ -29,19 +31,34 @@ public sealed class RegFileTokenizerTest
 		var tokenizer = new RegFileTokenizer(content);
 		Assert.IsTrue(tokenizer.Read());
 
-		tokenizer.Read(); // throw FormatException
+		tokenizer.Read(); // ref struct cannot used in Assert.ThrowsException
+	}
+
+	[DataRow("=\"value")]       // Unclosed quote in value
+	[DataRow("hex:00")]			// Missing = 
+	[DataRow("=he\r\nx:00")]    // Kind contains a new line
+	[ExpectedException(typeof(FormatException))]
+	[DataTestMethod]
+	public void InvalidValue(string content)
+    {
+		content = VERSION_LINE + "@" + content + "\r\n";
+		var tokenizer = new RegFileTokenizer(content);
+		tokenizer.Read();	// Version
+		tokenizer.Read();	// Name
+		tokenizer.Read();	// Value or Kind
 	}
 
 	[DataRow("\"name\"=-", RegTokenType.Name, RegTokenType.DeleteValue)]
 	[DataRow("[key] ;注释", RegTokenType.CreateKey, RegTokenType.Comment)]
-	[DataRow("\"name\"=dword:00000123 ;注释",
+	[DataRow("[-key]", RegTokenType.DeleteKey)]
+	[DataRow("\"name\"=dword:00000123;",
 		RegTokenType.Name, RegTokenType.Kind, RegTokenType.Value, RegTokenType.Comment)]
 	[DataTestMethod]
 	public void ReadTokens(string content, params RegTokenType[] tokens)
 	{
 		content = VERSION_LINE + content + "\r\n";
 		var tokenizer = new RegFileTokenizer(content);
-		tokenizer.Read(); // 跳过版本行。
+		tokenizer.Read();
 
 		foreach (var token in tokens)
 		{

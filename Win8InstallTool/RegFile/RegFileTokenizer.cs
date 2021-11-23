@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 namespace Win8InstallTool.RegFile;
@@ -12,6 +13,14 @@ namespace Win8InstallTool.RegFile;
 /// </summary>
 public ref struct RegFileTokenizer
 {
+	/*
+	 * 每个标记加上换行符，用于 IndexOfAny 搜索同时检查是否有换行。
+	 * 因为 switch 只能用于常量，懒得写三个所以只能这样了。
+	 */
+	static readonly char[] KEY_END = new char[] { ']', '\r' };
+	static readonly char[] QUOTE = new char[] { '"', '\r' };
+	static readonly char[] KIND_END = new char[] { ':', '\r' };
+
 	readonly string content;
 
 	int i;
@@ -32,61 +41,87 @@ public ref struct RegFileTokenizer
 	}
 
 	/// <summary>
-	/// 读取下一个 Token，如果已经读完则返回false，否则返回true
+	/// 读取下一个 Token，如果已经读完则返回 false，否则返回 true
 	/// </summary>
 	public bool Read()
+    {
+		// 用异常表示结束，省去了大量的 return。
+		// 虽然有违异常的原则，但仅内部使用也没问题。
+		// 实测无论哪种写性能都是微妙级，无需关心。
+		try
+		{
+			Dispatch();
+			return true;
+		}
+		catch (EndOfStreamException)
+        {
+			return false;
+		}
+	}
+
+	void Dispatch()
 	{
 		if (hasMoreLines)
 		{
 			ConsumeNextPart();
-			return true;
+			return;
 		}
 		switch (TokenType)
 		{
 			case RegTokenType.None:
-				ConsumeVersion();
+				ReadVersion();
 				break;
 			case RegTokenType.Name:
 				ConsumeKindOrString();
 				break;
 			case RegTokenType.Kind:
-				ConsumeValue();
+				ReadValue();
 				break;
 			default:
-				SkipBlankLines();
-				return ConsumeTopLevel();
+				ConsumeTopLevel();
+				break;
 		}
-
-		return true;
 	}
 
-	bool ConsumeTopLevel()
+	void ConsumeTopLevel()
 	{
-		if (i >= content.Length)
-		{
-			return false;
-		}
+		SkipBlankLines();
+
 		switch (content[i])
 		{
 			case '@':
-				ConsumeDefaultName();
+				ReadDefaultName();
 				break;
 			case '"':
-				ConsumeName();
+				ReadName();
 				break;
 			case '[':
-				ConsumeKey();
+				ReadKey();
 				break;
 			case ';':
-				ConsumeComment();
+				ReadComment();
 				break;
 			default:
-				throw new FormatException("Invalid Token: " + content[i]);
+				throw Unexpected(content[i]);
 		}
-		return true;
 	}
 
-	void ConsumeComment()
+	// 上一个词是不完整的值，接下来只允许值和注释
+	void ConsumeNextPart()
+	{
+		SkipBlankLines();
+
+		if (content[i] != ';')
+		{
+			ReadValue();
+		}
+		else
+		{
+			ReadComment();
+		}
+	}
+
+	void ReadComment()
 	{
 		TokenType = RegTokenType.Comment;
 		var j = i + 1;
@@ -95,15 +130,17 @@ public ref struct RegFileTokenizer
 	}
 
 	// 旧版的 REGEDIT4 就不支持了，Win 7 以上都是 5.0 的了。
-	void ConsumeVersion()
+	void ReadVersion()
 	{
 		const string VER_LINE = "Windows Registry Editor Version 5.00";
+
+		CheckHasValue();
 
 		var j = i;
 		i = content.IndexOf('\r', j);
 		if (i == -1)
 		{
-			throw new FormatException("数据不完整");
+			throw new FormatException("Reg 文件末尾必须要有空行");
 		}
 
 		TokenType = RegTokenType.Version;
@@ -115,7 +152,7 @@ public ref struct RegFileTokenizer
 		}
 	}
 
-	void ConsumeKey()
+	void ReadKey()
 	{
 		if (content[++i] == '-')
 		{
@@ -127,32 +164,31 @@ public ref struct RegFileTokenizer
 			TokenType = RegTokenType.CreateKey;
 		}
 
-		Value = ReadTo(']');
+		Value = InlineReadTo(KEY_END);
 	}
 
-	void ConsumeDefaultName()
+	void ReadDefaultName()
 	{
 		i += 1;
 		TokenType = RegTokenType.Name;
 		Value = string.Empty;
 	}
 
-	void ConsumeName()
+	void ReadName()
 	{
 		i += 1;
 		TokenType = RegTokenType.Name;
-		Value = ReadTo('"');
+		Value = InlineReadTo(QUOTE);
 	}
 
 	// 字符串值也放在这了，因为已经读了一个引号，免得回看。
 	void ConsumeKindOrString()
 	{
-		if (content[i++] != '=')
+		if (content[i] != '=')
 		{
-			throw new FormatException("值名后面必须紧跟等号");
+			throw Unexpected(content[i]);
 		}
-
-		switch (content[i])
+		switch (content[++i])
 		{
 			case '"':
 				TokenType = RegTokenType.Value;
@@ -164,28 +200,14 @@ public ref struct RegFileTokenizer
 				TokenType = RegTokenType.DeleteValue;
 				break;
 			default:
-				Value = ReadTo(':');
+				Value = InlineReadTo(KIND_END);
 				TokenType = RegTokenType.Kind;
 				break;
 		}
 	}
 
-	void ConsumeNextPart()
-	{
-		SkipBlankLines();
-
-		if (content[i] == ';')
-		{
-			ConsumeComment();
-		}
-		else
-		{
-			ConsumeValue();
-		}
-	}
-
 	// 类型后面必须立即跟着值，不能是注释然后把值写到下一行。
-	void ConsumeValue()
+	void ReadValue()
 	{
 		var j = i;
 
@@ -237,20 +259,51 @@ public ref struct RegFileTokenizer
 			}
 		}
 
-		throw new FormatException("数据不完整");
+		throw new FormatException("Reg 文件末尾必须要有空行");
 	}
 
-	string ReadTo(char ch)
+	/// <summary>
+	/// 从当前位置读取到指定字符出现的位置，中间不允许换行。
+	/// </summary>
+	/// <param name="ch">结束字符</param>
+	/// <returns>读取到的字符串</returns>
+	string InlineReadTo(char[] chars)
 	{
 		var j = i;
-		i = content.IndexOf(ch, j) + 1;
-		if (i == 0)
+		i = content.IndexOfAny(chars, i);
+
+		if (i == -1)
 		{
 			throw new FormatException("数据不完整");
 		}
-		return content.Substring(j, i - j - 1);
+		if (content[i] == '\r')
+		{
+			throw new FormatException("不能换行");
+		}
+
+		return content.Substring(j, (i++) - j);
 	}
 
+	/// <summary>
+	/// 创建一个表示遇到非预期字符的异常，因为代码较长所以单独提出来。
+	/// </summary>
+	/// <param name="ch">读到的字符</param>
+	Exception Unexpected(char ch)
+    {
+		return new FormatException("Unexpected char: " + ch);
+	}
+
+	void CheckHasValue()
+	{
+		if (i >= content.Length)
+		{
+			throw new EndOfStreamException();
+		}
+	}
+
+	/// <summary>
+	/// 跳过空白部分，顺带检查了下还有没有更多内容。
+	/// </summary>
 	void SkipBlankLines()
 	{
 		for (; i < content.Length; i++)
@@ -265,6 +318,10 @@ public ref struct RegFileTokenizer
 				default:
 					return;
 			}
+		}
+		if (i >= content.Length)
+		{
+			throw new EndOfStreamException();
 		}
 	}
 }
