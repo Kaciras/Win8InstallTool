@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace Win8InstallTool;
 
@@ -108,5 +110,59 @@ public static class RegHelper
 	{
 		using var subKey = key.OpenSubKey(name); 
 		return subKey != null;
+	}
+
+	/// <summary>
+	/// 尽管程序以管理员身份运行，仍有些注册表键没有修改权限，故需要添加一下权限。
+	/// 可以使用using语法来自动还原：
+	/// <code>using var _ = RegistryHelper.ElevatePermission(key)</code>
+	/// </summary>
+	/// <param name="key">键</param>
+	/// <returns>一个可销毁对象，在销毁时还原键的权限</returns>
+	public static TemporaryElevateSession Elevate(RegistryKey baseKey, string name)
+	{
+		// 这几个权限枚举得设对，否则要么打不开要么无法改权限。
+		var key = baseKey.OpenSubKey(
+			name,
+			RegistryKeyPermissionCheck.ReadWriteSubTree,
+			RegistryRights.ChangePermissions);
+
+		if (key == null)
+		{
+			throw new DirectoryNotFoundException();
+		}
+
+		var user = WindowsIdentity.GetCurrent().User;
+		var rule = new RegistryAccessRule(user, RegistryRights.FullControl, AccessControlType.Allow);
+
+		var security = key.GetAccessControl();
+		security.AddAccessRule(rule);
+		key.SetAccessControl(security);
+
+		return new TemporaryElevateSession(key, rule);
+	}
+
+	public readonly struct TemporaryElevateSession : IDisposable
+	{
+		public readonly RegistryKey Key { get; }
+
+		readonly RegistryAccessRule rule;
+
+		internal TemporaryElevateSession(RegistryKey key, RegistryAccessRule rule)
+		{
+			Key = key;
+			this.rule = rule;
+		}
+
+		public void Dispose()
+		{
+			// key 可能被删除了，所以重新获取一遍。
+			using var current = OpenKey(Key.Name, true);
+			Key.Dispose();
+
+			var accessControl = current.GetAccessControl();
+			accessControl.RemoveAccessRule(rule);
+			current?.SetAccessControl(accessControl);
+		}
 	}
 }

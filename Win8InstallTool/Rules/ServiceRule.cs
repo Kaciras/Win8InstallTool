@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Security;
 
 namespace Win8InstallTool.Rules;
 
@@ -22,25 +23,29 @@ public class ServiceRule : Rule
 	public string Name { get; private set; }
 
 	/// <summary>
-	/// 此服务应当被优化为什么状态，默认禁用。
+	/// 此服务应当被优化为什么状态。
 	/// </summary>
 	public ServiceState TargetState { get; }
+
+	readonly string subPath;
 
 	public ServiceRule(string key, string description, ServiceState state)
 	{
 		Key = key;
 		Description = description;
 		TargetState = state;
+
+		subPath = SERVICE_DIR + Key;
 	}
 
 	public bool Check()
 	{
-		using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key);
+		using var config = Registry.LocalMachine.OpenSubKey(subPath);
+
 		if (config == null)
 		{
 			return false; // 服务不存在
 		}
-
 		if (Name == null)
 		{
 			Name = (string)config.GetValue("DisplayName", Key);
@@ -65,23 +70,36 @@ public class ServiceRule : Rule
 	{
 		if (TargetState == ServiceState.Deleted)
 		{
-			Registry.LocalMachine.DeleteSubKeyTree(SERVICE_DIR + Key);
+			Registry.LocalMachine.DeleteSubKeyTree(subPath);
+			return;
 		}
+		try
+		{
+			ChaangeServiceStartupRegistry();
+		}
+		catch (SecurityException)
+		{
+			using var _ = RegHelper.Elevate(Registry.LocalMachine, subPath);
+			ChaangeServiceStartupRegistry();
+		}
+	}
 
-		using var config = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key, true);
+	void ChaangeServiceStartupRegistry()
+	{
+		using var key = Registry.LocalMachine.OpenSubKey(SERVICE_DIR + Key, true);
 		var startValue = TargetState;
 
 		if (TargetState == ServiceState.LazyStart)
 		{
-			config.SetValue("DelayedAutostart", 1, RegistryValueKind.DWord);
+			key.SetValue("DelayedAutostart", 1, RegistryValueKind.DWord);
 			startValue = ServiceState.Automatic;
 		}
 		else
 		{
 			// 默认不存在会报错，需要添加第二个参数
-			config.DeleteValue("DelayedAutostart", false);
+			key.DeleteValue("DelayedAutostart", false);
 		}
 
-		config.SetValue("Start", (int)startValue, RegistryValueKind.DWord);
+		key.SetValue("Start", (int)startValue, RegistryValueKind.DWord);
 	}
 }
