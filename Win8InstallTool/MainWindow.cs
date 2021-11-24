@@ -175,6 +175,9 @@ sealed partial class MainWindow : Form
 		progressBar.Value = 0;
 		treeView.Enabled = false;
 
+#if DEBUG
+		await Task.Run(() => RunOptimize(checkedNodes));
+#else
 		try
 		{
 			await Task.Run(() => RunOptimize(checkedNodes));
@@ -182,8 +185,8 @@ sealed partial class MainWindow : Form
 		catch (Exception ex)
 		{
 			MessageBox.Show(ex.Message, "优化时出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			Debugger.Break();
 		}
+#endif
 
 		treeView.Enabled = true;
 		textBox.Text = string.Empty;
