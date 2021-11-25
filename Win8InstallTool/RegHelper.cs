@@ -113,12 +113,17 @@ public static class RegHelper
 	}
 
 	/// <summary>
-	/// 尽管程序以管理员身份运行，仍有些注册表键没有修改权限，故需要添加一下权限。
-	/// 可以使用using语法来自动还原：
-	/// <code>using var _ = RegistryHelper.ElevatePermission(key)</code>
+	/// 为当前用户设置完全控制键的权限，用户至少要有修改权限的权限。
+	/// <br/>
+	/// 尽管程序以管理员身份运行，仍有些注册表键没有修改权限，故需要添加一下。
+	/// <code>
+	/// // 使用 using 语法来自动还原：
+	/// using var _ = RegistryHelper.ElevatePermission(key);
+	/// </code>
 	/// </summary>
 	/// <param name="key">键</param>
 	/// <returns>一个可销毁对象，在销毁时还原键的权限</returns>
+	/// <see cref="https://stackoverflow.com/a/6491052"/>
 	public static TemporaryElevateSession Elevate(RegistryKey baseKey, string name)
 	{
 		// 这几个权限枚举得设对，否则要么打不开要么无法改权限。
@@ -135,34 +140,51 @@ public static class RegHelper
 		var user = WindowsIdentity.GetCurrent().User;
 		var rule = new RegistryAccessRule(user, RegistryRights.FullControl, AccessControlType.Allow);
 
-		var security = key.GetAccessControl();
-		security.AddAccessRule(rule);
-		key.SetAccessControl(security);
-
 		return new TemporaryElevateSession(key, rule);
 	}
 
 	public readonly struct TemporaryElevateSession : IDisposable
 	{
-		public readonly RegistryKey Key { get; }
+		readonly RegistryKey key;
 
 		readonly RegistryAccessRule rule;
+		readonly RegistryAccessRule old;
 
 		internal TemporaryElevateSession(RegistryKey key, RegistryAccessRule rule)
 		{
-			Key = key;
+			this.key = key;
 			this.rule = rule;
+
+			var security = key.GetAccessControl();
+
+			var identity = rule.IdentityReference;
+			old = security.GetAccessRules(true, false, identity.GetType())
+				.Cast<RegistryAccessRule>()
+				.FirstOrDefault(r => r.IdentityReference.Equals(identity));
+
+			security.SetAccessRule(rule);
+			key.SetAccessControl(security);
 		}
 
 		public void Dispose()
 		{
 			// key 可能被删除了，所以重新获取一遍。
-			using var current = OpenKey(Key.Name, true);
-			Key.Dispose();
+			using var current = OpenKey(key.Name, true);
+			key.Dispose();
 
-			var accessControl = current.GetAccessControl();
-			accessControl.RemoveAccessRule(rule);
-			current?.SetAccessControl(accessControl);
+			if (current != null)
+			{
+				var accessControl = current.GetAccessControl();
+				if (old != null)
+				{
+					accessControl.SetAccessRule(old);
+				}
+				else
+				{
+					accessControl.RemoveAccessRule(rule);
+				}
+				current.SetAccessControl(accessControl);
+			}
 		}
 	}
 }

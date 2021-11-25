@@ -2,6 +2,8 @@
 using Microsoft.Win32;
 using System;
 using System.IO;
+using System.Security;
+using System.Security.AccessControl;
 using System.Text;
 using Win8InstallTool.Test.Properties;
 
@@ -89,6 +91,39 @@ public sealed class RegHelperTest
         {
 			Registry.ClassesRoot.DeleteSubKeyTree(@"测试项");
 		}
+	}
+
+	[ExpectedException(typeof(DirectoryNotFoundException))]
+	[TestMethod]
+	public void ElevateNonExists()
+	{
+		RegHelper.Elevate(Registry.CurrentUser, "_NON_EXISTS");
+	}
+
+	[TestMethod]
+	public void Elevate()
+	{
+		using var key = Registry.CurrentUser.CreateSubKey("_test_sec_0");
+
+		var security = new RegistrySecurity();
+		security.SetAccessRuleProtection(true, false);
+		key.SetAccessControl(security);
+
+		static void OpenWrite()
+		{
+			Registry.CurrentUser.OpenSubKey("_test_sec_0", true).Dispose();
+		}
+
+		Assert.ThrowsException<SecurityException>(OpenWrite);
+		using (var _ = RegHelper.Elevate(Registry.CurrentUser, "_test_sec_0"))
+		{
+			OpenWrite();
+		}
+		Assert.ThrowsException<SecurityException>(OpenWrite);
+
+		security.SetAccessRuleProtection(false, true);
+		key.SetAccessControl(security);
+		Registry.CurrentUser.DeleteSubKey("_test_sec_0");
 	}
 
 	/// <summary>
