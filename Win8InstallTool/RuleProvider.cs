@@ -29,7 +29,7 @@ public sealed class RuleProvider
 		RuleSets.Add(new SendToRuleSet());
 
 		var others = new List<Rule> {
-			new AppEventSoundRule(".None"),
+			new AppEventsRule(".None"),
 			new FileAttributeRule(
 				"%USERPROFILE%/AppData",
 				FileAttributes.Directory,

@@ -5,7 +5,7 @@ namespace Win8InstallTool.Rules;
 /// <summary>
 /// 优化 控制面板/硬件和声音/更改系统声音/声音方案 的规则，如果当前方案与目标不同则修改为目标方案。
 /// </summary>
-internal sealed class AppEventSoundRule : Rule
+public sealed class AppEventsRule : Rule
 {
 	const string ROOT = @"HKCU\AppEvents\Schemes";
 
@@ -19,7 +19,7 @@ internal sealed class AppEventSoundRule : Rule
 	/// 创建规则的实例，将声音方案调整为制定的项，方案名是注册表里的键名比如".Default"、".None"。
 	/// </summary>
 	/// <param name="target">方案名</param>
-	public AppEventSoundRule(string target)
+	public AppEventsRule(string target)
 	{
 		this.target = target;
 
