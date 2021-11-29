@@ -63,6 +63,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RegFile\RegFileReaderTest.cs" />
+    <Compile Include="Rules\FileAttributeRuleTest.cs" />
     <Compile Include="Rules\RegFileRuleTest.cs" />
     <Compile Include="RegFile\RegFileTokenizerTest.cs" />
     <Compile Include="RegHelperTest.cs" />

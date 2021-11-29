@@ -28,7 +28,15 @@ public sealed class RuleProvider
 		LoadRuleFile("开始菜单（用户）", Resources.StartupRules, ReadStartupMenu);
 		RuleSets.Add(new SendToRuleSet());
 
-		var others = new List<Rule> { new AppEventSoundRule(".None") };
+		var others = new List<Rule> {
+			new AppEventSoundRule(".None"),
+			new FileAttributeRule(
+				"%USERPROFILE%/AppData",
+				FileAttributes.Directory,
+				"取消 AppData 的隐藏属性",
+				"很多程序把配置和数据都存在这个目录，经常需要直接访问它，故取消隐藏"
+			),
+		};
 
 		if (includeSystem)
 		{
