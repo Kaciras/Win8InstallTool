@@ -18,13 +18,13 @@ public sealed class FileAttributeRule : Rule
 		string name, 
 		string description)
 	{
-		this.path = Environment.ExpandEnvironmentVariables(path);
+		this.path = path;
 		this.attributes = attributes;
 		Name = name;
 		Description = description;
 	}
 
-	public bool Check()
+	public bool NeedOptimize()
 	{
 		try
 		{

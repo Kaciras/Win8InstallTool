@@ -63,12 +63,10 @@ public class SendToRuleSet : OptimizableSet
 		{
 			return Path.GetFileNameWithoutExtension(name);
 		}
-
 		if (localized[0] != '@')
 		{
 			return localized;
 		}
-
 		try
 		{
 			return Utils.ExtractStringFromDLL(localized);

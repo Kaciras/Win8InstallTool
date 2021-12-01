@@ -32,7 +32,7 @@ public sealed class ContextMenuRule : Rule
 		Description = description;
 	}
 
-	public bool Check()
+	public bool NeedOptimize()
 	{
 		return folders
 			.Select(folder => Path.Combine(folder, item))

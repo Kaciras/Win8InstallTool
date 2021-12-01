@@ -21,7 +21,7 @@ public sealed class GroupPolicyRule : Rule
 		Description = description;
 	}
 
-	public bool Check()
+	public bool NeedOptimize()
 	{
 		return GroupPolicy.GetPolicySetting(key, item)?.ToString() != value;
 	}

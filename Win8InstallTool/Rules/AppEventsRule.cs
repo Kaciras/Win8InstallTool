@@ -38,7 +38,10 @@ public sealed class AppEventsRule : Rule
 		Description = "将 Windows 系统声音方案设置为：" + name;
 	}
 
-	public bool Check()
+	/// <summary>
+	/// 因为本工具默认用户不会乱改导致不一致的情况，所以只检查预设名即可。
+	/// </summary>
+	public bool NeedOptimize()
 	{
 		using var schemes = RegHelper.OpenKey(ROOT);
 		return !schemes.GetValue("").Equals(target);
@@ -56,11 +59,11 @@ public sealed class AppEventsRule : Rule
 			using var app = apps.OpenSubKey(appName);
 			foreach (var item in app.GetSubKeyNames())
 			{
-				using var key = app.OpenSubKey(item + @"\" + target);
+				using var key = app.OpenSubKey(@$"{item}\{target}");
 				if (key == null) continue;
 
-				using var current = app.OpenSubKey(item + @"\.Current", true);
-				current.SetValue("", key.GetValue(""));
+				using var current = app.OpenSubKey(@$"{item}\.Current", true);
+				current.SetValue(string.Empty, key.GetValue(""));
 			}
 		}
 	}

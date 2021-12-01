@@ -26,14 +26,14 @@ public sealed class RegFileRuleTest
 	public void CheckNoNeeded()
 	{
 		var rule = new RegFileRule("test", "test", Resources.Kinds);
-		Assert.IsFalse(rule.Check());
+		Assert.IsFalse(rule.NeedOptimize());
 	}
 
 	[TestMethod]
 	public void Check()
 	{
 		var rule = new RegFileRule("test", "test", Resources.ImportTest);
-		Assert.IsTrue(rule.Check());
+		Assert.IsTrue(rule.NeedOptimize());
 	}
 
 	[TestMethod]

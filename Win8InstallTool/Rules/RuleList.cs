@@ -22,6 +22,6 @@ public class RuleList : OptimizableSet
 
 	public IEnumerable<Optimizable> Scan()
 	{
-		return rules.Where(rule => rule.Check());
+		return rules.Where(rule => rule.NeedOptimize());
 	}
 }

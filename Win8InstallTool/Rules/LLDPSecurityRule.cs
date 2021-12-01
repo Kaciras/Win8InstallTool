@@ -26,7 +26,7 @@ public sealed class LLDPSecurityRule : Rule
 
 	string descriptor;
 
-	public bool Check()
+	public bool NeedOptimize()
 	{
 		var sc = Utils.Execute("sc.exe", "sdshow mslldp");
 		descriptor = sc.StandardOutput.ReadToEnd().Trim();

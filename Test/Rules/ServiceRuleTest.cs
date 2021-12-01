@@ -23,7 +23,7 @@ public sealed class ServiceRuleTest
 	public void Optimize()
 	{
 		var rule = new ServiceRule("Win8InstallToolTest", "descr", ServiceState.Disabled);
-		Assert.IsTrue(rule.Check());
+		Assert.IsTrue(rule.NeedOptimize());
 
 		rule.Optimize();
 		using var controller = new ServiceController("Win8InstallToolTest");

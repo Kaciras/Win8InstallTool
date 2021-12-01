@@ -22,9 +22,9 @@ public sealed class ExplorerFolderRule : Rule
 
 	public string Description => "就是视频、文档、链接这些，它们可以从用户目录里打开,放在我的电脑里只会占位置，而且我不咋用";
 
-	public bool Check()
+	public bool NeedOptimize()
 	{
-		using var nameSpage = Registry.LocalMachine.OpenSubKey(KEY, RegistryRights.FullControl);
+		using var nameSpage = Registry.LocalMachine.OpenSubKey(KEY);
 		return clsids.Any(nameSpage.ContainsSubKey);
 	}
 

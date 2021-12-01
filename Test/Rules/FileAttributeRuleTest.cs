@@ -28,7 +28,7 @@ public sealed class FileAttributeRuleTest
 	public void FileNotExists()
 	{
 		var rule = new FileAttributeRule("NON_EXISTS", default, "test", "for test");
-		Assert.IsFalse(rule.Check());
+		Assert.IsFalse(rule.NeedOptimize());
 	}
 
 	[DataRow(FileAttributes.Directory, false)]
@@ -37,7 +37,7 @@ public sealed class FileAttributeRuleTest
 	public void Check(FileAttributes attrs, bool expected)
 	{
 		var rule = new FileAttributeRule("test", attrs, "test", "for test");
-		Assert.AreEqual(expected, rule.Check());
+		Assert.AreEqual(expected, rule.NeedOptimize());
 	}
 
 	[TestMethod]

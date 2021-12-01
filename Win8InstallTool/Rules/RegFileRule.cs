@@ -33,7 +33,7 @@ public class RegFileRule : Rule
 	/// <summary>
 	/// 对比 Reg 文件和注册表，判断是否存在不同，如果不同就说明需要优化。
 	/// </summary>
-	public bool Check()
+	public bool NeedOptimize()
 	{
 		var reader = new RegFileReader(content);
 		var expected = true;
@@ -83,9 +83,9 @@ public class RegFileRule : Rule
 
 		return kind switch
 		{
-			RegistryValueKind.Unknown or RegistryValueKind.None => throw new Exception("无效的值类型"),
-			RegistryValueKind.Binary => ConvertAndCheck<byte>(),
 			RegistryValueKind.MultiString => ConvertAndCheck<string>(),
+			RegistryValueKind.Binary => ConvertAndCheck<byte>(),
+			RegistryValueKind.Unknown or RegistryValueKind.None => throw new Exception("无效的值类型"),
 			_ => expected.Equals(valueInDB),
 		};
 	}

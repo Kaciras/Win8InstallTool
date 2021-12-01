@@ -22,7 +22,7 @@ public sealed class StartupMenuRule : Rule
 		path = Path.Combine(GetFolderPath(folder), "Programs", name);
 	}
 
-	public bool Check() => Directory.Exists(path);
+	public bool NeedOptimize() => Directory.Exists(path);
 
 	public void Optimize() => Directory.Delete(path, true);
 }

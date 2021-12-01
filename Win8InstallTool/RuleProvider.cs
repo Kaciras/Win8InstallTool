@@ -31,7 +31,7 @@ public sealed class RuleProvider
 		var others = new List<Rule> {
 			new AppEventsRule(".None"),
 			new FileAttributeRule(
-				"%USERPROFILE%/AppData",
+				Environment.ExpandEnvironmentVariables("%USERPROFILE%/AppData"),
 				FileAttributes.Directory,
 				"取消 AppData 的隐藏属性",
 				"很多程序把配置和数据都存在这个目录，经常需要直接访问它，故取消隐藏"

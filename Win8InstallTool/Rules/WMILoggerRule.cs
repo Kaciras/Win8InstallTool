@@ -28,7 +28,7 @@ public class WMILoggerRule : Rule
 		this.maxFileSize = maxFileSize;
 	}
 
-	public bool Check()
+	public bool NeedOptimize()
 	{
 		if (cycle.HasValue)
 		{

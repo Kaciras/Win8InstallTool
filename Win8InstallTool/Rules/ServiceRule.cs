@@ -38,7 +38,7 @@ public class ServiceRule : Rule
 		subPath = SERVICE_DIR + Key;
 	}
 
-	public bool Check()
+	public bool NeedOptimize()
 	{
 		using var config = Registry.LocalMachine.OpenSubKey(subPath);
 
