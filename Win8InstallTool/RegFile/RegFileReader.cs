@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -58,7 +57,7 @@ public ref struct RegFileReader
 
 		_ => throw new FormatException("Unexcepted Token"),
 	};
-	
+
 	/// <summary>
 	/// 文件最开始的位置，首先是版本行，然后下一个句子必须是键。
 	/// </summary>
@@ -81,7 +80,7 @@ public ref struct RegFileReader
 					throw new FormatException();
 			}
 		}
-		
+
 		return false; // 没读到可以返回的词文件就结束了。
 	}
 
@@ -142,7 +141,7 @@ public ref struct RegFileReader
 	/// 值名后面有两种情况：类型或字符串值，在这里读取并检查。
 	/// </summary>
 	void TryGetKind()
-    {
+	{
 		if (!tokenizer.Read())
 		{
 			throw new FormatException("缺少值或类型");

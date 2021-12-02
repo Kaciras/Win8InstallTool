@@ -1,5 +1,5 @@
-﻿using Win8InstallTool.Benchmark.Properties;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
+using Win8InstallTool.Benchmark.Properties;
 using Win8InstallTool.RegFile;
 
 namespace Win8InstallTool.Benchmark;

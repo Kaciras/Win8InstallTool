@@ -1,10 +1,10 @@
-﻿using Microsoft.Win32;
-using Microsoft.Win32.SafeHandles;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Microsoft.Win32;
+using Microsoft.Win32.SafeHandles;
 
 namespace Win8InstallTool;
 
@@ -101,7 +101,8 @@ public class GroupPolicyObjectSettings
 
 	internal uint Flag
 	{
-		get {
+		get
+		{
 			uint flag = 0x00000000;
 			if (LoadRegistryInformation)
 			{

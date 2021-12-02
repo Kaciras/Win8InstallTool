@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +17,7 @@ sealed partial class MainWindow : Form
 		InitializeComponent();
 		CheckForIllegalCrossThreadCalls = false;
 
-		if (Program.IsElevated)
+		if (provider.AdminMode)
 		{
 			roleLabel.ForeColor = Color.DeepPink;
 			roleLabel.Text = "管理员";

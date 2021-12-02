@@ -1,10 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.IO;
 using System.Security;
 using System.Security.AccessControl;
-using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Win32;
 using Win8InstallTool.Test.Properties;
 
 namespace Win8InstallTool.Test;
@@ -78,17 +77,17 @@ public sealed class RegHelperTest
 		Assert.AreEqual(Resources.ImportTest, File.ReadAllText("ExportTest.reg"));
 	}
 
-    [TestMethod]
-    public void Search()
-    {
+	[TestMethod]
+	public void Search()
+	{
 		RegHelper.Import(@"Resources\Registry\Search.reg");
-        try
-        {
+		try
+		{
 			var result = RegHelper.Search(@"HKCR\测试项", "key");
-			CollectionAssert.AreEquivalent(new string[]{ "foo", "bar" }, result);
-        }
-        finally
-        {
+			CollectionAssert.AreEquivalent(new string[] { "foo", "bar" }, result);
+		}
+		finally
+		{
 			Registry.ClassesRoot.DeleteSubKeyTree(@"测试项");
 		}
 	}

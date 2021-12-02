@@ -13,9 +13,9 @@ public sealed class OptimizeAction : Optimizable
 
 	public string Description { get; }
 
-	public OptimizeAction(string name, string description, Action optimizeAction)
+	public OptimizeAction(string name, string description, Action action)
 	{
-		this.optimizeAction = optimizeAction;
+		optimizeAction = action;
 		Name = name;
 		Description = description;
 	}

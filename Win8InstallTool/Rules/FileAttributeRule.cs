@@ -14,8 +14,8 @@ public sealed class FileAttributeRule : Rule
 
 	public FileAttributeRule(
 		string path,
-		FileAttributes attributes, 
-		string name, 
+		FileAttributes attributes,
+		string name,
 		string description)
 	{
 		this.path = path;

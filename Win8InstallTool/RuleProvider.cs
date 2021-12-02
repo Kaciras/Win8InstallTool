@@ -9,17 +9,20 @@ using Win8InstallTool.Rules;
 namespace Win8InstallTool;
 
 /// <summary>
-/// 优化方案的提供者，调用 Scan() 方法检测所有可优化的地方。
+/// 统一管理优化项的类，在启动时载入所有的优化规则。
 /// </summary>
 public sealed class RuleProvider
 {
 	public ICollection<OptimizableSet> RuleSets { get; } = new List<OptimizableSet>();
 
-	readonly bool includeSystem;
+	/// <summary>
+	/// 是否载入只有管理员才能设置的优化项，对这些项目的优化需要管理员权限。
+	/// </summary>
+	public bool AdminMode { get; }
 
-	public RuleProvider(bool includeSystem)
+	public RuleProvider(bool adminMode)
 	{
-		this.includeSystem = includeSystem;
+		AdminMode = adminMode;
 	}
 
 	internal void Initialize()
@@ -38,13 +41,13 @@ public sealed class RuleProvider
 			),
 		};
 
-		if (includeSystem)
+		if (AdminMode)
 		{
 			others.Add(new ExplorerFolderRule());
 			others.Add(new LLDPSecurityRule());
 			others.Add(new RegFileRule(
 				"把用记事本打开添加到右键菜单",
-				"很常用的功能，不解释", 
+				"很常用的功能，不解释",
 				GetEmbeddedRegFile("OpenWithNotepad")
 			));
 

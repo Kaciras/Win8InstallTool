@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -8,35 +7,35 @@ using System.Windows.Forms;
 [assembly: InternalsVisibleTo("Benchmark")]
 namespace Win8InstallTool;
 
+/*
+ * 为了实现的简洁，本程序假设用户的系统满足以下条件：
+ * 1）没有手动修改过注册表等底层数据，只用系统提供的控制中心调整配置，这避免了各种边界情况。
+ * 2）在扫描和优化两个操作之间不对系统设置做修改，这避免了不一致的状态。
+ */
 static class Program
 {
-	/// <summary>
-	/// 程序是否具有管理员权限
-	/// </summary>
-	internal static bool IsElevated { get; private set; }
-
 	[STAThread]
 	static void Main()
 	{
 		Application.EnableVisualStyles();
 		Application.SetCompatibleTextRenderingDefault(false);
 
-		if (CheckOSSupport())
-		{
-			IsElevated = Utils.CheckIsAdministrator();
-			var provider = new RuleProvider(IsElevated);
-			provider.Initialize();
-
-			Application.Idle += CaptureSyncContext;
-			Application.Run(new MainWindow(provider));
-		}
-		else
+		if (!CheckOSSupport())
 		{
 			MessageBox.Show(
 				"本程序仅支持 64 位 Windows8.1",
 				"无法启动",
 				MessageBoxButtons.OK,
 				MessageBoxIcon.Information);
+		}
+		else
+		{
+			var elevated = Utils.CheckIsAdministrator();
+			var provider = new RuleProvider(elevated);
+			provider.Initialize();
+
+			Application.Idle += CaptureSyncContext;
+			Application.Run(new MainWindow(provider));
 		}
 	}
 

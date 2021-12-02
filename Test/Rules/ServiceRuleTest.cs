@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.ServiceProcess;
+﻿using System.ServiceProcess;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Win8InstallTool.Rules;
 
 namespace Win8InstallTool.Test.Rules;

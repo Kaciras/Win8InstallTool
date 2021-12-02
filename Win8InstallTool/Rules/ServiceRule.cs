@@ -1,5 +1,5 @@
-﻿using Microsoft.Win32;
-using System.Security;
+﻿using System.Security;
+using Microsoft.Win32;
 
 namespace Win8InstallTool.Rules;
 

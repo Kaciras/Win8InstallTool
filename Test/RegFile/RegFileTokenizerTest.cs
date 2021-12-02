@@ -22,7 +22,7 @@ public sealed class RegFileTokenizerTest
 	//[DataRow("[ke\r\ny]")]      // Key name contains a new line
 	//[DataRow("[")]				// Unclosed key
 	//[DataRow("\"na\r\nme\"")]   // Name contains a new line
-	[DataRow("foobar")]			// Name not wrapped with quote
+	[DataRow("foobar")]         // Name not wrapped with quote
 	[ExpectedException(typeof(FormatException))]
 	[DataTestMethod]
 	public void InvalidTopLevel(string content)
@@ -35,17 +35,17 @@ public sealed class RegFileTokenizerTest
 	}
 
 	[DataRow("=\"value")]       // Unclosed quote in value
-	[DataRow("hex:00")]			// Missing = 
+	[DataRow("hex:00")]         // Missing = 
 	[DataRow("=he\r\nx:00")]    // Kind contains a new line
 	[ExpectedException(typeof(FormatException))]
 	[DataTestMethod]
 	public void InvalidValue(string content)
-    {
+	{
 		content = VERSION_LINE + "@" + content + "\r\n";
 		var tokenizer = new RegFileTokenizer(content);
-		tokenizer.Read();	// Version
-		tokenizer.Read();	// Name
-		tokenizer.Read();	// Value or Kind
+		tokenizer.Read();   // Version
+		tokenizer.Read();   // Name
+		tokenizer.Read();   // Value or Kind
 	}
 
 	[DataRow("\"name\"=-", RegTokenType.Name, RegTokenType.DeleteValue)]

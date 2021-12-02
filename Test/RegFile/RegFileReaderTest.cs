@@ -32,17 +32,17 @@ public sealed class RegFileReaderTest
 
 	[ExpectedException(typeof(FormatException))]
 	[TestMethod]
-    public void TruncatedValue()
-    {
+	public void TruncatedValue()
+	{
 		var reader = new RegFileReader(Resources.TruncatedValue);
 		Assert.IsTrue(reader.Read());
 		reader.Read();
 	}
 
 	[ExpectedException(typeof(FormatException))]
-    [TestMethod]
-    public void InvalidKind()
-    {
+	[TestMethod]
+	public void InvalidKind()
+	{
 		var reader = new RegFileReader(Resources.InvalidKind);
 
 		Assert.IsTrue(reader.Read());
@@ -50,15 +50,15 @@ public sealed class RegFileReaderTest
 	}
 
 	[TestMethod]
-    public void ReadEmpty()
-    {
+	public void ReadEmpty()
+	{
 		Assert.IsFalse(new RegFileReader("").Read());
 	}
 
 	[ExpectedException(typeof(FormatException))]
 	[TestMethod]
-    public void NoKey()
-    {
+	public void NoKey()
+	{
 		new RegFileReader(Resources.NoKey).Read();
 	}
 }

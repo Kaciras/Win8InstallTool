@@ -8,7 +8,7 @@ static class TestHelper
 	public static void RunInNewThread(Action action)
 	{
 		Exception exception = null;
-		var thread = new Thread(() => 
+		var thread = new Thread(() =>
 		{
 			try
 			{

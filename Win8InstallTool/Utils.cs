@@ -1,11 +1,11 @@
-﻿using Shell32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using Shell32;
 
 namespace Win8InstallTool;
 
@@ -76,7 +76,8 @@ internal static class Utils
 	/// <exception cref="FileNotFoundException">如果所给的快捷方式不存在</exception>
 	public static string GetShortcutTarget(string filename)
 	{
-		return STAExecutor.Run(() => {
+		return STAExecutor.Run(() =>
+		{
 			var pathOnly = Path.GetDirectoryName(filename);
 			var filenameOnly = Path.GetFileName(filename);
 			var shell = new Shell();

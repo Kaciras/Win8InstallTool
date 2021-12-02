@@ -44,7 +44,7 @@ public ref struct RegFileTokenizer
 	/// 读取下一个 Token，如果已经读完则返回 false，否则返回 true
 	/// </summary>
 	public bool Read()
-    {
+	{
 		// 用异常表示结束，省去了大量的 return。
 		// 虽然有违异常的原则，但仅内部使用也没问题。
 		// 实测无论哪种写性能都是微妙级，无需关心。
@@ -54,7 +54,7 @@ public ref struct RegFileTokenizer
 			return true;
 		}
 		catch (EndOfStreamException)
-        {
+		{
 			return false;
 		}
 	}
@@ -289,7 +289,7 @@ public ref struct RegFileTokenizer
 	/// </summary>
 	/// <param name="ch">读到的字符</param>
 	Exception Unexpected(char ch)
-    {
+	{
 		return new FormatException("Unexpected char: " + ch);
 	}
 
