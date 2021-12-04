@@ -45,6 +45,7 @@ public sealed class RuleProvider
 		{
 			others.Add(new ExplorerFolderRule());
 			others.Add(new LLDPSecurityRule());
+			others.Add(new PowerShellPolicyRule());
 			others.Add(new RegFileRule(
 				"把用记事本打开添加到右键菜单",
 				"很常用的功能，不解释",

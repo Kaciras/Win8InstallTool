@@ -100,6 +100,7 @@
     <Compile Include="Rules\LLDPSecurityRule.cs" />
     <Compile Include="Rules\ExplorerFolderRule.cs" />
     <Compile Include="Rules\GroupPolicyRule.cs" />
+    <Compile Include="Rules\PowerShellPolicyRule.cs" />
     <Compile Include="Rules\RegFileRule.cs" />
     <Compile Include="Rules\RuleList.cs" />
     <Compile Include="Rules\SendToRuleSet.cs" />
