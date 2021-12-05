@@ -5,10 +5,14 @@ using System.Text;
 namespace Win8InstallTool.RegFile;
 
 /// <summary>
-/// 解析注册表导出文件（.reg）的类，属于最前端的分词器。我觉得应该有开源库读取 reg 文件的，
-/// 但是找了一圈也没找到，只能自己撸了。
+/// 解析注册表导出文件（.reg）的工具，属于编译器里最前端的分词器。
+/// 我觉得应该有开源库读取 reg 文件的，但是找了一圈也没找到，只能自己撸了。
 /// <br/>
-/// 注意本分词器要求文件末尾必须有换行。
+/// 本分词器有一些额外的限制：
+/// <list>
+/// <item>1）必须使用 \r\n 换行</item>
+/// <item>2）文件末尾必须有一个空行</item>
+/// </list>
 /// <seealso cref="https://support.microsoft.com/en-us/help/310516/how-to-add-modify-or-delete-registry-subkeys-and-values-by-using-a-reg"/>
 /// </summary>
 public ref struct RegFileTokenizer
@@ -17,9 +21,9 @@ public ref struct RegFileTokenizer
 	 * 每个标记加上换行符，用于 IndexOfAny 搜索同时检查是否有换行。
 	 * 因为 switch 只能用于常量，懒得写三个所以只能这样了。
 	 */
-	static readonly char[] KEY_END = new char[] { ']', '\r' };
-	static readonly char[] QUOTE = new char[] { '"', '\r' };
-	static readonly char[] KIND_END = new char[] { ':', '\r' };
+	static readonly char[] KEY_END = { ']', '\r' };
+	static readonly char[] QUOTE = { '"', '\r' };
+	static readonly char[] KIND_END = { ':', '\r' };
 
 	readonly string content;
 

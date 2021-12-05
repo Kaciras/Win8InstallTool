@@ -8,7 +8,7 @@ namespace Win8InstallTool.RegFile;
 
 /// <summary>
 /// Reg 文件读取器，是 RegFileTokenizer 的下一层，处理上下文相关的语法。
-/// 
+/// <br/>
 /// 该读取器只返回完整的条目（键或值），其它部分如版本号和注释将被忽略。
 /// </summary>
 public ref struct RegFileReader
@@ -16,29 +16,23 @@ public ref struct RegFileReader
 	/// <summary>
 	/// 当前读取到的条目是键吗，如果不是则为值。
 	/// </summary>
-	public bool IsKey { get; private set; }
+	public bool IsKey { get; private set; } = default;
 
-	public string Key { get; private set; }
+	public string Key { get; private set; } = default;
 
-	public string Name { get; private set; }
+	public string Name { get; private set; } = default;
 
-	public RegistryValueKind Kind { get; private set; }
+	public RegistryValueKind Kind { get; private set; } = default;
 
-	public object Value { get; private set; }
+	public object Value { get; private set; } = default;
 
-	public bool IsDelete { get; private set; }
+	public bool IsDelete { get; private set; } = default;
 
 	RegFileTokenizer tokenizer;
 
 	public RegFileReader(string content)
 	{
 		tokenizer = new RegFileTokenizer(content);
-		IsKey = default;
-		Key = default;
-		Name = default;
-		Kind = default;
-		Value = default;
-		IsDelete = default;
 	}
 
 	/// <summary>
