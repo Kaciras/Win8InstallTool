@@ -19,37 +19,13 @@ static class Program
 	{
 		Application.EnableVisualStyles();
 		Application.SetCompatibleTextRenderingDefault(false);
+		Application.Idle += CaptureSyncContext;
 
-		if (!CheckOSSupport())
-		{
-			MessageBox.Show(
-				"本程序仅支持 64 位 Windows8.1",
-				"无法启动",
-				MessageBoxButtons.OK,
-				MessageBoxIcon.Information);
-		}
-		else
-		{
-			var elevated = Utils.CheckIsAdministrator();
-			var provider = new RuleProvider(elevated);
-			provider.Initialize();
+		var elevated = Utils.CheckIsAdministrator();
+		var provider = new RuleProvider(elevated);
+		provider.Initialize();
 
-			Application.Idle += CaptureSyncContext;
-			Application.Run(new MainWindow(provider));
-		}
-	}
-
-	/// <summary>
-	/// 检查所在的系统是否支持本程序，如果不支持则不应继续运行。
-	/// </summary>
-	static bool CheckOSSupport()
-	{
-		var os = Environment.OSVersion;
-		var version = os.Version;
-
-		return Environment.Is64BitOperatingSystem
-			&& os.Platform == PlatformID.Win32NT
-			&& version.Major == 6 && version.Minor == 3;
+		Application.Run(new MainWindow(provider));
 	}
 
 	/// <summary>
