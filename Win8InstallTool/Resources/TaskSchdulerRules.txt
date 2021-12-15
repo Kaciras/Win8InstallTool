@@ -31,3 +31,7 @@ Microsoft\Windows\Mobile Broadband Accounts\MNO Metadata Parser
 
 Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector
 客户体验改善计划相关的任务，没同意的可以删了
+
+Microsoft\Windows\Defrag\ScheduledDefrag
+整理磁盘碎片的任务，想手动运行的可以禁用它。该任务也可以在碎片整理和优化驱动器工具里修改。
+:DISABLE
