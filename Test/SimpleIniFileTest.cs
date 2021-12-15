@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace Win8InstallTool.Test;
 
@@ -6,14 +7,28 @@ namespace Win8InstallTool.Test;
 public sealed class SimpleIniFileTest
 {
 	[TestMethod]
-	public void ReadNonExists()
+	public void GetNonExistValue()
 	{
 		var file = new SimpleIniFile("Resources/Config.ini");
-		Assert.AreEqual(string.Empty, file.Read(null, "non-exists", null));
+		Assert.AreEqual("s", file.Read("server", "non-exists", "s"));
 	}
 
 	[TestMethod]
-	public void Read()
+	public void GetNonExistSection()
+	{
+		var file = new SimpleIniFile("Resources/Config.ini");
+		Assert.AreEqual("s", file.Read("server", "non-exists", "s"));
+	}
+
+	[TestMethod]
+	public void GetNonExistFile()
+	{
+		var file = new SimpleIniFile("non-exists.ini");
+		Assert.AreEqual("s", file.Read("server", "non-exists", "s"));
+	}
+
+	[TestMethod]
+	public void GetValue()
 	{
 		var file = new SimpleIniFile("Resources/Config.ini");
 		Assert.AreEqual("hello world", file.Read("server", "key", null));
