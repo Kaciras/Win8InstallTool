@@ -184,7 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Registry\ExplorerOptions.reg" />
-    <EmbeddedResource Include="Resources\Registry\KeyboardA11y.reg" />
+    <EmbeddedResource Include="Resources\Registry\DisableAccessibility.reg" />
     <EmbeddedResource Include="Resources\Registry\DisableAutoPlay.reg" />
     <None Include="Resources\ContextMenuRules.txt" />
     <None Include="Resources\GroupPolicyRules.txt" />
