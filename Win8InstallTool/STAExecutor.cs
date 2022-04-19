@@ -1,7 +1,28 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading;
+using AspectInjector.Broker;
 
 namespace Win8InstallTool;
+
+/// <summary>
+/// 使用 AOP 来实现让目标方法运行在 STA 线程，比起手动调用 STAExecutor.Run() 更简洁。
+/// <br/>
+/// 本项目的 AOP 使用 aspect-injector，在编译期织入。
+/// </summary>
+[Injection(typeof(ExecuteOnSTAThreadAttribute))]
+[Aspect(Scope.Global)]
+public sealed class ExecuteOnSTAThreadAttribute : Attribute
+{
+	[Advice(Kind.Around)]
+	public object Intercept(
+		[Argument(Source.Target)] Func<object[], object> target,
+		[Argument(Source.Arguments)] object[] args
+	)
+	{
+		return STAExecutor.Run(() => target(args));
+	}
+}
 
 /// <summary>
 /// 一些 COM 组件要求在 STA 线程访问，但 .NET 的线程池不是 STA，故做了一个切换线程的工具。
