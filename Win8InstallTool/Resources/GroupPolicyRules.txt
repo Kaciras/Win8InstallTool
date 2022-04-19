@@ -40,6 +40,12 @@ DisablePropPage
 关闭程序兼容性属性页
 屁用没有的玩意，遇到不兼容的情况从来没在这个配置页里解决过。
 
+HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat
+DisableEngine
+1
+关闭应用程序兼容性引擎
+为提升兼容性，微软给一些曾经流行的老软件做了适配，在每次启动应用时都会检查，关闭后提升性能，但老软件可能无法运行。
+
 HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender
 DisableAntiSpyware
 1
