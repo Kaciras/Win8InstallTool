@@ -10,7 +10,7 @@ sealed partial class AboutWindow : Form
 		InitializeComponent();
 
 		var version = typeof(AboutWindow).Assembly.GetName().Version;
-		versionLabel.Text = $"版本 {version.ToString(3)}，更新于 2021-12-15";
+		versionLabel.Text = $"版本 {version.ToString(3)}，更新于 2022-4-20";
 	}
 
 	private void CloseButton_Click(object sender, EventArgs e)
