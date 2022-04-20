@@ -1,28 +1,28 @@
-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext
 DisableAddonLoadTimePerformanceNotifications
 1
 关闭 IE 加载项性能通知
 防止出现打开IE浏览器状态栏提示关闭加载项来提高浏览器运行速度的提示。
 
-HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Suggested Sites
+HKLM\SOFTWARE\Policies\Microsoft\Internet Explorer\Suggested Sites
 Enabled
 0
 IE 打开建议的网站
 建议你妈逼，老子看啥要你指点？
 
-HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore
+HKLM\SOFTWARE\Policies\Microsoft\WindowsStore
 AutoDownload
 2
 关闭应用商店的自动更新
 看到自动更新就烦,WIn8 的鸡肋商店我也从来不用。
 
-HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Main
+HKLM\SOFTWARE\Policies\Microsoft\Internet Explorer\Main
 DisableFirstRunCustomize
 1
 禁用首次运行向导
 全是没卵用的配置，浪费启动时间。
 
-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
 NoDriveTypeAutoRun
 255
 关闭自动播放
@@ -46,7 +46,7 @@ DisableEngine
 关闭应用程序兼容性引擎
 为提升兼容性，微软给一些曾经流行的老软件做了适配，在每次启动应用时都会检查，关闭后提升性能，但老软件可能无法运行。
 
-HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender
+HKLM\SOFTWARE\Policies\Microsoft\Windows Defender
 DisableAntiSpyware
 1
 关闭 Windows Defender

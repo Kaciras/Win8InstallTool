@@ -2,6 +2,10 @@
 
 namespace Win8InstallTool.Rules;
 
+/// <summary>
+/// 修改一个组策略（gpedit.msc）项的规则，组策略的项目跟注册表类似，通常位于：
+/// <code>HKEY_LOCAL_MACHINE\SOFTWARE\Policies\</code>
+/// </summary>
 public sealed class GroupPolicyRule : Rule
 {
 	readonly string key;

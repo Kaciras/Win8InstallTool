@@ -29,7 +29,7 @@ public abstract class GroupPolicyObject
 	/// </summary>
 	static readonly Guid LocalGuid = new(Assembly.GetExecutingAssembly().GetCustomAttribute<GuidAttribute>().Value);
 
-	protected IGroupPolicyObject Instance = null;
+	protected IGroupPolicyObject Instance;
 
 	internal GroupPolicyObject()
 	{
@@ -146,8 +146,8 @@ public class ComputerGroupPolicyObject : GroupPolicyObject
 	}
 
 	/// <summary>
-	///     Retrieves the file system path to the root of the specified GPO section.
-	///     The path is in UNC format.
+	/// Retrieves the file system path to the root of the specified GPO section.
+	/// he path is in UNC format.
 	/// </summary>
 	public override string GetPathTo(GroupPolicySection section)
 	{

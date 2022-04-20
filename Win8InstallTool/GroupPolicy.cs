@@ -12,7 +12,8 @@ namespace Win8InstallTool;
 public static class GroupPolicy
 {
 	[ExecuteOnSTAThread]
-	public static void SetPolicySetting(string key, string item, object value, RegistryValueKind kind)
+	public static void SetPolicySetting(string key, 
+		string item, object value, RegistryValueKind kind)
 	{
 		var gpo = new ComputerGroupPolicyObject();
 		var section = Key(key, out string subkey);
