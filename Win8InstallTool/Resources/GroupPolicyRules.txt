@@ -14,7 +14,7 @@ HKLM\SOFTWARE\Policies\Microsoft\WindowsStore
 AutoDownload
 2
 关闭应用商店的自动更新
-看到自动更新就烦,WIn8 的鸡肋商店我也从来不用。
+看到自动更新就烦，Win8 的鸡肋商店我也从来不用。
 
 HKLM\SOFTWARE\Policies\Microsoft\Internet Explorer\Main
 DisableFirstRunCustomize
@@ -35,12 +35,6 @@ DisablePCA
 屁用没有的玩意，兼容性怎样还用你来分析？
 
 HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat
-DisablePropPage
-1
-关闭程序兼容性属性页
-屁用没有的玩意，遇到不兼容的情况从来没在这个配置页里解决过。
-
-HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat
 DisableEngine
 1
 关闭应用程序兼容性引擎
@@ -51,6 +45,18 @@ DisableAntiSpyware
 1
 关闭 Windows Defender
 我自己是不用杀毒软件的，如果要用还是别关。
+
+HKLM\SOFTWARE\Policies\Microsoft\Windows\System
+EnableSmartScreen
+0
+关闭 SmartScreen 筛选器
+SmartScreen 是什么自己搜，没啥用的东西关了吧。
+
+HKLM\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter
+EnabledV9
+0
+关闭 Edge 浏览器的 SmartScreen
+SmartScreen 是什么自己搜，没啥用的东西关了吧。
 
 # 这个是用户配置里的，注意不要带 GUID 部分，因为底层 API 会处理。
 HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments
