@@ -2,6 +2,8 @@
 
 ![Screenshot](https://github.com/Kaciras/Win8InstallTool/raw/master/screenshot.png)
 
+**废弃说明：Windows8.1 已停止维护，本项目也跟着结束了**
+
 自用的系优化程序，在新装系统后自动做一些配置，免得一个个调麻烦。**本程序专用于 Windows8.1，未在其它系统上测试过。**
 
 优化规则包括：
